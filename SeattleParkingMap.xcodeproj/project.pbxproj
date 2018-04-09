@@ -7,29 +7,65 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		490F0D3A1C13F9590086504A /* SPMMapInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490F0D391C13F9590086504A /* SPMMapInterfaceController.m */; };
-		49134FC0194C66EF00250042 /* SPMInformationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49134FBF194C66EF00250042 /* SPMInformationTableViewController.m */; };
+		490F0D3A1C13F9590086504A /* MapInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 490F0D391C13F9590086504A /* MapInterfaceController.m */; };
+		49134FC0194C66EF00250042 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49134FBF194C66EF00250042 /* SettingsTableViewController.m */; };
+		493984C71C30F212009C38F0 /* WatchConnectivityOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 493984C61C30F212009C38F0 /* WatchConnectivityOperation.m */; };
 		493AE6911C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 493AE6901C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m */; };
 		493AE69B1C211CDD00F0AD5C /* WKInterfaceController+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 493AE69A1C211CDD00F0AD5C /* WKInterfaceController+SPM.m */; };
+		493DFFB51C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DFFB41C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m */; };
+		493DFFB71C2FB1B100ACEA45 /* ParkingSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F031C28FF6D0080C5DB /* ParkingSpot.m */; };
+		493DFFB81C2FB1B300ACEA45 /* ParkingTimeLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */; };
+		494631A41C2CEB43003B4A91 /* LegendDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631A31C2CEB43003B4A91 /* LegendDataSource.m */; };
+		494631A71C2CEDE2003B4A91 /* Legend.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631A61C2CEDE2003B4A91 /* Legend.m */; };
+		494631AA1C2CF804003B4A91 /* LegendTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631A91C2CF804003B4A91 /* LegendTableViewCell.m */; };
+		494631AF1C2E5028003B4A91 /* UIImage+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631AE1C2E5028003B4A91 /* UIImage+SPM.m */; };
+		4981FD371C41654B008A7F3C /* SeattleParkingMapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4981FD361C41654B008A7F3C /* SeattleParkingMapTests.m */; };
+		4981FD461C420234008A7F3C /* SeattleParkingMapUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */; };
+		498F20961C267D7A001DD2BA /* CalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 498F20951C267D7A001DD2BA /* CalloutView.xib */; };
+		498F20991C2680D9001DD2BA /* ParkingSpotCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */; };
+		498F209C1C2692CA001DD2BA /* TimeLimitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498F209B1C2692CA001DD2BA /* TimeLimitViewController.m */; };
 		499096871BF9254F004EDCC3 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 499096851BF9254F004EDCC3 /* Interface.storyboard */; };
 		499096891BF9254F004EDCC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 499096881BF9254F004EDCC3 /* Assets.xcassets */; };
 		499096901BF9254F004EDCC3 /* SeattleParkingMapWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4990968F1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		499096961BF9254F004EDCC3 /* SPMParkInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499096951BF9254F004EDCC3 /* SPMParkInterfaceController.m */; };
-		499096991BF9254F004EDCC3 /* SPMExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 499096981BF9254F004EDCC3 /* SPMExtensionDelegate.m */; };
-		4990969C1BF9254F004EDCC3 /* SPMGlanceInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4990969B1BF9254F004EDCC3 /* SPMGlanceInterfaceController.m */; };
+		499096961BF9254F004EDCC3 /* ParkInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499096951BF9254F004EDCC3 /* ParkInterfaceController.m */; };
+		499096991BF9254F004EDCC3 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 499096981BF9254F004EDCC3 /* ExtensionDelegate.m */; };
+		4990969C1BF9254F004EDCC3 /* GlanceInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4990969B1BF9254F004EDCC3 /* GlanceInterfaceController.m */; };
 		499096A51BF9254F004EDCC3 /* SeattleParkingMapWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */; };
-		499A2F041C1FC1BE00F5AEE4 /* SPMBaseInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A2F031C1FC1BE00F5AEE4 /* SPMBaseInterfaceController.m */; };
+		499A2F041C1FC1BE00F5AEE4 /* BaseInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */; };
 		49A9CE1C1986DEFE00BB1196 /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 49A9CE1B1986DEFE00BB1196 /* ArcGIS.bundle */; };
+		49AD85F41C31081B002040B7 /* UIColor+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD85F31C31081B002040B7 /* UIColor+SPM.m */; };
+		49AD864C1C311D41002040B7 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD864B1C311D41002040B7 /* ComplicationController.m */; };
+		49AD864E1C31326E002040B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49AD864D1C31326E002040B7 /* Assets.xcassets */; };
+		49B96F011C28ED760080C5DB /* ParkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F001C28ED760080C5DB /* ParkingManager.m */; };
+		49B96F041C28FF6D0080C5DB /* ParkingSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F031C28FF6D0080C5DB /* ParkingSpot.m */; };
+		49B96F071C28FF790080C5DB /* ParkingTimeLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */; };
 		49C0D7741BF85A48009057F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49C0D7731BF85A48009057F2 /* LaunchScreen.storyboard */; };
 		49C0D7761BF8667D009057F2 /* libFlurry_7.3.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49C0D7751BF8667D009057F2 /* libFlurry_7.3.0.a */; };
 		49C23FF91984B12F00898148 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F78E8821941288B006B8217 /* Main.storyboard */; };
+		49CFE13D1C3C060000D29A89 /* NSDate+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */; };
+		49CFE13E1C3C060A00D29A89 /* NSDate+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */; };
+		49ED7EFE1C3774BA0063A82A /* ParkingTimeLimit+Watch.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ED7EFD1C3774BA0063A82A /* ParkingTimeLimit+Watch.m */; };
 		8F78E87D1941288B006B8217 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E87C1941288B006B8217 /* main.m */; };
-		8F78E8811941288B006B8217 /* SPMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8801941288B006B8217 /* SPMAppDelegate.m */; };
-		8F78E88C1941288B006B8217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F78E88B1941288B006B8217 /* Images.xcassets */; };
-		8F78E8AA19412AC9006B8217 /* SPMRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8891941288B006B8217 /* SPMRootViewController.m */; };
+		8F78E8811941288B006B8217 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8801941288B006B8217 /* AppDelegate.m */; };
+		8F78E88C1941288B006B8217 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F78E88B1941288B006B8217 /* Assets.xcassets */; };
+		8F78E8AA19412AC9006B8217 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8891941288B006B8217 /* RootViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		4981FD391C41654B008A7F3C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F78E8651941288A006B8217 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8F78E86C1941288B006B8217;
+			remoteInfo = SeattleParkingMap;
+		};
+		4981FD481C420234008A7F3C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8F78E8651941288A006B8217 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8F78E86C1941288B006B8217;
+			remoteInfo = SeattleParkingMap;
+		};
 		499096911BF9254F004EDCC3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8F78E8651941288A006B8217 /* Project object */;
@@ -72,55 +108,110 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		490F0D381C13F9590086504A /* SPMMapInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPMMapInterfaceController.h; sourceTree = "<group>"; };
-		490F0D391C13F9590086504A /* SPMMapInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPMMapInterfaceController.m; sourceTree = "<group>"; };
-		49134FBE194C66EF00250042 /* SPMInformationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPMInformationTableViewController.h; sourceTree = "<group>"; };
-		49134FBF194C66EF00250042 /* SPMInformationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPMInformationTableViewController.m; sourceTree = "<group>"; };
+		490F0D381C13F9590086504A /* MapInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapInterfaceController.h; sourceTree = "<group>"; };
+		490F0D391C13F9590086504A /* MapInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapInterfaceController.m; sourceTree = "<group>"; };
+		49134FBE194C66EF00250042 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		49134FBF194C66EF00250042 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
+		493984C51C30F212009C38F0 /* WatchConnectivityOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchConnectivityOperation.h; sourceTree = "<group>"; };
+		493984C61C30F212009C38F0 /* WatchConnectivityOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchConnectivityOperation.m; sourceTree = "<group>"; };
 		493AE68F1C1FF4B500F0AD5C /* WKInterfaceMap+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKInterfaceMap+SPM.h"; sourceTree = "<group>"; };
 		493AE6901C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKInterfaceMap+SPM.m"; sourceTree = "<group>"; };
-		493AE6921C1FF64700F0AD5C /* SeattleParkingMapWatch-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SeattleParkingMapWatch-Prefix.pch"; path = "SeattleParkingMapWatch Extension/SeattleParkingMapWatch-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		493AE6921C1FF64700F0AD5C /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = "SeattleParkingMapWatch Extension/Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		493AE6991C211CD400F0AD5C /* WKInterfaceController+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKInterfaceController+SPM.h"; sourceTree = "<group>"; };
 		493AE69A1C211CDD00F0AD5C /* WKInterfaceController+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKInterfaceController+SPM.m"; sourceTree = "<group>"; };
-		494A2DFF19822FBC00ADAC90 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		493DFFB31C2F6DBC00ACEA45 /* TimeLimitInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLimitInterfaceController.h; sourceTree = "<group>"; };
+		493DFFB41C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLimitInterfaceController.m; sourceTree = "<group>"; };
+		493DFFB61C2FAFFE00ACEA45 /* WatchConnectivitySerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchConnectivitySerialization.h; sourceTree = "<group>"; };
+		494631A21C2CEB43003B4A91 /* LegendDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegendDataSource.h; sourceTree = "<group>"; };
+		494631A31C2CEB43003B4A91 /* LegendDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegendDataSource.m; sourceTree = "<group>"; };
+		494631A51C2CEDE2003B4A91 /* Legend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Legend.h; sourceTree = "<group>"; };
+		494631A61C2CEDE2003B4A91 /* Legend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Legend.m; sourceTree = "<group>"; };
+		494631A81C2CF804003B4A91 /* LegendTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LegendTableViewCell.h; sourceTree = "<group>"; };
+		494631A91C2CF804003B4A91 /* LegendTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LegendTableViewCell.m; sourceTree = "<group>"; };
+		494631AD1C2E5028003B4A91 /* UIImage+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SPM.h"; sourceTree = "<group>"; };
+		494631AE1C2E5028003B4A91 /* UIImage+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SPM.m"; sourceTree = "<group>"; };
+		494A2DFF19822FBC00ADAC90 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = TODO.md; sourceTree = "<group>"; };
 		494A2E01198230AF00ADAC90 /* Outside Map Area.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Outside Map Area.gpx"; sourceTree = "<group>"; };
 		494A2E03198237A400ADAC90 /* Outside Seattle Area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Outside Seattle Area.gpx"; sourceTree = "<group>"; };
+		4981FD2F1C40BD9F008A7F3C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeattleParkingMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4981FD361C41654B008A7F3C /* SeattleParkingMapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeattleParkingMapTests.m; sourceTree = "<group>"; };
+		4981FD381C41654B008A7F3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeattleParkingMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeattleParkingMapUITests.m; sourceTree = "<group>"; };
+		4981FD471C420234008A7F3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		498F20951C267D7A001DD2BA /* CalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalloutView.xib; sourceTree = "<group>"; };
+		498F20971C2680D9001DD2BA /* ParkingSpotCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingSpotCalloutView.h; sourceTree = "<group>"; };
+		498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingSpotCalloutView.m; sourceTree = "<group>"; };
+		498F209A1C2692CA001DD2BA /* TimeLimitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLimitViewController.h; sourceTree = "<group>"; };
+		498F209B1C2692CA001DD2BA /* TimeLimitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLimitViewController.m; sourceTree = "<group>"; };
 		499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeattleParkingMapWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		499096861BF9254F004EDCC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		499096881BF9254F004EDCC3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4990968A1BF9254F004EDCC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4990968F1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "SeattleParkingMapWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		499096941BF9254F004EDCC3 /* SPMParkInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMParkInterfaceController.h; sourceTree = "<group>"; };
-		499096951BF9254F004EDCC3 /* SPMParkInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPMParkInterfaceController.m; sourceTree = "<group>"; };
-		499096971BF9254F004EDCC3 /* SPMExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMExtensionDelegate.h; sourceTree = "<group>"; };
-		499096981BF9254F004EDCC3 /* SPMExtensionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPMExtensionDelegate.m; sourceTree = "<group>"; };
-		4990969A1BF9254F004EDCC3 /* SPMGlanceInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMGlanceInterfaceController.h; sourceTree = "<group>"; };
-		4990969B1BF9254F004EDCC3 /* SPMGlanceInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPMGlanceInterfaceController.m; sourceTree = "<group>"; };
+		499096941BF9254F004EDCC3 /* ParkInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParkInterfaceController.h; sourceTree = "<group>"; };
+		499096951BF9254F004EDCC3 /* ParkInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParkInterfaceController.m; sourceTree = "<group>"; };
+		499096971BF9254F004EDCC3 /* ExtensionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtensionDelegate.h; sourceTree = "<group>"; };
+		499096981BF9254F004EDCC3 /* ExtensionDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExtensionDelegate.m; sourceTree = "<group>"; };
+		4990969A1BF9254F004EDCC3 /* GlanceInterfaceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlanceInterfaceController.h; sourceTree = "<group>"; };
+		4990969B1BF9254F004EDCC3 /* GlanceInterfaceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GlanceInterfaceController.m; sourceTree = "<group>"; };
 		499096A21BF9254F004EDCC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		499A2F021C1FC1B400F5AEE4 /* SPMBaseInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPMBaseInterfaceController.h; sourceTree = "<group>"; };
-		499A2F031C1FC1BE00F5AEE4 /* SPMBaseInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPMBaseInterfaceController.m; sourceTree = "<group>"; };
+		499A2F021C1FC1B400F5AEE4 /* BaseInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInterfaceController.h; sourceTree = "<group>"; };
+		499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseInterfaceController.m; sourceTree = "<group>"; };
 		49A9CE1B1986DEFE00BB1196 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = "/Users/marc/Projects/SeattleParkingMap/Seattle Parking Map/../../../Library/SDKs/ArcGIS/iOS/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle"; sourceTree = "<absolute>"; };
-		49A9CE1D1986F6B300BB1196 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
+		49A9CE1D1986F6B300BB1196 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		49AD85F21C31081B002040B7 /* UIColor+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+SPM.h"; sourceTree = "<group>"; };
+		49AD85F31C31081B002040B7 /* UIColor+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SPM.m"; sourceTree = "<group>"; };
+		49AD864A1C311D41002040B7 /* ComplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComplicationController.h; sourceTree = "<group>"; };
+		49AD864B1C311D41002040B7 /* ComplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComplicationController.m; sourceTree = "<group>"; };
+		49AD864D1C31326E002040B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49B093D91B689D96000960CB /* FlurryWatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlurryWatch.h; sourceTree = "<group>"; };
+		49B96EFF1C28ED760080C5DB /* ParkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingManager.h; sourceTree = "<group>"; };
+		49B96F001C28ED760080C5DB /* ParkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingManager.m; sourceTree = "<group>"; };
+		49B96F021C28FF6D0080C5DB /* ParkingSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingSpot.h; sourceTree = "<group>"; };
+		49B96F031C28FF6D0080C5DB /* ParkingSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingSpot.m; sourceTree = "<group>"; };
+		49B96F051C28FF790080C5DB /* ParkingTimeLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingTimeLimit.h; sourceTree = "<group>"; };
+		49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingTimeLimit.m; sourceTree = "<group>"; };
 		49C0D7731BF85A48009057F2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		49C0D7751BF8667D009057F2 /* libFlurry_7.3.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_7.3.0.a; sourceTree = "<group>"; };
-		49C23FEE19846F2600898148 /* SPMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPMConstants.h; sourceTree = "<group>"; };
+		49C23FEE19846F2600898148 /* ConstantsExternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConstantsExternal.h; sourceTree = "<group>"; };
 		49C23FEF19847D5900898148 /* Inside Seattle Screenshot Curent Location.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Inside Seattle Screenshot Curent Location.gpx"; sourceTree = "<group>"; };
 		49C23FF019847DE100898148 /* Inside Seattle Screenshot Parking.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Inside Seattle Screenshot Parking.gpx"; sourceTree = "<group>"; };
+		49CFE13B1C3C060000D29A89 /* NSDate+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+SPM.h"; sourceTree = "<group>"; };
+		49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+SPM.m"; sourceTree = "<group>"; };
 		49D3BE931984C3F800BF3F0C /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		49EC94DC1C2C0FD300CDEF51 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		49ED7EFC1C3774BA0063A82A /* ParkingTimeLimit+Watch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParkingTimeLimit+Watch.h"; sourceTree = "<group>"; };
+		49ED7EFD1C3774BA0063A82A /* ParkingTimeLimit+Watch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ParkingTimeLimit+Watch.m"; sourceTree = "<group>"; };
 		8F78E86D1941288B006B8217 /* SeattleParkingMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeattleParkingMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F78E8781941288B006B8217 /* SeattleParkingMap-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SeattleParkingMap-Info.plist"; sourceTree = "<group>"; };
+		8F78E8781941288B006B8217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F78E87C1941288B006B8217 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		8F78E87E1941288B006B8217 /* SeattleParkingMap-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SeattleParkingMap-Prefix.pch"; sourceTree = "<group>"; };
-		8F78E87F1941288B006B8217 /* SPMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMAppDelegate.h; sourceTree = "<group>"; };
-		8F78E8801941288B006B8217 /* SPMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPMAppDelegate.m; sourceTree = "<group>"; };
+		8F78E87E1941288B006B8217 /* Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		8F78E87F1941288B006B8217 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		8F78E8801941288B006B8217 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		8F78E8831941288B006B8217 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8F78E8881941288B006B8217 /* SPMRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMRootViewController.h; sourceTree = "<group>"; };
-		8F78E8891941288B006B8217 /* SPMRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPMRootViewController.m; sourceTree = "<group>"; };
-		8F78E88B1941288B006B8217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8F78E8881941288B006B8217 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		8F78E8891941288B006B8217 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		8F78E88B1941288B006B8217 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F78E8AD194133F0006B8217 /* Inside Seattle Area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Inside Seattle Area.gpx"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4981FD311C41654B008A7F3C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4981FD401C420234008A7F3C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4990968C1BF9254F004EDCC3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -143,9 +234,27 @@
 			isa = PBXGroup;
 			children = (
 				499096A21BF9254F004EDCC3 /* Info.plist */,
-				493AE6921C1FF64700F0AD5C /* SeattleParkingMapWatch-Prefix.pch */,
+				493AE6921C1FF64700F0AD5C /* Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4981FD351C41654B008A7F3C /* SeattleParkingMapTests */ = {
+			isa = PBXGroup;
+			children = (
+				4981FD361C41654B008A7F3C /* SeattleParkingMapTests.m */,
+				4981FD381C41654B008A7F3C /* Info.plist */,
+			);
+			path = SeattleParkingMapTests;
+			sourceTree = "<group>";
+		};
+		4981FD441C420234008A7F3C /* SeattleParkingMapUITests */ = {
+			isa = PBXGroup;
+			children = (
+				4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */,
+				4981FD471C420234008A7F3C /* Info.plist */,
+			);
+			path = SeattleParkingMapUITests;
 			sourceTree = "<group>";
 		};
 		499096841BF9254F004EDCC3 /* SeattleParkingMapWatch */ = {
@@ -161,20 +270,31 @@
 		499096931BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */ = {
 			isa = PBXGroup;
 			children = (
-				499096971BF9254F004EDCC3 /* SPMExtensionDelegate.h */,
-				499096981BF9254F004EDCC3 /* SPMExtensionDelegate.m */,
-				499A2F021C1FC1B400F5AEE4 /* SPMBaseInterfaceController.h */,
-				499A2F031C1FC1BE00F5AEE4 /* SPMBaseInterfaceController.m */,
-				499096941BF9254F004EDCC3 /* SPMParkInterfaceController.h */,
-				499096951BF9254F004EDCC3 /* SPMParkInterfaceController.m */,
-				490F0D381C13F9590086504A /* SPMMapInterfaceController.h */,
-				490F0D391C13F9590086504A /* SPMMapInterfaceController.m */,
-				4990969A1BF9254F004EDCC3 /* SPMGlanceInterfaceController.h */,
-				4990969B1BF9254F004EDCC3 /* SPMGlanceInterfaceController.m */,
+				499096971BF9254F004EDCC3 /* ExtensionDelegate.h */,
+				499096981BF9254F004EDCC3 /* ExtensionDelegate.m */,
+				499A2F021C1FC1B400F5AEE4 /* BaseInterfaceController.h */,
+				499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */,
+				499096941BF9254F004EDCC3 /* ParkInterfaceController.h */,
+				499096951BF9254F004EDCC3 /* ParkInterfaceController.m */,
+				490F0D381C13F9590086504A /* MapInterfaceController.h */,
+				490F0D391C13F9590086504A /* MapInterfaceController.m */,
+				493DFFB31C2F6DBC00ACEA45 /* TimeLimitInterfaceController.h */,
+				493DFFB41C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m */,
+				4990969A1BF9254F004EDCC3 /* GlanceInterfaceController.h */,
+				4990969B1BF9254F004EDCC3 /* GlanceInterfaceController.m */,
+				49AD864A1C311D41002040B7 /* ComplicationController.h */,
+				49AD864B1C311D41002040B7 /* ComplicationController.m */,
+				493984C51C30F212009C38F0 /* WatchConnectivityOperation.h */,
+				493984C61C30F212009C38F0 /* WatchConnectivityOperation.m */,
+				49ED7EFC1C3774BA0063A82A /* ParkingTimeLimit+Watch.h */,
+				49ED7EFD1C3774BA0063A82A /* ParkingTimeLimit+Watch.m */,
+				49AD85F21C31081B002040B7 /* UIColor+SPM.h */,
+				49AD85F31C31081B002040B7 /* UIColor+SPM.m */,
 				493AE68F1C1FF4B500F0AD5C /* WKInterfaceMap+SPM.h */,
 				493AE6901C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m */,
 				493AE6991C211CD400F0AD5C /* WKInterfaceController+SPM.h */,
 				493AE69A1C211CDD00F0AD5C /* WKInterfaceController+SPM.m */,
+				49AD864D1C31326E002040B7 /* Assets.xcassets */,
 				493AE6931C1FF6DF00F0AD5C /* Supporting Files */,
 			);
 			path = "SeattleParkingMapWatch Extension";
@@ -200,6 +320,35 @@
 			name = "Location Simulation";
 			sourceTree = "<group>";
 		};
+		49B96F081C28FF870080C5DB /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				493DFFB61C2FAFFE00ACEA45 /* WatchConnectivitySerialization.h */,
+				49B96EFF1C28ED760080C5DB /* ParkingManager.h */,
+				49B96F001C28ED760080C5DB /* ParkingManager.m */,
+				49B96F021C28FF6D0080C5DB /* ParkingSpot.h */,
+				49B96F031C28FF6D0080C5DB /* ParkingSpot.m */,
+				49B96F051C28FF790080C5DB /* ParkingTimeLimit.h */,
+				49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */,
+				494631A21C2CEB43003B4A91 /* LegendDataSource.h */,
+				494631A31C2CEB43003B4A91 /* LegendDataSource.m */,
+				494631A51C2CEDE2003B4A91 /* Legend.h */,
+				494631A61C2CEDE2003B4A91 /* Legend.m */,
+			);
+			name = "Data Model";
+			sourceTree = "<group>";
+		};
+		49CFE13F1C3C061900D29A89 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				49CFE13B1C3C060000D29A89 /* NSDate+SPM.h */,
+				49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */,
+				494631AD1C2E5028003B4A91 /* UIImage+SPM.h */,
+				494631AE1C2E5028003B4A91 /* UIImage+SPM.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		49D3BE921984C3F800BF3F0C /* Flurry */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +363,8 @@
 			isa = PBXGroup;
 			children = (
 				8F78E8761941288B006B8217 /* SeattleParkingMap */,
+				4981FD351C41654B008A7F3C /* SeattleParkingMapTests */,
+				4981FD441C420234008A7F3C /* SeattleParkingMapUITests */,
 				499096841BF9254F004EDCC3 /* SeattleParkingMapWatch */,
 				499096931BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */,
 				8F78E86E1941288B006B8217 /* Products */,
@@ -226,6 +377,8 @@
 				8F78E86D1941288B006B8217 /* SeattleParkingMap.app */,
 				499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */,
 				4990968F1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension.appex */,
+				4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */,
+				4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -233,18 +386,29 @@
 		8F78E8761941288B006B8217 /* SeattleParkingMap */ = {
 			isa = PBXGroup;
 			children = (
-				494A2DFF19822FBC00ADAC90 /* README.md */,
+				49EC94DC1C2C0FD300CDEF51 /* README.md */,
+				494A2DFF19822FBC00ADAC90 /* TODO.md */,
 				49A9CE1D1986F6B300BB1196 /* CHANGELOG.md */,
-				49C23FEE19846F2600898148 /* SPMConstants.h */,
-				8F78E87F1941288B006B8217 /* SPMAppDelegate.h */,
-				8F78E8801941288B006B8217 /* SPMAppDelegate.m */,
-				8F78E8881941288B006B8217 /* SPMRootViewController.h */,
-				8F78E8891941288B006B8217 /* SPMRootViewController.m */,
-				49134FBE194C66EF00250042 /* SPMInformationTableViewController.h */,
-				49134FBF194C66EF00250042 /* SPMInformationTableViewController.m */,
+				4981FD2F1C40BD9F008A7F3C /* Constants.h */,
+				49C23FEE19846F2600898148 /* ConstantsExternal.h */,
+				8F78E87F1941288B006B8217 /* AppDelegate.h */,
+				8F78E8801941288B006B8217 /* AppDelegate.m */,
+				8F78E8881941288B006B8217 /* RootViewController.h */,
+				8F78E8891941288B006B8217 /* RootViewController.m */,
+				49134FBE194C66EF00250042 /* SettingsTableViewController.h */,
+				49134FBF194C66EF00250042 /* SettingsTableViewController.m */,
+				498F209A1C2692CA001DD2BA /* TimeLimitViewController.h */,
+				498F209B1C2692CA001DD2BA /* TimeLimitViewController.m */,
+				498F20971C2680D9001DD2BA /* ParkingSpotCalloutView.h */,
+				498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */,
+				494631A81C2CF804003B4A91 /* LegendTableViewCell.h */,
+				494631A91C2CF804003B4A91 /* LegendTableViewCell.m */,
+				49B96F081C28FF870080C5DB /* Data Model */,
+				49CFE13F1C3C061900D29A89 /* Categories */,
 				8F78E8821941288B006B8217 /* Main.storyboard */,
+				498F20951C267D7A001DD2BA /* CalloutView.xib */,
 				49C0D7731BF85A48009057F2 /* LaunchScreen.storyboard */,
-				8F78E88B1941288B006B8217 /* Images.xcassets */,
+				8F78E88B1941288B006B8217 /* Assets.xcassets */,
 				49A9CE1F1986F73E00BB1196 /* ArcGIS */,
 				49D3BE921984C3F800BF3F0C /* Flurry */,
 				49A9CE201986F75C00BB1196 /* Location Simulation */,
@@ -256,9 +420,9 @@
 		8F78E8771941288B006B8217 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				8F78E8781941288B006B8217 /* SeattleParkingMap-Info.plist */,
+				8F78E8781941288B006B8217 /* Info.plist */,
 				8F78E87C1941288B006B8217 /* main.m */,
-				8F78E87E1941288B006B8217 /* SeattleParkingMap-Prefix.pch */,
+				8F78E87E1941288B006B8217 /* Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -266,6 +430,42 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4981FD331C41654B008A7F3C /* SeattleParkingMapTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4981FD3B1C41654B008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapTests" */;
+			buildPhases = (
+				4981FD301C41654B008A7F3C /* Sources */,
+				4981FD311C41654B008A7F3C /* Frameworks */,
+				4981FD321C41654B008A7F3C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4981FD3A1C41654B008A7F3C /* PBXTargetDependency */,
+			);
+			name = SeattleParkingMapTests;
+			productName = SeattleParkingMapTests;
+			productReference = 4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		4981FD421C420234008A7F3C /* SeattleParkingMapUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4981FD4A1C420234008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapUITests" */;
+			buildPhases = (
+				4981FD3F1C420234008A7F3C /* Sources */,
+				4981FD401C420234008A7F3C /* Frameworks */,
+				4981FD411C420234008A7F3C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4981FD491C420234008A7F3C /* PBXTargetDependency */,
+			);
+			name = SeattleParkingMapUITests;
+			productName = SeattleParkingMapUITests;
+			productReference = 4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		499096821BF9254F004EDCC3 /* SeattleParkingMapWatch */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 499096AC1BF9254F004EDCC3 /* Build configuration list for PBXNativeTarget "SeattleParkingMapWatch" */;
@@ -325,10 +525,18 @@
 		8F78E8651941288A006B8217 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = SPM;
+				CLASSPREFIX = "";
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Tap Light Software";
 				TargetAttributes = {
+					4981FD331C41654B008A7F3C = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 8F78E86C1941288B006B8217;
+					};
+					4981FD421C420234008A7F3C = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 8F78E86C1941288B006B8217;
+					};
 					499096821BF9254F004EDCC3 = {
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = GBLBH9THKY;
@@ -358,11 +566,27 @@
 				8F78E86C1941288B006B8217 /* SeattleParkingMap */,
 				499096821BF9254F004EDCC3 /* SeattleParkingMapWatch */,
 				4990968E1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */,
+				4981FD331C41654B008A7F3C /* SeattleParkingMapTests */,
+				4981FD421C420234008A7F3C /* SeattleParkingMapUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4981FD321C41654B008A7F3C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4981FD411C420234008A7F3C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		499096811BF9254F004EDCC3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -376,6 +600,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49AD864E1C31326E002040B7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,27 +608,52 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F78E88C1941288B006B8217 /* Images.xcassets in Resources */,
+				8F78E88C1941288B006B8217 /* Assets.xcassets in Resources */,
 				49C23FF91984B12F00898148 /* Main.storyboard in Resources */,
 				49C0D7741BF85A48009057F2 /* LaunchScreen.storyboard in Resources */,
 				49A9CE1C1986DEFE00BB1196 /* ArcGIS.bundle in Resources */,
+				498F20961C267D7A001DD2BA /* CalloutView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4981FD301C41654B008A7F3C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4981FD371C41654B008A7F3C /* SeattleParkingMapTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4981FD3F1C420234008A7F3C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4981FD461C420234008A7F3C /* SeattleParkingMapUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4990968B1BF9254F004EDCC3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				490F0D3A1C13F9590086504A /* SPMMapInterfaceController.m in Sources */,
-				499096991BF9254F004EDCC3 /* SPMExtensionDelegate.m in Sources */,
-				499A2F041C1FC1BE00F5AEE4 /* SPMBaseInterfaceController.m in Sources */,
+				490F0D3A1C13F9590086504A /* MapInterfaceController.m in Sources */,
+				493DFFB71C2FB1B100ACEA45 /* ParkingSpot.m in Sources */,
+				499096991BF9254F004EDCC3 /* ExtensionDelegate.m in Sources */,
+				49ED7EFE1C3774BA0063A82A /* ParkingTimeLimit+Watch.m in Sources */,
+				493DFFB81C2FB1B300ACEA45 /* ParkingTimeLimit.m in Sources */,
+				49AD85F41C31081B002040B7 /* UIColor+SPM.m in Sources */,
+				499A2F041C1FC1BE00F5AEE4 /* BaseInterfaceController.m in Sources */,
 				493AE69B1C211CDD00F0AD5C /* WKInterfaceController+SPM.m in Sources */,
-				499096961BF9254F004EDCC3 /* SPMParkInterfaceController.m in Sources */,
+				49AD864C1C311D41002040B7 /* ComplicationController.m in Sources */,
+				493DFFB51C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m in Sources */,
+				499096961BF9254F004EDCC3 /* ParkInterfaceController.m in Sources */,
 				493AE6911C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m in Sources */,
-				4990969C1BF9254F004EDCC3 /* SPMGlanceInterfaceController.m in Sources */,
+				4990969C1BF9254F004EDCC3 /* GlanceInterfaceController.m in Sources */,
+				49CFE13E1C3C060A00D29A89 /* NSDate+SPM.m in Sources */,
+				493984C71C30F212009C38F0 /* WatchConnectivityOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,15 +662,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F78E87D1941288B006B8217 /* main.m in Sources */,
-				8F78E8811941288B006B8217 /* SPMAppDelegate.m in Sources */,
-				8F78E8AA19412AC9006B8217 /* SPMRootViewController.m in Sources */,
-				49134FC0194C66EF00250042 /* SPMInformationTableViewController.m in Sources */,
+				498F209C1C2692CA001DD2BA /* TimeLimitViewController.m in Sources */,
+				8F78E8811941288B006B8217 /* AppDelegate.m in Sources */,
+				494631AF1C2E5028003B4A91 /* UIImage+SPM.m in Sources */,
+				8F78E8AA19412AC9006B8217 /* RootViewController.m in Sources */,
+				49134FC0194C66EF00250042 /* SettingsTableViewController.m in Sources */,
+				49B96F071C28FF790080C5DB /* ParkingTimeLimit.m in Sources */,
+				494631AA1C2CF804003B4A91 /* LegendTableViewCell.m in Sources */,
+				49B96F041C28FF6D0080C5DB /* ParkingSpot.m in Sources */,
+				49B96F011C28ED760080C5DB /* ParkingManager.m in Sources */,
+				498F20991C2680D9001DD2BA /* ParkingSpotCalloutView.m in Sources */,
+				49CFE13D1C3C060000D29A89 /* NSDate+SPM.m in Sources */,
+				494631A41C2CEB43003B4A91 /* LegendDataSource.m in Sources */,
+				494631A71C2CEDE2003B4A91 /* Legend.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4981FD3A1C41654B008A7F3C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8F78E86C1941288B006B8217 /* SeattleParkingMap */;
+			targetProxy = 4981FD391C41654B008A7F3C /* PBXContainerItemProxy */;
+		};
+		4981FD491C420234008A7F3C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8F78E86C1941288B006B8217 /* SeattleParkingMap */;
+			targetProxy = 4981FD481C420234008A7F3C /* PBXContainerItemProxy */;
+		};
 		499096921BF9254F004EDCC3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4990968E1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */;
@@ -453,6 +723,72 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4981FD3C1C41654B008A7F3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = SeattleParkingMapTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeattleParkingMap.app/SeattleParkingMap";
+			};
+			name = Debug;
+		};
+		4981FD3D1C41654B008A7F3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = SeattleParkingMapTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SeattleParkingMap.app/SeattleParkingMap";
+			};
+			name = Release;
+		};
+		4981FD4B1C420234008A7F3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = SeattleParkingMapUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = SeattleParkingMap;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		4981FD4C1C420234008A7F3C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				INFOPLIST_FILE = SeattleParkingMapUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = SeattleParkingMap;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
 		499096A61BF9254F004EDCC3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -498,13 +834,14 @@
 		499096A81BF9254F004EDCC3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SeattleParkingMapWatch Extension/SeattleParkingMapWatch-Prefix.pch";
+				GCC_PREFIX_HEADER = "SeattleParkingMapWatch Extension/Prefix.pch";
 				INFOPLIST_FILE = "SeattleParkingMapWatch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -520,13 +857,14 @@
 		499096A91BF9254F004EDCC3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SeattleParkingMapWatch Extension/SeattleParkingMapWatch-Prefix.pch";
+				GCC_PREFIX_HEADER = "SeattleParkingMapWatch Extension/Prefix.pch";
 				INFOPLIST_FILE = "SeattleParkingMapWatch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -554,6 +892,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -568,11 +907,20 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -597,6 +945,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
@@ -604,11 +953,20 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
@@ -626,8 +984,8 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/SDKs/ArcGIS/iOS/";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SeattleParkingMap/SeattleParkingMap-Prefix.pch";
-				INFOPLIST_FILE = "SeattleParkingMap/SeattleParkingMap-Info.plist";
+				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
+				INFOPLIST_FILE = SeattleParkingMap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -655,8 +1013,8 @@
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(HOME)/Library/SDKs/ArcGIS/iOS/";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "SeattleParkingMap/SeattleParkingMap-Prefix.pch";
-				INFOPLIST_FILE = "SeattleParkingMap/SeattleParkingMap-Info.plist";
+				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
+				INFOPLIST_FILE = SeattleParkingMap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -679,6 +1037,23 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4981FD3B1C41654B008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4981FD3C1C41654B008A7F3C /* Debug */,
+				4981FD3D1C41654B008A7F3C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4981FD4A1C420234008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4981FD4B1C420234008A7F3C /* Debug */,
+				4981FD4C1C420234008A7F3C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		499096AA1BF9254F004EDCC3 /* Build configuration list for PBXNativeTarget "SeattleParkingMapWatch Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

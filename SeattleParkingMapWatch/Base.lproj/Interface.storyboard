@@ -8,23 +8,132 @@
         <!--Map-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller identifier="Map" title="Parked" id="AgC-eL-Hgc" userLabel="Map" customClass="SPMMapInterfaceController">
+                <controller identifier="Map" title="Parked" id="AgC-eL-Hgc" userLabel="Map" customClass="MapInterfaceController">
                     <items>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" id="u5l-R4-xTC" userLabel="Group Main">
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" spacing="5" id="u5l-R4-xTC" userLabel="Group Main">
                             <items>
-                                <map alignment="center" verticalAlignment="center" id="zp9-pd-wwC"/>
+                                <map height="100" alignment="center" verticalAlignment="center" id="SlA-hX-nCE">
+                                    <variation key="device=watch42mm" height="120"/>
+                                </map>
+                                <button alignment="center" verticalAlignment="bottom" id="b4M-gx-LeJ">
+                                    <group key="contentGroup" width="1" height="37.5" alignment="left" spacing="3" id="tnp-h5-ZYt">
+                                        <items>
+                                            <timer alignment="center" verticalAlignment="center" textAlignment="center" format="short" previewedSeconds="84609" id="cDq-QG-274">
+                                                <fontDescription key="font" type="system" pointSize="15"/>
+                                                <calendarUnit key="units" hour="YES" minute="YES"/>
+                                            </timer>
+                                            <label alignment="center" verticalAlignment="center" text="⇢" textAlignment="center" id="XfX-jl-egT" userLabel="Remaining">
+                                                <fontDescription key="font" type="system" pointSize="15"/>
+                                            </label>
+                                            <imageView alignment="center" verticalAlignment="center" image="MapTimeLimit" id="hos-NC-hYf">
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </imageView>
+                                        </items>
+                                        <color key="backgroundColor" white="0.15203979863221886" alpha="1" colorSpace="calibratedWhite"/>
+                                        <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+                                    </group>
+                                    <connections>
+                                        <action selector="touchedTimeLimit" destination="AgC-eL-Hgc" id="Emx-s3-NOi"/>
+                                    </connections>
+                                </button>
                                 <button width="1" alignment="center" verticalAlignment="bottom" title="Remove Spot" id="wwq-O0-iK3">
                                     <color key="backgroundColor" red="1" green="0.1323590875" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
                                     <connections>
                                         <action selector="removeParkingSpotTouched" destination="AgC-eL-Hgc" id="pIP-UB-Kah"/>
                                     </connections>
                                 </button>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="center" hidden="YES" alpha="0.0" layout="vertical" id="AgS-8m-rXR" userLabel="Group Loading">
+                        <group width="1" height="1" alignment="center" hidden="YES" alpha="0.0" layout="vertical" id="gWZ-vo-Cnl" userLabel="Group Loading">
                             <items>
-                                <label width="1" alignment="center" verticalAlignment="center" text="Removing" textAlignment="center" numberOfLines="0" id="dRQ-Sw-set"/>
-                                <label width="24" alignment="center" verticalAlignment="center" textAlignment="left" numberOfLines="0" id="PKp-vK-fig">
+                                <label width="1" alignment="center" verticalAlignment="center" text="Loading" textAlignment="center" numberOfLines="0" id="1iM-5z-xu3"/>
+                                <label width="24" alignment="center" verticalAlignment="center" textAlignment="left" numberOfLines="0" id="yEj-1P-RP2">
+                                    <string key="text" base64-UTF8="YES">
+Cg
+</string>
+                                </label>
+                                <button width="1" alignment="center" verticalAlignment="bottom" title="Cancel" id="V1s-NL-yHA">
+                                    <connections>
+                                        <action selector="cancelTouched" destination="AgC-eL-Hgc" id="jF0-dF-w7S"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="buttonCancel" destination="V1s-NL-yHA" id="JhW-IP-j4X"/>
+                        <outlet property="buttonTimeLimit" destination="b4M-gx-LeJ" id="Ct3-5j-rzS"/>
+                        <outlet property="groupLoading" destination="gWZ-vo-Cnl" id="Xtx-im-r8J"/>
+                        <outlet property="groupMain" destination="u5l-R4-xTC" id="Izt-Fx-0Zf"/>
+                        <outlet property="imageBell" destination="hos-NC-hYf" id="6Tu-qH-o15"/>
+                        <outlet property="interfaceMap" destination="SlA-hX-nCE" id="YdK-aB-Uxg"/>
+                        <outlet property="labelLoading" destination="1iM-5z-xu3" id="Bia-re-gAl"/>
+                        <outlet property="labelRemaining" destination="XfX-jl-egT" id="1Y6-fb-tMD"/>
+                        <outlet property="loadingIndicator" destination="yEj-1P-RP2" id="WFV-rv-Joz"/>
+                        <outlet property="timerInterfaceReminder" destination="cDq-QG-274" id="UxA-fF-qYi"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="288" y="-103"/>
+        </scene>
+        <!--Time Limit-->
+        <scene sceneID="Vcp-nb-Wee">
+            <objects>
+                <controller identifier="TimeLimit" id="zgM-e8-xgW" userLabel="Time Limit" customClass="TimeLimitInterfaceController">
+                    <items>
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" id="GPz-Wd-oDn" userLabel="Group Main">
+                            <items>
+                                <label width="1" alignment="center" text="You will be reminded 10 minutes before" textAlignment="center" numberOfLines="0" minimumScaleFactor="0.90000000000000002" id="eAg-38-TOw">
+                                    <fontDescription key="font" type="system" pointSize="13"/>
+                                    <variation key="device=watch42mm">
+                                        <fontDescription key="font" type="system" pointSize="16"/>
+                                    </variation>
+                                </label>
+                                <group alignment="center" verticalAlignment="center" id="JBT-hn-78y" userLabel="Picker Group">
+                                    <items>
+                                        <group width="1" alignment="left" layout="vertical" id="Sel-DW-F56" userLabel="Hour Group">
+                                            <items>
+                                                <picker width="35" height="35" alignment="left" focusStyle="stack" id="mvF-ke-XNC" userLabel="Hour Picker">
+                                                    <connections>
+                                                        <action selector="pickerHoursSelectedIndex:" destination="zgM-e8-xgW" id="vbA-1S-xs8"/>
+                                                    </connections>
+                                                </picker>
+                                                <label alignment="center" text="HR" id="8wb-g8-7IA">
+                                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                </label>
+                                            </items>
+                                        </group>
+                                        <label height="35" alignment="left" text=":" id="qYM-Td-vnB"/>
+                                        <group width="1" alignment="left" layout="vertical" id="8E3-jd-ZgJ" userLabel="Minute Group">
+                                            <items>
+                                                <picker width="35" height="35" alignment="right" focusStyle="stack" id="Cjf-69-2SH" userLabel="Minute Picker">
+                                                    <connections>
+                                                        <action selector="pickerMinutesSelectedIndex:" destination="zgM-e8-xgW" id="b3u-5x-e8b"/>
+                                                    </connections>
+                                                </picker>
+                                                <label alignment="center" text="MIN" id="d9u-nJ-98U" userLabel="MIN">
+                                                    <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                                                </label>
+                                            </items>
+                                        </group>
+                                    </items>
+                                </group>
+                                <button width="1" alignment="right" verticalAlignment="bottom" title="Set Time Limit" id="L1z-9A-PQN">
+                                    <color key="titleColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="1" green="0.78334659337997437" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
+                                    <connections>
+                                        <action selector="touchedSetTimeLimit" destination="zgM-e8-xgW" id="yNM-sd-bY8"/>
+                                    </connections>
+                                </button>
+                            </items>
+                            <edgeInsets key="margins" left="0.0" right="0.0" top="10" bottom="0.0"/>
+                        </group>
+                        <group width="1" height="1" alignment="center" hidden="YES" alpha="0.0" layout="vertical" id="q3u-QX-psO" userLabel="Group Loading">
+                            <items>
+                                <label width="1" alignment="center" verticalAlignment="center" text="Loading" textAlignment="center" numberOfLines="0" id="cAA-5l-CIz"/>
+                                <label width="24" alignment="center" verticalAlignment="center" textAlignment="left" numberOfLines="0" id="kH7-f0-l7t">
                                     <string key="text" base64-UTF8="YES">
 Cg
 </string>
@@ -33,39 +142,47 @@ Cg
                         </group>
                     </items>
                     <connections>
-                        <outlet property="groupLoading" destination="AgS-8m-rXR" id="RJQ-EQ-7uE"/>
-                        <outlet property="groupMain" destination="u5l-R4-xTC" id="Izt-Fx-0Zf"/>
-                        <outlet property="interfaceMap" destination="zp9-pd-wwC" id="4q1-lI-s5a"/>
-                        <outlet property="labelLoading" destination="dRQ-Sw-set" id="xvA-ig-lM8"/>
-                        <outlet property="loadingIndicator" destination="PKp-vK-fig" id="ZXv-MO-uxI"/>
+                        <outlet property="groupLoading" destination="q3u-QX-psO" id="pEL-kp-5wc"/>
+                        <outlet property="groupMain" destination="GPz-Wd-oDn" id="rF8-Ne-iKF"/>
+                        <outlet property="labelLoading" destination="cAA-5l-CIz" id="Zvt-gP-JL7"/>
+                        <outlet property="labelReminder" destination="eAg-38-TOw" id="qiM-fx-cUX"/>
+                        <outlet property="loadingIndicator" destination="kH7-f0-l7t" id="Mft-AO-gCr"/>
+                        <outlet property="pickerHours" destination="mvF-ke-XNC" id="IGS-rH-p9Z"/>
+                        <outlet property="pickerMinutes" destination="Cjf-69-2SH" id="4yz-hp-uA9"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="283" y="-122"/>
+            <point key="canvasLocation" x="445" y="-122"/>
         </scene>
         <!--Parking-->
         <scene sceneID="foa-Fu-40t">
             <objects>
-                <controller identifier="Park" title="Parking" id="4t0-Es-icU" customClass="SPMParkInterfaceController">
+                <controller identifier="Park" title="Parking" id="4t0-Es-icU" customClass="ParkInterfaceController">
                     <items>
-                        <group width="1" height="1" alignment="center" verticalAlignment="center" hidden="YES" alpha="0.0" layout="vertical" id="VAX-Sw-HZC">
+                        <group width="1" height="1" alignment="center" verticalAlignment="center" layout="vertical" id="VAX-Sw-HZC">
                             <items>
-                                <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="Z1N-xG-1GB" userLabel="Group Centering">
+                                <group width="1" alignment="center" verticalAlignment="center" layout="vertical" spacing="0.0" id="Z1N-xG-1GB" userLabel="Group Centering">
                                     <items>
-                                        <label width="1" height="1" alignment="center" verticalAlignment="center" text="Ⓟ" textAlignment="center" id="4BR-80-Cqn">
-                                            <fontDescription key="font" type="boldSystem" pointSize="75"/>
+                                        <label width="1" alignment="center" verticalAlignment="center" text="Ⓟ" textAlignment="center" id="dxB-mZ-6Ag">
+                                            <fontDescription key="font" type="boldSystem" pointSize="49"/>
                                         </label>
+                                        <picker width="1" height="50" alignment="center" verticalAlignment="center" focusStyle="sequence" indicatorMode="shownWhileFocused" id="SEw-YQ-TqL">
+                                            <connections>
+                                                <action selector="pickerTimeLimitSelectedIndex:" destination="4t0-Es-icU" id="Zi1-o5-5H9"/>
+                                            </connections>
+                                        </picker>
                                     </items>
                                 </group>
-                                <button width="1" height="53" alignment="center" verticalAlignment="bottom" title="Park In Current Location" id="wJG-IL-7we">
+                                <button width="1" alignment="center" verticalAlignment="bottom" title="📍 Park Here" id="wJG-IL-7we">
                                     <color key="backgroundColor" red="0.0" green="0.55772668123245239" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
                                     <connections>
                                         <action selector="parkHereTouched" destination="4t0-Es-icU" id="Co9-dz-wQA"/>
                                     </connections>
                                 </button>
                             </items>
                         </group>
-                        <group width="1" height="1" alignment="center" layout="vertical" id="Xkb-m4-Fvu" userLabel="Group Loading">
+                        <group width="1" height="1" alignment="center" hidden="YES" alpha="0.0" layout="vertical" id="Xkb-m4-Fvu" userLabel="Group Loading">
                             <items>
                                 <label width="1" alignment="center" verticalAlignment="center" text="Loading" textAlignment="center" numberOfLines="0" id="Ixc-AO-9XC"/>
                                 <label width="24" alignment="center" verticalAlignment="center" textAlignment="left" numberOfLines="0" id="5a9-1u-9TH">
@@ -87,7 +204,9 @@ Cg
                         <outlet property="groupLoading" destination="Xkb-m4-Fvu" id="Hht-LV-gRP"/>
                         <outlet property="groupMain" destination="VAX-Sw-HZC" id="Spe-r7-xYA"/>
                         <outlet property="labelLoading" destination="Ixc-AO-9XC" id="glI-tK-oKa"/>
+                        <outlet property="labelParkingGraphic" destination="dxB-mZ-6Ag" id="lfd-Yu-aAK"/>
                         <outlet property="loadingIndicator" destination="5a9-1u-9TH" id="HaB-Mt-cYd"/>
+                        <outlet property="pickerTimeLimit" destination="SEw-YQ-TqL" id="2pB-wZ-aUq"/>
                     </connections>
                 </controller>
             </objects>
@@ -96,13 +215,16 @@ Cg
         <!--Glance-->
         <scene sceneID="rjY-Ar-IMT">
             <objects>
-                <glanceController identifier="Glance" spacing="0.0" topTemplateType="body1Medium" id="Sv0-Ai-Zie" customClass="SPMGlanceInterfaceController">
+                <glanceController identifier="Glance" spacing="0.0" topTemplateType="body1Medium" id="Sv0-Ai-Zie" customClass="GlanceInterfaceController">
                     <items>
-                        <label alignment="left" text="Seattle Parking" id="vDn-Ga-I2H"/>
+                        <label alignment="left" text="Seattle Parking" minimumScaleFactor="0.80000000000000004" id="vDn-Ga-I2H">
+                            <color key="textColor" red="0.2036917359" green="0.72705197330000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
+                        </label>
                         <label alignment="left" text="Loading…" minimumScaleFactor="0.59999999999999998" id="sl3-vS-RGx"/>
-                        <group alignment="left" layout="vertical" id="eew-Gs-W6Y">
+                        <group alignment="left" layout="vertical" spacing="0.0" id="eew-Gs-W6Y">
                             <items>
-                                <map height="100" alignment="left" hidden="YES" alpha="0.0" id="mlQ-VR-ezz"/>
+                                <map height="100" alignment="center" verticalAlignment="center" hidden="YES" alpha="0.0" id="mlQ-VR-ezz"/>
                                 <label width="1" height="1" alignment="center" text="Ⓟ" textAlignment="center" id="yjt-RH-pd9">
                                     <fontDescription key="font" type="boldSystem" pointSize="75"/>
                                 </label>
@@ -121,5 +243,5 @@ Cg
             <point key="canvasLocation" x="129" y="101"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="0.2036917328" green="0.72705196429999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="0.04768893773346794" green="0.59425500798828867" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>

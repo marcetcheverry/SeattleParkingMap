@@ -1,3 +1,13 @@
+# 1.3
+* Set time limits on the parking spot
+* Get notifications on your device and Apple Watch before the time limit is up
+* Park with one tap directly from your watch face with complications.
+* Check your time limit or park date with complications on your watch. Use time travel to see when your spot will expire.
+* Support for 3D Touch Quick Actions. Quickly set or remove a parking spot from your home screen
+* Improved display of parked vehicle and current location
+* Fixed bug introduced in 1.2 where the location alert may not display during maintenance hours
+* Fixed bug where we would zoom in too much into a parking spot when reopening the app
+
 # 1.2
 * Apple Watch App and Glance (requires watchOS 2 and iOS 9)
 * Split View support for iPad

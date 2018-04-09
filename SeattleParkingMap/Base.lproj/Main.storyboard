@@ -9,7 +9,7 @@
         <!--Root View Controller-->
         <scene sceneID="Osa-Gy-WCc">
             <objects>
-                <viewController id="n7a-Xc-KVx" customClass="SPMRootViewController" sceneMemberID="viewController">
+                <viewController id="n7a-Xc-KVx" customClass="RootViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TWk-3j-YeH"/>
                         <viewControllerLayoutGuide type="bottom" id="cuQ-Rt-1w1"/>
@@ -23,14 +23,14 @@
                                 <color key="backgroundColor" red="0.34901961679999999" green="0.34901961679999999" blue="0.34901961679999999" alpha="1" colorSpace="deviceRGB"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NkW-Ou-7b3" userLabel="Map Type Segmented Control">
-                                <rect key="frame" x="237" y="28" width="125" height="29"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="232" y="28" width="135" height="29"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="125" id="sqR-BE-5o0"/>
+                                    <constraint firstAttribute="width" constant="135" id="sqR-BE-5o0"/>
                                 </constraints>
                                 <segments>
                                     <segment title="Street"/>
-                                    <segment title="Aerial"/>
+                                    <segment title="Satellite"/>
                                 </segments>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <userDefinedRuntimeAttributes>
@@ -44,7 +44,7 @@
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="21V-Zl-i4E" userLabel="Location Button" colorLabel="IBBuiltInLabel-Blue">
                                 <rect key="frame" x="10" y="25" width="37" height="37"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration" hint="Centers and zooms to the current location on the map" label="Current Location"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="37" id="c3R-bu-tUB"/>
@@ -55,7 +55,7 @@
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <real key="value" value="17.5"/>
+                                        <real key="value" value="18.5"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                         <integer key="value" value="1"/>
@@ -65,13 +65,13 @@
                                     <action selector="updateLocationTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="hOW-DU-YLB"/>
                                 </connections>
                             </button>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LvT-KZ-ZUS" userLabel="Legend Container" colorLabel="IBBuiltInLabel-Gray">
-                                <rect key="frame" x="10" y="554" width="55" height="36"/>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LvT-KZ-ZUS" userLabel="Guide Container" colorLabel="IBBuiltInLabel-Gray">
+                                <rect key="frame" x="10" y="554" width="100" height="36"/>
                                 <subviews>
-                                    <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGe-sq-Voe">
-                                        <rect key="frame" x="0.0" y="3" width="55" height="30"/>
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGe-sq-Voe" userLabel="Guide Button">
+                                        <rect key="frame" x="0.0" y="3" width="100" height="30"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Legend">
+                                        <state key="normal" title="Loading…">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -79,19 +79,149 @@
                                             <action selector="legendsTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="CAq-tP-vhL"/>
                                         </connections>
                                     </button>
-                                    <imageView opaque="NO" clipsSubviews="YES" contentMode="center" image="Types" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-c2-7Bm">
-                                        <rect key="frame" x="-22" y="5" width="100" height="137"/>
+                                    <tableView opaque="NO" clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="17" sectionHeaderHeight="10" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BpC-BV-ySw">
+                                        <rect key="frame" x="10" y="10" width="80" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Description of the parking categories on the map" label="Legend">
-                                            <accessibilityTraits key="traits" image="YES" staticText="YES" notEnabled="YES"/>
-                                        </accessibility>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="137" id="HWc-my-stW"/>
-                                            <constraint firstAttribute="width" constant="100" id="KEH-UV-Dam"/>
+                                            <constraint firstAttribute="height" priority="750" constant="150" id="MWs-SB-9PW"/>
+                                            <constraint firstAttribute="height" priority="750" constant="140" id="caW-c7-Qmv"/>
+                                            <constraint firstAttribute="height" priority="750" constant="125" id="cm5-zv-PR9"/>
                                         </constraints>
-                                    </imageView>
-                                    <slider opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.75" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="vHb-XX-gZ0">
-                                        <rect key="frame" x="8" y="-4" width="39" height="31"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="LegendTableViewCell" id="D3Y-FA-XkO" customClass="LegendTableViewCell">
+                                                <rect key="frame" x="0.0" y="10" width="80" height="17"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D3Y-FA-XkO" id="XiU-e2-pT8">
+                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="17"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fpq-tO-4jf">
+                                                            <rect key="frame" x="0.0" y="6" width="20" height="5"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="20" placeholder="YES" id="H3o-hJ-XDt" userLabel="Placeholder width = 20"/>
+                                                                <constraint firstAttribute="width" constant="20" id="TG6-Wf-dBs"/>
+                                                                <constraint firstAttribute="height" constant="6" id="YV6-VW-nXf"/>
+                                                                <constraint firstAttribute="height" constant="5" placeholder="YES" id="jXv-ee-Pah" userLabel="Placeholder Height"/>
+                                                                <constraint firstAttribute="height" constant="5" id="lcg-NK-C6j"/>
+                                                                <constraint firstAttribute="width" constant="22" id="nkf-yh-e83"/>
+                                                            </constraints>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="TG6-Wf-dBs"/>
+                                                                    <exclude reference="YV6-VW-nXf"/>
+                                                                    <exclude reference="lcg-NK-C6j"/>
+                                                                    <exclude reference="nkf-yh-e83"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="TG6-Wf-dBs"/>
+                                                                    <include reference="lcg-NK-C6j"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="TG6-Wf-dBs"/>
+                                                                    <include reference="lcg-NK-C6j"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=regular">
+                                                                <mask key="constraints">
+                                                                    <include reference="YV6-VW-nXf"/>
+                                                                    <include reference="nkf-yh-e83"/>
+                                                                </mask>
+                                                            </variation>
+                                                        </imageView>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Loading" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7q-NO-tiF">
+                                                            <rect key="frame" x="25" y="0.0" width="61" height="17"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="170" id="H8O-8k-vlE"/>
+                                                                <constraint firstAttribute="width" constant="85" id="rpo-rM-0wV"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="H8O-8k-vlE"/>
+                                                                    <exclude reference="rpo-rM-0wV"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="H8O-8k-vlE"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="widthClass=compact">
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=compact">
+                                                                <mask key="constraints">
+                                                                    <include reference="rpo-rM-0wV"/>
+                                                                </mask>
+                                                            </variation>
+                                                            <variation key="heightClass=regular-widthClass=regular">
+                                                                <mask key="constraints">
+                                                                    <include reference="H8O-8k-vlE"/>
+                                                                </mask>
+                                                            </variation>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="M7q-NO-tiF" secondAttribute="bottom" id="6WX-lE-9JW"/>
+                                                        <constraint firstItem="fpq-tO-4jf" firstAttribute="leading" secondItem="XiU-e2-pT8" secondAttribute="leading" id="a1A-5b-TY5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="M7q-NO-tiF" secondAttribute="trailing" id="cEu-A0-dvf"/>
+                                                        <constraint firstItem="M7q-NO-tiF" firstAttribute="leading" secondItem="fpq-tO-4jf" secondAttribute="trailing" constant="5" id="eFC-nI-d7b"/>
+                                                        <constraint firstItem="fpq-tO-4jf" firstAttribute="centerY" secondItem="M7q-NO-tiF" secondAttribute="centerY" id="guu-Nt-Ce4"/>
+                                                        <constraint firstItem="M7q-NO-tiF" firstAttribute="top" secondItem="XiU-e2-pT8" secondAttribute="top" id="l8u-bY-5Dn"/>
+                                                    </constraints>
+                                                    <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="8" right="0.0"/>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="cEu-A0-dvf"/>
+                                                        </mask>
+                                                    </variation>
+                                                </tableViewCellContentView>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <connections>
+                                                    <outlet property="legendImageView" destination="fpq-tO-4jf" id="cPw-aM-hbo"/>
+                                                    <outlet property="legendLabel" destination="M7q-NO-tiF" id="YtR-Ay-UKF"/>
+                                                </connections>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="MWs-SB-9PW"/>
+                                                <exclude reference="caW-c7-Qmv"/>
+                                                <exclude reference="cm5-zv-PR9"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="cm5-zv-PR9"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="caW-c7-Qmv"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=regular">
+                                            <mask key="constraints">
+                                                <include reference="MWs-SB-9PW"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="dataSource" destination="qMZ-ew-KxU" id="9bk-9o-eMb"/>
+                                            <outlet property="delegate" destination="n7a-Xc-KVx" id="43P-Iw-eC3"/>
+                                        </connections>
+                                    </tableView>
+                                    <slider opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.75" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="vHb-XX-gZ0" userLabel="Guide Slider">
+                                        <rect key="frame" x="8" y="20" width="84" height="2"/>
                                         <color key="tintColor" red="1" green="0.95292711215684778" blue="0.66601474782793679" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration" hint="Adjusts the opacity of the parking category legends on the map" label="Legend Opacity"/>
                                         <userDefinedRuntimeAttributes>
@@ -104,23 +234,25 @@
                                         </connections>
                                     </slider>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="wGe-sq-Voe" secondAttribute="width" id="04P-XH-dX1"/>
-                                    <constraint firstAttribute="height" priority="250" constant="36" id="093-Sl-yJp"/>
-                                    <constraint firstAttribute="width" priority="750" constant="125" id="1fg-pN-ExB" userLabel="width = 125 @ 750"/>
-                                    <constraint firstAttribute="width" priority="750" constant="185" id="D7M-GY-Qzp"/>
+                                    <constraint firstAttribute="height" priority="751" constant="36" id="093-Sl-yJp"/>
+                                    <constraint firstAttribute="width" priority="750" constant="135" id="1fg-pN-ExB" userLabel="width = 125 @ 750"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="BpC-BV-ySw" secondAttribute="trailing" constant="5" id="4R4-7L-XgO"/>
+                                    <constraint firstItem="BpC-BV-ySw" firstAttribute="top" secondItem="LvT-KZ-ZUS" secondAttribute="topMargin" id="BX6-wc-IVF"/>
+                                    <constraint firstAttribute="width" priority="750" constant="220" id="D7M-GY-Qzp"/>
                                     <constraint firstAttribute="centerY" secondItem="wGe-sq-Voe" secondAttribute="centerY" id="Ei0-uL-22d"/>
                                     <constraint firstItem="wGe-sq-Voe" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leading" id="IIl-aP-vzD"/>
-                                    <constraint firstAttribute="centerX" secondItem="dlE-c2-7Bm" secondAttribute="centerX" id="J9X-5z-oNd"/>
-                                    <constraint firstItem="dlE-c2-7Bm" firstAttribute="top" secondItem="LvT-KZ-ZUS" secondAttribute="top" constant="5" id="PzE-x0-sIl"/>
-                                    <constraint firstItem="vHb-XX-gZ0" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leading" constant="10" id="Sg0-LC-GG7"/>
-                                    <constraint firstAttribute="bottom" secondItem="vHb-XX-gZ0" secondAttribute="bottom" constant="10" id="fGW-jF-LcF"/>
-                                    <constraint firstAttribute="width" priority="250" constant="75" id="fXr-6a-uPT"/>
-                                    <constraint firstAttribute="trailing" secondItem="vHb-XX-gZ0" secondAttribute="trailing" constant="10" id="fgc-Ae-cSC"/>
-                                    <constraint firstAttribute="height" priority="750" constant="200" id="nuL-MV-opm"/>
-                                    <constraint firstAttribute="height" priority="750" constant="180" id="ooI-I1-RjQ" userLabel="height = 180 @ 750"/>
+                                    <constraint firstItem="vHb-XX-gZ0" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leadingMargin" constant="5" id="Sg0-LC-GG7"/>
+                                    <constraint firstItem="BpC-BV-ySw" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leadingMargin" constant="5" id="Vwu-FY-SUf"/>
+                                    <constraint firstItem="vHb-XX-gZ0" firstAttribute="top" secondItem="BpC-BV-ySw" secondAttribute="bottom" constant="10" id="fEc-h3-1Sy"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="vHb-XX-gZ0" secondAttribute="bottom" id="fGW-jF-LcF"/>
+                                    <constraint firstAttribute="width" priority="751" constant="100" id="fXr-6a-uPT"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="vHb-XX-gZ0" secondAttribute="trailing" constant="5" id="fgc-Ae-cSC"/>
+                                    <constraint firstAttribute="width" priority="750" constant="195" id="x1a-15-f3H"/>
                                 </constraints>
+                                <edgeInsets key="layoutMargins" top="10" left="5" bottom="15" right="5"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="5"/>
@@ -130,42 +262,46 @@
                                     <mask key="constraints">
                                         <exclude reference="1fg-pN-ExB"/>
                                         <exclude reference="D7M-GY-Qzp"/>
-                                        <exclude reference="nuL-MV-opm"/>
-                                        <exclude reference="ooI-I1-RjQ"/>
+                                        <exclude reference="x1a-15-f3H"/>
                                     </mask>
                                 </variation>
-                                <variation key="widthClass=compact">
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="x1a-15-f3H"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="1fg-pN-ExB"/>
-                                        <include reference="ooI-I1-RjQ"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <mask key="constraints">
                                         <include reference="D7M-GY-Qzp"/>
-                                        <include reference="nuL-MV-opm"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="HIy-f4-fxS" appends="YES" id="5CW-JF-apw"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5vq-oh-bYS" userLabel="Sidebar Container View">
                                 <rect key="frame" x="553" y="25" width="37" height="565"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psu-st-SJI" userLabel="Info Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psu-st-SJI" userLabel="Info Button">
                                         <rect key="frame" x="0.0" y="528" width="37" height="37"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Opens the information screen" label="Information"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Opens the settings screen" label="Settings"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="37" id="Fte-sv-aDN"/>
                                             <constraint firstAttribute="width" constant="37" id="puF-pM-fek"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
-                                        <state key="normal" title="ℹ︎">
+                                        <state key="normal" image="Settings">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <real key="value" value="17.5"/>
+                                                <real key="value" value="18.5"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                 <integer key="value" value="1"/>
@@ -177,7 +313,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fae-nd-wo8" userLabel="Parking Button">
                                         <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                         <accessibility key="accessibilityConfiguration" hint="Marks the current location as your parking spot" label="Park"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="37" id="Ugb-FN-vj0"/>
@@ -193,7 +329,7 @@
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <real key="value" value="17.5"/>
+                                                <real key="value" value="18.5"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                 <integer key="value" value="1"/>
@@ -236,13 +372,15 @@
                     <navigationItem key="navigationItem" id="HF8-OR-p1h"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="gestureRecognizerGuideContainer" destination="HIy-f4-fxS" id="WWX-DK-dfa"/>
                         <outlet property="infoButton" destination="psu-st-SJI" id="dy1-mt-Zx4"/>
                         <outlet property="legendContainerCollapsedWidthConstraint" destination="fXr-6a-uPT" id="4s0-Af-INw"/>
                         <outlet property="legendContainerView" destination="LvT-KZ-ZUS" id="acy-WH-CmE"/>
+                        <outlet property="legendDataSource" destination="qMZ-ew-KxU" id="n5V-s3-aYw"/>
                         <outlet property="legendSlider" destination="vHb-XX-gZ0" id="jtM-Gz-OQ0"/>
+                        <outlet property="legendTableView" destination="BpC-BV-ySw" id="Wel-cJ-pWQ"/>
                         <outlet property="legendsButton" destination="wGe-sq-Voe" id="o6d-fh-lSh"/>
                         <outlet property="legendsContainerCollapsedHeightConstraint" destination="093-Sl-yJp" id="BmD-FF-WHH"/>
-                        <outlet property="legendsImageView" destination="dlE-c2-7Bm" id="iRc-WL-Nh9"/>
                         <outlet property="locationButton" destination="21V-Zl-i4E" id="jFk-6c-yWj"/>
                         <outlet property="mapSegmentedControl" destination="NkW-Ou-7b3" id="l48-h7-2NS"/>
                         <outlet property="mapView" destination="kXp-JV-Fzv" id="xRV-SM-9m8"/>
@@ -251,11 +389,122 @@
                         <outletCollection property="borderedViews" destination="LvT-KZ-ZUS" id="YpD-Sl-vIy"/>
                         <outletCollection property="borderedViews" destination="psu-st-SJI" id="2rL-3s-myE"/>
                         <outletCollection property="borderedViews" destination="fae-nd-wo8" id="Hlk-aA-Rvb"/>
+                        <segue destination="t2a-9h-LOe" kind="presentation" identifier="PresentTimeLimit" modalPresentationStyle="formSheet" id="dlX-Ai-eDt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KzL-tw-tWR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="HIy-f4-fxS" userLabel="Guide Container Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="guideContainerTapped:" destination="n7a-Xc-KVx" id="fis-lT-lK5"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <customObject id="qMZ-ew-KxU" customClass="LegendDataSource"/>
             </objects>
-            <point key="canvasLocation" x="427.5" y="59.154929577464785"/>
+            <point key="canvasLocation" x="103" y="-670"/>
+        </scene>
+        <!--Time Limit-->
+        <scene sceneID="5di-wT-gKa">
+            <objects>
+                <viewController modalPresentationStyle="formSheet" id="SUa-Hg-MXa" customClass="TimeLimitViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pOe-Nh-Gag"/>
+                        <viewControllerLayoutGuide type="bottom" id="LGx-se-QnF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yuJ-9a-gmC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" countDownDuration="7200" minuteInterval="10" translatesAutoresizingMaskIntoConstraints="NO" id="x9u-dV-HEO">
+                                <rect key="frame" x="0.0" y="64" width="600" height="216"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="216" id="DuG-2o-oKX"/>
+                                </constraints>
+                                <date key="date" timeIntervalSinceReferenceDate="472289780.06014901">
+                                    <!--2015-12-20 07:36:20 +0000-->
+                                </date>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="datePickerValueChanged:" destination="SUa-Hg-MXa" eventType="valueChanged" id="Jjo-Z4-TSR"/>
+                                </connections>
+                            </datePicker>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CnG-Ou-bxR">
+                                <rect key="frame" x="0.0" y="280" width="600" height="42"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KRV-w7-aPk">
+                                        <rect key="frame" x="10" y="0.0" width="75" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 minutes before" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMY-gJ-iAI">
+                                        <rect key="frame" x="351" y="0.0" width="137" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minimumValue="5" maximumValue="100" stepValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="Mbw-oC-Qgh">
+                                        <rect key="frame" x="496" y="7" width="94" height="29"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <action selector="stepperValueChanged:" destination="SUa-Hg-MXa" eventType="valueChanged" id="N4z-uh-z4t"/>
+                                        </connections>
+                                    </stepper>
+                                </subviews>
+                                <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="QMY-gJ-iAI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KRV-w7-aPk" secondAttribute="trailing" constant="20" id="CST-CI-nug"/>
+                                    <constraint firstAttribute="bottom" secondItem="KRV-w7-aPk" secondAttribute="bottom" id="Ioj-Qx-ryY"/>
+                                    <constraint firstAttribute="height" constant="42" id="LAF-Ym-VAz"/>
+                                    <constraint firstItem="Mbw-oC-Qgh" firstAttribute="leading" secondItem="QMY-gJ-iAI" secondAttribute="trailing" constant="8" id="M5d-MC-2Gw"/>
+                                    <constraint firstItem="Mbw-oC-Qgh" firstAttribute="centerY" secondItem="CnG-Ou-bxR" secondAttribute="centerY" id="NpP-AM-uoW"/>
+                                    <constraint firstAttribute="bottom" secondItem="QMY-gJ-iAI" secondAttribute="bottom" id="OeP-ps-Jnp"/>
+                                    <constraint firstItem="QMY-gJ-iAI" firstAttribute="centerY" secondItem="CnG-Ou-bxR" secondAttribute="centerY" id="bnk-nh-KuJ"/>
+                                    <constraint firstItem="QMY-gJ-iAI" firstAttribute="top" secondItem="CnG-Ou-bxR" secondAttribute="top" id="oqF-90-pNw"/>
+                                    <constraint firstItem="KRV-w7-aPk" firstAttribute="leading" secondItem="CnG-Ou-bxR" secondAttribute="leading" constant="10" id="pod-gc-TBi"/>
+                                    <constraint firstItem="KRV-w7-aPk" firstAttribute="top" secondItem="CnG-Ou-bxR" secondAttribute="top" id="vd6-Zd-MwT"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mbw-oC-Qgh" secondAttribute="trailing" constant="10" id="vfp-50-mSF"/>
+                                    <constraint firstItem="KRV-w7-aPk" firstAttribute="centerY" secondItem="CnG-Ou-bxR" secondAttribute="centerY" id="y51-5L-rvQ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.20000000000000001" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CnG-Ou-bxR" firstAttribute="top" secondItem="x9u-dV-HEO" secondAttribute="bottom" id="4zh-4I-1yP"/>
+                            <constraint firstItem="CnG-Ou-bxR" firstAttribute="leading" secondItem="yuJ-9a-gmC" secondAttribute="leading" id="Lwp-F6-Ncu"/>
+                            <constraint firstAttribute="trailing" secondItem="CnG-Ou-bxR" secondAttribute="trailing" id="WXb-5w-Qfn"/>
+                            <constraint firstItem="x9u-dV-HEO" firstAttribute="top" secondItem="pOe-Nh-Gag" secondAttribute="bottom" id="fs6-1F-NQm"/>
+                            <constraint firstAttribute="trailing" secondItem="x9u-dV-HEO" secondAttribute="trailing" id="fsZ-tK-XBR"/>
+                            <constraint firstItem="x9u-dV-HEO" firstAttribute="leading" secondItem="yuJ-9a-gmC" secondAttribute="leading" id="pO7-Bl-j3f"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Time Limit" id="oXW-Ja-zBB">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="XUA-HS-g5E">
+                            <connections>
+                                <segue destination="Z4e-Ur-OrN" kind="unwind" unwindAction="unwindFromInformationViewController:" id="d44-O6-zc1"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Set" style="done" id="BCn-db-d8l">
+                            <connections>
+                                <action selector="touchedSet:" destination="SUa-Hg-MXa" id="89X-37-nnp"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <value key="contentSizeForViewInPopover" type="size" width="375" height="258"/>
+                    <connections>
+                        <outlet property="datePicker" destination="x9u-dV-HEO" id="3RT-hY-l7u"/>
+                        <outlet property="labelRemindMe" destination="QMY-gJ-iAI" id="W7g-Xe-eOx"/>
+                        <outlet property="stepper" destination="Mbw-oC-Qgh" id="caP-8J-8R6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l9L-Uc-P8p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Z4e-Ur-OrN" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="812" y="65"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bWa-XY-l9U">
@@ -272,18 +521,18 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j83-Mt-8C8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1136.25" y="58.5"/>
+            <point key="canvasLocation" x="812" y="-671"/>
         </scene>
         <!--Information-->
         <scene sceneID="sDq-tf-gME">
             <objects>
-                <tableViewController storyboardIdentifier="SPMInformationTableViewController" title="Information" id="PEg-pt-Xft" customClass="SPMInformationTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SettingsTableViewController" title="Information" id="PEg-pt-Xft" customClass="SettingsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" separatorStyle="none" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" id="0rB-hM-O7v">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.20000000000000001" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
-                            <tableViewSection headerTitle="MAP PROVIDER" id="zj9-pg-SaL">
+                            <tableViewSection headerTitle="MAP STYLE" id="zj9-pg-SaL">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="49" id="jUr-L8-Kvu">
                                         <rect key="frame" x="0.0" y="114" width="600" height="49"/>
@@ -299,9 +548,6 @@
                                                         <segment title="OpenStreetMap"/>
                                                         <segment title="Bing"/>
                                                     </segments>
-                                                    <variation key="heightClass=regular-widthClass=regular" ambiguous="YES">
-                                                        <rect key="frame" x="0.0" y="11" width="600" height="29"/>
-                                                    </variation>
                                                     <connections>
                                                         <action selector="mapProviderSegmentedControlValueChanged:" destination="PEg-pt-Xft" eventType="valueChanged" id="2Xw-g6-i7r"/>
                                                     </connections>
@@ -362,10 +608,59 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Seattle Parking Map" id="3b2-Zg-aWB" userLabel="Seattle Parking Map">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="LJq-k6-2pJ">
+                                        <rect key="frame" x="0.0" y="329" width="600" height="100"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LJq-k6-2pJ" id="SgR-ct-dTf">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nfe-b9-QXt">
+                                                    <rect key="frame" x="225" y="10" width="150" height="30"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Open Website">
+                                                        <accessibilityTraits key="traits" button="YES" link="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="150" id="C3m-PD-nzw"/>
+                                                        <constraint firstAttribute="height" constant="30" id="uSE-OS-vNf"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <state key="normal" title="Send Feedback">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="contactTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="aT1-N4-DEc"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="nfe-b9-QXt" secondAttribute="centerX" id="2i2-mh-PT0"/>
+                                                <constraint firstAttribute="bottom" secondItem="nfe-b9-QXt" secondAttribute="bottom" constant="10" id="DWp-Da-eVv"/>
+                                                <constraint firstItem="nfe-b9-QXt" firstAttribute="centerY" secondItem="SgR-ct-dTf" secondAttribute="centerY" placeholder="YES" id="ibD-H8-yTS" userLabel="Placeholder Send Feedback Y"/>
+                                                <constraint firstItem="nfe-b9-QXt" firstAttribute="top" secondItem="SgR-ct-dTf" secondAttribute="top" constant="10" id="qfq-a4-bCJ"/>
+                                            </constraints>
+                                            <variation key="widthClass=compact" ambiguous="YES">
+                                                <rect key="frame" x="0.0" y="0.0" width="400" height="100"/>
+                                            </variation>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection headerTitle="Frequently Asked Questions" id="tXb-Jm-w5B">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="kkZ-xO-CkM" style="IBUITableViewCellStyleDefault" id="y7Q-PS-pAy">
-                                        <rect key="frame" x="0.0" y="329" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="472" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="y7Q-PS-pAy" id="bzl-XN-0gD">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -389,7 +684,7 @@
                             <tableViewSection headerTitle="HOW DO I USE THE PARKING MAP?" id="7bh-fb-rg7">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="sZz-ZS-reu" style="IBUITableViewCellStyleDefault" id="jFb-nX-tj6">
-                                        <rect key="frame" x="0.0" y="472" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="615" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jFb-nX-tj6" id="7iy-x8-zrn">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -421,7 +716,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="HOW IS MY PRIVACY PROTECTED?" id="vHS-z7-JMX">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="e4T-03-WDf" style="IBUITableViewCellStyleDefault" id="eyp-Lv-qFj">
-                                        <rect key="frame" x="0.0" y="615" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="758" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eyp-Lv-qFj" id="Ryo-Rg-lrd">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -445,7 +740,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="WHY DOES THE PARKING MAP LOOK DIFFERENT FROM MY DEVICE'S BUILT-IN MAPS?" id="aAA-tJ-uHB">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="yht-dV-LCY" style="IBUITableViewCellStyleDefault" id="XjE-5g-hwB">
-                                        <rect key="frame" x="0.0" y="758" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="901" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XjE-5g-hwB" id="IEV-ys-cuO">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -469,7 +764,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="WHY CAN'T I SEE THE 'TEMPORARY NO PARKING RESTRICTIONS' ON THE MAP?" id="bY9-9G-SKu">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="aih-wa-nmF" style="IBUITableViewCellStyleDefault" id="SNZ-T3-nVQ">
-                                        <rect key="frame" x="0.0" y="901" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="1044" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SNZ-T3-nVQ" id="mCr-Gm-PtP">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -493,7 +788,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="Why is the street map blank?" id="szF-Ka-5Kl">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="kSn-qM-Nea" style="IBUITableViewCellStyleDefault" id="9r0-Rl-TSr">
-                                        <rect key="frame" x="0.0" y="1044" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="1187" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9r0-Rl-TSr" id="4uS-8C-Jbh">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -517,7 +812,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="Where does this information come from?" id="Wsf-JC-nlh">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="eP1-9G-gq8" style="IBUITableViewCellStyleDefault" id="GPr-Zd-XKh">
-                                        <rect key="frame" x="0.0" y="1187" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="1330" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GPr-Zd-XKh" id="Ih1-Zf-GuO">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
@@ -541,14 +836,14 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="Parking Data Provided By SDOT" id="Ksc-dI-ffS">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="oZU-cs-w0q">
-                                        <rect key="frame" x="0.0" y="1330" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="1473" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="oZU-cs-w0q" id="gtQ-X0-VuT">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fY-s8-f9B" userLabel="SDOT Image Button">
-                                                    <rect key="frame" x="152" y="10" width="297" height="108"/>
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fY-s8-f9B" userLabel="SDOT Image Button">
+                                                    <rect key="frame" x="152" y="10" width="297" height="118"/>
                                                     <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Seattle Department of Transportation" label="SDOT">
                                                         <accessibilityTraits key="traits" button="YES" link="YES" image="YES"/>
@@ -569,8 +864,8 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                         <action selector="sdotTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="FL2-0r-8Ua"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5L-oy-ADf">
-                                                    <rect key="frame" x="191" y="138" width="219" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5L-oy-ADf">
+                                                    <rect key="frame" x="191" y="148" width="219" height="30"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Open Website">
                                                         <accessibilityTraits key="traits" button="YES" link="YES"/>
@@ -601,6 +896,9 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                 <constraint firstItem="f5L-oy-ADf" firstAttribute="top" secondItem="3fY-s8-f9B" secondAttribute="bottom" constant="20" id="rzK-Jp-dlH"/>
                                                 <constraint firstAttribute="centerX" secondItem="f5L-oy-ADf" secondAttribute="centerX" id="sN5-xb-V9D"/>
                                             </constraints>
+                                            <variation key="widthClass=compact" ambiguous="YES">
+                                                <rect key="frame" x="0.0" y="0.0" width="400" height="100"/>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
@@ -609,13 +907,13 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <tableViewSection headerTitle="Mapping API Provided By Esri" id="nEF-pG-sEC">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="RnG-19-WN6">
-                                        <rect key="frame" x="0.0" y="1473" width="600" height="100"/>
+                                        <rect key="frame" x="0.0" y="1616" width="600" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="RnG-19-WN6" id="XrD-6V-eig">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RnG-19-WN6" id="XrD-6V-eig">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVh-UJ-RnS">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVh-UJ-RnS">
                                                     <rect key="frame" x="185" y="10" width="230" height="30"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Open Website">
@@ -642,56 +940,15 @@ If you have navigated far away from your marked parking spot, you can press the 
                                             <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="jVh-UJ-RnS" secondAttribute="bottom" constant="10" id="D0C-Ld-8zr"/>
+                                                <constraint firstItem="jVh-UJ-RnS" firstAttribute="centerY" secondItem="XrD-6V-eig" secondAttribute="centerY" placeholder="YES" id="FqI-4A-twV" userLabel="Placeholder Center Y"/>
                                                 <constraint firstAttribute="centerX" secondItem="jVh-UJ-RnS" secondAttribute="centerX" id="d4E-fK-Ife"/>
                                                 <constraint firstItem="jVh-UJ-RnS" firstAttribute="top" secondItem="XrD-6V-eig" secondAttribute="top" constant="10" id="tOx-n5-MxZ"/>
                                             </constraints>
+                                            <variation key="widthClass=compact" ambiguous="YES">
+                                                <rect key="frame" x="0.0" y="0.0" width="400" height="100"/>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                            <tableViewSection headerTitle="Seattle Parking Map 1.1" id="3b2-Zg-aWB">
-                                <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="LJq-k6-2pJ">
-                                        <rect key="frame" x="0.0" y="1616" width="600" height="100"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="LJq-k6-2pJ" id="SgR-ct-dTf">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nfe-b9-QXt">
-                                                    <rect key="frame" x="225" y="10" width="150" height="30"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <accessibility key="accessibilityConfiguration" hint="Open Website">
-                                                        <accessibilityTraits key="traits" button="YES" link="YES"/>
-                                                    </accessibility>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="150" id="C3m-PD-nzw"/>
-                                                        <constraint firstAttribute="height" constant="30" id="uSE-OS-vNf"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                                    <state key="normal" title="Send Feedback">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="5"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="contactTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="aT1-N4-DEc"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="nfe-b9-QXt" secondAttribute="centerX" id="2i2-mh-PT0"/>
-                                                <constraint firstAttribute="bottom" secondItem="nfe-b9-QXt" secondAttribute="bottom" constant="10" id="DWp-Da-eVv"/>
-                                                <constraint firstItem="nfe-b9-QXt" firstAttribute="top" secondItem="SgR-ct-dTf" secondAttribute="top" constant="10" id="qfq-a4-bCJ"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -701,7 +958,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                             <outlet property="delegate" destination="PEg-pt-Xft" id="Tf5-pJ-GQI"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Information" id="azf-ik-iaS">
+                    <navigationItem key="navigationItem" title="Settings" id="azf-ik-iaS">
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="hf5-50-rJE">
                             <connections>
                                 <action selector="doneTouched:" destination="PEg-pt-Xft" id="8xa-Fe-XNX"/>
@@ -721,12 +978,31 @@ If you have navigated far away from your marked parking spot, you can press the 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="32z-2x-kp8" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="HUT-oL-BnU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1836" y="58.5"/>
+            <point key="canvasLocation" x="1512" y="-671"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="R4m-g5-lqv">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="t2a-9h-LOe" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="cNC-7f-X4S">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="SUa-Hg-MXa" kind="relationship" relationship="rootViewController" id="vPC-dC-mLf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R9t-Hp-Jzx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="103" y="65"/>
         </scene>
     </scenes>
     <resources>
         <image name="Location" width="20" height="20"/>
-        <image name="Types" width="100" height="137"/>
+        <image name="Settings" width="16" height="16"/>
         <image name="sdot-logo-transparent" width="287" height="108"/>
     </resources>
 </document>

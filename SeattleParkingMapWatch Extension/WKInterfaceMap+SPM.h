@@ -6,8 +6,10 @@
 //  Copyright © 2015 Tap Light Software. All rights reserved.
 //
 
+@class ParkingSpot;
+
 @interface WKInterfaceMap (SPM)
 
-- (void)SPMSetCurrentParkingSpot:(nonnull NSDictionary *)parkingSpot;
+- (void)SPMSetCurrentParkingSpot:(nonnull ParkingSpot *)parkingSpot;
 
 @end

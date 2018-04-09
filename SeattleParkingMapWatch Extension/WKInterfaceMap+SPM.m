@@ -8,21 +8,22 @@
 
 #import "WKInterfaceMap+SPM.h"
 
+#import "ParkingSpot.h"
+
 @implementation WKInterfaceMap (SPM)
 
-- (void)SPMSetCurrentParkingSpot:(nonnull NSDictionary *)parkingSpot
+- (void)SPMSetCurrentParkingSpot:(nonnull ParkingSpot *)parkingSpot
 {
-    NSParameterAssert(parkingSpot[SPMWatchObjectParkingPoint] != nil);
+    NSParameterAssert(parkingSpot);
 
-    if (parkingSpot[SPMWatchObjectParkingPoint] == nil)
+    [self removeAllAnnotations];
+
+    if (!parkingSpot)
     {
         return;
     }
 
-    [self removeAllAnnotations];
-
-    CLLocationCoordinate2D const coordinate = CLLocationCoordinate2DMake([parkingSpot[SPMWatchObjectParkingPoint][SPMWatchObjectParkingPointLatitude] doubleValue],
-                                                                         [parkingSpot[SPMWatchObjectParkingPoint][SPMWatchObjectParkingPointLongitude] doubleValue]);
+    CLLocationCoordinate2D const coordinate = parkingSpot.location.coordinate;
 
     [self addAnnotation:coordinate
            withPinColor:WKInterfaceMapPinColorRed];
