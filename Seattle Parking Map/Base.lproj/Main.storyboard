@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="n7a-Xc-KVx">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Root View Controller-->
+        <scene sceneID="Osa-Gy-WCc">
+            <objects>
+                <viewController id="n7a-Xc-KVx" customClass="SPMRootViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TWk-3j-YeH"/>
+                        <viewControllerLayoutGuide type="bottom" id="cuQ-Rt-1w1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nRq-3w-1Eg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kXp-JV-Fzv" customClass="AGSMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="0.34901961679999999" green="0.34901961679999999" blue="0.34901961679999999" alpha="1" colorSpace="deviceRGB"/>
+                            </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NkW-Ou-7b3" userLabel="Map Type Segmented Control">
+                                <rect key="frame" x="97" y="28" width="125" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="125" id="sqR-BE-5o0"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Street"/>
+                                    <segment title="Aerial"/>
+                                </segments>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="4.75"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="mapLayerSegmentedControlValueChanged:" destination="n7a-Xc-KVx" eventType="valueChanged" id="0iH-Hr-BcV"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="21V-Zl-i4E" userLabel="Location Button" colorLabel="IBBuiltInLabel-Blue">
+                                <rect key="frame" x="10" y="25" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                <accessibility key="accessibilityConfiguration" hint="Centers and zooms to the current location on the map" label="Current Location"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="37" id="c3R-bu-tUB"/>
+                                    <constraint firstAttribute="height" constant="37" id="kc5-5f-csF"/>
+                                </constraints>
+                                <state key="normal" image="Location">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <real key="value" value="17.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="updateLocationTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="hOW-DU-YLB"/>
+                                </connections>
+                            </button>
+                            <adBannerView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xH3-hM-pNn">
+                                <rect key="frame" x="0.0" y="568" width="320" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="W9g-I1-h4t"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="n7a-Xc-KVx" id="bda-0z-Xgf"/>
+                                </connections>
+                            </adBannerView>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LvT-KZ-ZUS" userLabel="Legend Container" colorLabel="IBBuiltInLabel-Gray">
+                                <rect key="frame" x="10" y="378" width="125" height="180"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGe-sq-Voe">
+                                        <rect key="frame" x="0.0" y="75" width="125" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Legend">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="legendsTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="CAq-tP-vhL"/>
+                                        </connections>
+                                    </button>
+                                    <imageView opaque="NO" clipsSubviews="YES" contentMode="center" image="Types" translatesAutoresizingMaskIntoConstraints="NO" id="dlE-c2-7Bm">
+                                        <rect key="frame" x="13" y="5" width="100" height="137"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Description of the parking categories on the map" label="Legend">
+                                            <accessibilityTraits key="traits" none="YES" image="YES" staticText="YES" notEnabled="YES"/>
+                                        </accessibility>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="137" id="HWc-my-stW"/>
+                                            <constraint firstAttribute="width" constant="100" id="KEH-UV-Dam"/>
+                                        </constraints>
+                                    </imageView>
+                                    <slider opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.75" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="vHb-XX-gZ0">
+                                        <rect key="frame" x="8" y="140" width="109" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" red="1" green="0.95292711215684778" blue="0.66601474782793679" alpha="1" colorSpace="calibratedRGB"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Adjusts the opacity of the parking category legends on the map" label="Legend Opacity"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="opacitySliderChanged:" destination="n7a-Xc-KVx" eventType="valueChanged" id="RQi-BI-cnQ"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="wGe-sq-Voe" secondAttribute="width" id="04P-XH-dX1"/>
+                                    <constraint firstAttribute="width" constant="125" id="1fg-pN-ExB"/>
+                                    <constraint firstAttribute="centerY" secondItem="wGe-sq-Voe" secondAttribute="centerY" id="Ei0-uL-22d"/>
+                                    <constraint firstItem="wGe-sq-Voe" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leading" id="IIl-aP-vzD"/>
+                                    <constraint firstAttribute="centerX" secondItem="dlE-c2-7Bm" secondAttribute="centerX" id="J9X-5z-oNd"/>
+                                    <constraint firstItem="dlE-c2-7Bm" firstAttribute="top" secondItem="LvT-KZ-ZUS" secondAttribute="top" constant="5" id="PzE-x0-sIl"/>
+                                    <constraint firstItem="vHb-XX-gZ0" firstAttribute="leading" secondItem="LvT-KZ-ZUS" secondAttribute="leading" constant="10" id="Sg0-LC-GG7"/>
+                                    <constraint firstAttribute="bottom" secondItem="vHb-XX-gZ0" secondAttribute="bottom" constant="10" id="fGW-jF-LcF"/>
+                                    <constraint firstAttribute="trailing" secondItem="vHb-XX-gZ0" secondAttribute="trailing" constant="10" id="fgc-Ae-cSC"/>
+                                    <constraint firstAttribute="height" constant="180" id="ooI-I1-RjQ"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5vq-oh-bYS" userLabel="Sidebar Container View">
+                                <rect key="frame" x="273" y="25" width="37" height="533"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psu-st-SJI" userLabel="Info Button">
+                                        <rect key="frame" x="0.0" y="496" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Opens the information screen" label="Information"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="Fte-sv-aDN"/>
+                                            <constraint firstAttribute="width" constant="37" id="puF-pM-fek"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="ℹ︎">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <real key="value" value="17.5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="presentInformationViewController:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="EFg-s3-x7a"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fae-nd-wo8" userLabel="Parking Button">
+                                        <rect key="frame" x="0.0" y="0.0" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                        <accessibility key="accessibilityConfiguration" hint="Marks the current location as your parking spot" label="Park"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="Ugb-FN-vj0"/>
+                                            <constraint firstAttribute="width" constant="37" id="uFD-mR-TLQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <inset key="titleEdgeInsets" minX="0.0" minY="2" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Ⓟ">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <real key="value" value="17.5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="parkingTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="0e6-bb-S2K"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="fae-nd-wo8" firstAttribute="top" secondItem="5vq-oh-bYS" secondAttribute="top" id="KnX-x2-CXT"/>
+                                    <constraint firstItem="psu-st-SJI" firstAttribute="leading" secondItem="5vq-oh-bYS" secondAttribute="leading" id="RGg-Ta-jtZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="fae-nd-wo8" secondAttribute="trailing" id="VhA-KE-yXZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="psu-st-SJI" secondAttribute="trailing" id="cvA-YR-WAO"/>
+                                    <constraint firstAttribute="width" constant="37" id="dAW-UP-nMl"/>
+                                    <constraint firstItem="fae-nd-wo8" firstAttribute="leading" secondItem="5vq-oh-bYS" secondAttribute="leading" id="gXG-u1-5X2"/>
+                                    <constraint firstAttribute="bottom" secondItem="psu-st-SJI" secondAttribute="bottom" id="q6F-PU-ggT"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.34901961679999999" green="0.34901961679999999" blue="0.34901961679999999" alpha="1" colorSpace="deviceRGB"/>
+                        <constraints>
+                            <constraint firstItem="NkW-Ou-7b3" firstAttribute="top" secondItem="TWk-3j-YeH" secondAttribute="bottom" constant="8" id="1tD-Cp-LsV"/>
+                            <constraint firstItem="cuQ-Rt-1w1" firstAttribute="top" secondItem="xH3-hM-pNn" secondAttribute="bottom" constant="-50" id="4wS-1Z-v6F"/>
+                            <constraint firstItem="21V-Zl-i4E" firstAttribute="leading" secondItem="nRq-3w-1Eg" secondAttribute="leading" constant="10" id="IbD-O4-Tv5"/>
+                            <constraint firstItem="kXp-JV-Fzv" firstAttribute="leading" secondItem="nRq-3w-1Eg" secondAttribute="leading" id="MX1-V6-v2K"/>
+                            <constraint firstItem="LvT-KZ-ZUS" firstAttribute="leading" secondItem="nRq-3w-1Eg" secondAttribute="leading" constant="10" id="NbO-iI-aNM"/>
+                            <constraint firstItem="xH3-hM-pNn" firstAttribute="top" secondItem="LvT-KZ-ZUS" secondAttribute="bottom" constant="10" id="QeX-oM-mJ7"/>
+                            <constraint firstAttribute="trailing" secondItem="xH3-hM-pNn" secondAttribute="trailing" id="V7c-u8-bNo"/>
+                            <constraint firstItem="xH3-hM-pNn" firstAttribute="top" secondItem="5vq-oh-bYS" secondAttribute="bottom" constant="10" id="WxT-ri-GBz"/>
+                            <constraint firstItem="xH3-hM-pNn" firstAttribute="top" secondItem="kXp-JV-Fzv" secondAttribute="bottom" id="ehF-Sz-shx"/>
+                            <constraint firstItem="kXp-JV-Fzv" firstAttribute="top" secondItem="nRq-3w-1Eg" secondAttribute="top" id="ks4-2Z-ytx"/>
+                            <constraint firstItem="xH3-hM-pNn" firstAttribute="leading" secondItem="nRq-3w-1Eg" secondAttribute="leading" id="m4r-7o-yEp"/>
+                            <constraint firstAttribute="trailing" secondItem="5vq-oh-bYS" secondAttribute="trailing" constant="10" id="n6x-bz-OCp"/>
+                            <constraint firstItem="5vq-oh-bYS" firstAttribute="top" secondItem="TWk-3j-YeH" secondAttribute="bottom" constant="5" id="tDZ-kz-Owb"/>
+                            <constraint firstItem="21V-Zl-i4E" firstAttribute="top" secondItem="TWk-3j-YeH" secondAttribute="bottom" constant="5" id="wlp-aR-qnF"/>
+                            <constraint firstAttribute="trailing" secondItem="kXp-JV-Fzv" secondAttribute="trailing" id="y62-E2-GcJ"/>
+                            <constraint firstAttribute="centerX" secondItem="NkW-Ou-7b3" secondAttribute="centerX" id="zsu-j7-XbR"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="HF8-OR-p1h"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="bannerView" destination="xH3-hM-pNn" id="W9D-53-PTv"/>
+                        <outlet property="bannerViewBottomConstraint" destination="4wS-1Z-v6F" id="nly-8G-VbW"/>
+                        <outlet property="bannerViewHeightConstraint" destination="W9g-I1-h4t" id="3r9-T6-7q0"/>
+                        <outlet property="infoButton" destination="psu-st-SJI" id="dy1-mt-Zx4"/>
+                        <outlet property="legendContainerView" destination="LvT-KZ-ZUS" id="acy-WH-CmE"/>
+                        <outlet property="legendContainerWidthConstraint" destination="1fg-pN-ExB" id="rSH-Yb-Oeh"/>
+                        <outlet property="legendSlider" destination="vHb-XX-gZ0" id="jtM-Gz-OQ0"/>
+                        <outlet property="legendsButton" destination="wGe-sq-Voe" id="o6d-fh-lSh"/>
+                        <outlet property="legendsContainerHeightConstraint" destination="ooI-I1-RjQ" id="gHf-L0-UVu"/>
+                        <outlet property="legendsImageView" destination="dlE-c2-7Bm" id="iRc-WL-Nh9"/>
+                        <outlet property="locationButton" destination="21V-Zl-i4E" id="jFk-6c-yWj"/>
+                        <outlet property="mapSegmentedControl" destination="NkW-Ou-7b3" id="l48-h7-2NS"/>
+                        <outlet property="mapView" destination="kXp-JV-Fzv" id="xRV-SM-9m8"/>
+                        <outlet property="parkingButton" destination="fae-nd-wo8" id="EwW-nC-mWC"/>
+                        <outletCollection property="borderedViews" destination="21V-Zl-i4E" id="coO-Ha-HhF"/>
+                        <outletCollection property="borderedViews" destination="LvT-KZ-ZUS" id="YpD-Sl-vIy"/>
+                        <outletCollection property="borderedViews" destination="psu-st-SJI" id="2rL-3s-myE"/>
+                        <outletCollection property="borderedViews" destination="fae-nd-wo8" id="Hlk-aA-Rvb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KzL-tw-tWR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="228" y="56"/>
+        </scene>
+        <!--Information Table View Controller - Information-->
+        <scene sceneID="sDq-tf-gME">
+            <objects>
+                <tableViewController storyboardIdentifier="SPMInformationTableViewController" title="Information" id="PEg-pt-Xft" customClass="SPMInformationTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="0rB-hM-O7v">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.20000000000000001" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection headerTitle="Frequently Asked Questions" id="tXb-Jm-w5B">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="kkZ-xO-CkM" rowHeight="150" style="IBUITableViewCellStyleDefault" id="y7Q-PS-pAy">
+                                        <rect key="frame" x="0.0" y="119" width="320" height="150"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="y7Q-PS-pAy" id="bzl-XN-0gD">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="kkZ-xO-CkM">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="150"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">This map is provided as a public service and intended for informational purposes only. You may find that construction projects, traffic, or other events have caused conditions to differ from the map. Drivers should always comply with city parking rules and regulations.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="HOW DO I USE THE PARKING MAP?" id="7bh-fb-rg7">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="sZz-ZS-reu" rowHeight="635" style="IBUITableViewCellStyleDefault" id="jFb-nX-tj6">
+                                        <rect key="frame" x="0.0" y="317" width="320" height="635"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jFb-nX-tj6" id="7iy-x8-zrn">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="635"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="sZz-ZS-reu">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="635"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <mutableString key="text">For free parking, look for 'Unrestricted' streets by matching the color from the on-screen legend to what is visible on the map. 'Time Limited' and 'Paid' parking categories are also options when free parking is unavailable.
+
+Please note that 'Unrestricted' does not always imply that the street is a free parking zone, it just means that there are no existing restrictions on that street. Always follow the on-street signs.
+
+For easier browsing, the on-map overlays can be hidden by dragging the eye slider in the legend overlay. The legend can also be collapsed by tapping on it.
+
+Once you have found a parking spot, as you walk away from your parked car you may use the location reminder feature by tapping the Ⓟ button. This will mark your parking spot with an X on the map. Tap the X on the map to show the time you parked your car and remove the reminder.
+
+If you have navigated far away from your marked parking spot, you can press the red Ⓟ button to center it on the map again. Your current location is always marked by a blue circle.</mutableString>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="WHY DOES THE APPLICATION SHOW ADVERTISEMENTS?" id="Hdq-4e-UIV">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="EBc-82-V3w" rowHeight="225" style="IBUITableViewCellStyleDefault" id="7Dm-Gz-dJc">
+                                        <rect key="frame" x="0.0" y="1017" width="320" height="225"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Dm-Gz-dJc" id="D0K-yt-UK4">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="225"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="EBc-82-V3w">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="225"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">We show advertisments to fund further development of the app. While the data included in the application is public domain and free, significant effort was devoted to developing this native application. If there is enough interest in an ad-free version, we might add the ability to remove them in a future update. Please send us an email at the bottom of this page if this interests you.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="HOW IS MY PRIVACY PROTECTED?" id="vHS-z7-JMX">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="e4T-03-WDf" rowHeight="225" style="IBUITableViewCellStyleDefault" id="eyp-Lv-qFj">
+                                        <rect key="frame" x="0.0" y="1290" width="320" height="225"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eyp-Lv-qFj" id="Ryo-Rg-lrd">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="225"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="e4T-03-WDf">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="225"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">We do not collect or store any information regarding your location, parking spots, or any sort of personal information. Such information lives only on your device while using the app. The only types of information collected by this application are for anonymous diagnostic reports (usage measurement, crash reports, etc). Furthermore we do not sell or share any information collected.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="WHY DOES THE PARKING MAP LOOK DIFFERENT FROM MY DEVICE'S BUILT-IN MAPS?" id="aAA-tJ-uHB">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="yht-dV-LCY" rowHeight="100" style="IBUITableViewCellStyleDefault" id="XjE-5g-hwB">
+                                        <rect key="frame" x="0.0" y="1596" width="320" height="100"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XjE-5g-hwB" id="IEV-ys-cuO">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="yht-dV-LCY">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="100"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">The parking map in this application is obtained from the official data, maps and drawings provided by the Seattle Department of Transportation.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="WHY CAN'T I SEE THE 'TEMPORARY NO PARKING RESTRICTIONS' ON THE MAP?" id="bY9-9G-SKu">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="aih-wa-nmF" rowHeight="130" style="IBUITableViewCellStyleDefault" id="SNZ-T3-nVQ">
+                                        <rect key="frame" x="0.0" y="1761" width="320" height="130"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SNZ-T3-nVQ" id="mCr-Gm-PtP">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="130"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="aih-wa-nmF">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="130"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">Try zooming in deeper to see them. It is always a good idea to be zoomed in as deeply as possible around your current location while looking for parking. These temporary parking restrictions can be recognized because the lines have rounded corners.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Why is the street map blank?" id="szF-Ka-5Kl">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="kSn-qM-Nea" rowHeight="175" style="IBUITableViewCellStyleDefault" id="9r0-Rl-TSr">
+                                        <rect key="frame" x="0.0" y="1939" width="320" height="175"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9r0-Rl-TSr" id="4uS-8C-Jbh">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="175"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="kSn-qM-Nea">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="175"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">First, try zooming in as not everything shows at a small scale. Or, the map may need time to redraw. It is displaying a large amount of data so there are some slow times. Please be patient. In addition, the map is down overnight from 12 midnight to 3 am for data maintenance.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Where does this information come from?" id="Wsf-JC-nlh">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="eP1-9G-gq8" rowHeight="220" style="IBUITableViewCellStyleDefault" id="GPr-Zd-XKh">
+                                        <rect key="frame" x="0.0" y="2162" width="320" height="220"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GPr-Zd-XKh" id="Ih1-Zf-GuO">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="eP1-9G-gq8">
+                                                    <rect key="frame" x="15" y="0.0" width="290" height="220"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">The map pulls parking info from the City’s asset management system. The parking signs and garage and lot locations are updated nightly. The rates and hours for garages and lots are updated monthly. There may be a time lag between sign installation and record data entry; consequently, the map may not reflect on-the-ground reality. Always comply with city parking rules and regulations.</string>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Parking Data Provided By SDOT" id="Ksc-dI-ffS">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="200" id="oZU-cs-w0q">
+                                        <rect key="frame" x="0.0" y="2430" width="320" height="200"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oZU-cs-w0q" id="gtQ-X0-VuT">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f5L-oy-ADf">
+                                                    <rect key="frame" x="51" y="158" width="219" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Open Website">
+                                                        <accessibilityTraits key="traits" none="YES" button="YES" link="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="219" id="YyA-aP-jFh"/>
+                                                        <constraint firstAttribute="height" constant="30" id="zhc-Jo-dq5"/>
+                                                    </constraints>
+                                                    <state key="normal" title="➲ SDOT Parking Map Website">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="seattleParkingMapTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="9kQ-zi-cEd"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fY-s8-f9B">
+                                                    <rect key="frame" x="12" y="20" width="297" height="118"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Seattle Department of Transportation" label="SDOT">
+                                                        <accessibilityTraits key="traits" none="YES" button="YES" link="YES" image="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="297" id="7bD-6Z-vPp"/>
+                                                        <constraint firstAttribute="height" constant="118" id="8hO-fY-fDn"/>
+                                                    </constraints>
+                                                    <state key="normal" image="sdot-logo-transparent">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="sdotTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="FL2-0r-8Ua"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="3fY-s8-f9B" secondAttribute="centerX" id="Axf-N2-2xw"/>
+                                                <constraint firstItem="f5L-oy-ADf" firstAttribute="top" secondItem="3fY-s8-f9B" secondAttribute="bottom" constant="20" id="rzK-Jp-dlH"/>
+                                                <constraint firstAttribute="centerX" secondItem="f5L-oy-ADf" secondAttribute="centerX" id="sN5-xb-V9D"/>
+                                                <constraint firstItem="3fY-s8-f9B" firstAttribute="top" secondItem="gtQ-X0-VuT" secondAttribute="top" constant="20" id="utN-RW-Rrn"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Mapping API Provided By Esri" id="nEF-pG-sEC">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="75" id="RnG-19-WN6">
+                                        <rect key="frame" x="0.0" y="2678" width="320" height="75"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RnG-19-WN6" id="XrD-6V-eig">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVh-UJ-RnS">
+                                                    <rect key="frame" x="45" y="23" width="230" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.65000000000000002" colorSpace="calibratedWhite"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Open Website">
+                                                        <accessibilityTraits key="traits" none="YES" button="YES" link="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="iEb-QG-92b"/>
+                                                        <constraint firstAttribute="width" constant="230" id="jhB-QL-vhG"/>
+                                                    </constraints>
+                                                    <state key="normal" title="➲ ArcGIS Runtime SDK for iOS">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="arcGISRuntimeTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="flN-3t-vRu"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="jVh-UJ-RnS" secondAttribute="centerX" id="d4E-fK-Ife"/>
+                                                <constraint firstAttribute="centerY" secondItem="jVh-UJ-RnS" secondAttribute="centerY" id="nbP-hZ-hfj"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.35000000000000003" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Seattle Parking Map 1.0" id="3b2-Zg-aWB">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="75" id="LJq-k6-2pJ">
+                                        <rect key="frame" x="0.0" y="2801" width="320" height="75"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LJq-k6-2pJ" id="SgR-ct-dTf">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nfe-b9-QXt">
+                                                    <rect key="frame" x="29" y="23" width="263" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <accessibility key="accessibilityConfiguration" hint="Open Website">
+                                                        <accessibilityTraits key="traits" none="YES" button="YES" link="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="263" id="C3m-PD-nzw"/>
+                                                        <constraint firstAttribute="height" constant="30" id="O8H-gr-WBV"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <state key="normal" title="Contact Support / Send Feedback">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="contactTouched:" destination="PEg-pt-Xft" eventType="touchUpInside" id="aT1-N4-DEc"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="nfe-b9-QXt" secondAttribute="centerX" id="2i2-mh-PT0"/>
+                                                <constraint firstAttribute="centerY" secondItem="nfe-b9-QXt" secondAttribute="centerY" id="vR4-O9-7Cy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.34999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="PEg-pt-Xft" id="I2G-xq-cuM"/>
+                            <outlet property="delegate" destination="PEg-pt-Xft" id="Tf5-pJ-GQI"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Information" id="azf-ik-iaS">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="hf5-50-rJE">
+                            <connections>
+                                <action selector="doneTouched:" destination="PEg-pt-Xft" id="8xa-Fe-XNX"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="32z-2x-kp8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="595" y="56"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Location" width="20" height="20"/>
+        <image name="Types" width="100" height="137"/>
+        <image name="sdot-logo-transparent" width="287" height="108"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
