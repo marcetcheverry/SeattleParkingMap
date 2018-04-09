@@ -8,4 +8,11 @@
 
 @interface SPMRootViewController : UIViewController
 
+// Watch
+- (void)synchronizeParkingSpotDisplayFromDataStore;
+- (nullable NSDictionary *)watchSessionEncodedParkingDictionary;
+- (void)removeCurrentParkingSpotFromWatch;
+- (BOOL)attemptToSetParkingSpotInCurrentLocationFromWatch:(BOOL)fromWatch
+                                                    error:(NSError * __nullable * __nullable)error;
+
 @end

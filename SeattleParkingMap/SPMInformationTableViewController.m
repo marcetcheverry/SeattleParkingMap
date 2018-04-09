@@ -34,7 +34,7 @@
 
     self.mapProviderSegmentedControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapProvider];
 
-    if ([[UIScreen mainScreen] scale] == 1)
+    if ([[UIScreen mainScreen] scale] < 2)
     {
         self.mapResolutionSegmentedControl.selectedSegmentIndex = 0;
         self.mapResolutionSegmentedControl.enabled = NO;
@@ -52,18 +52,18 @@
             self.mapResolutionSegmentedControl.selectedSegmentIndex = 0;
         }
     }
-//
-//    BOOL renderLabelsAtNativeResolution = [[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsRenderLabelsAtNativeResolution];
-//
-//    if (renderLabelsAtNativeResolution)
-//    {
-//        self.mapLabelSizeSegmentedControl.selectedSegmentIndex = 0;
-//    }
-//    else
-//    {
-//        self.mapLabelSizeSegmentedControl.selectedSegmentIndex = 1;
-//    }
-//
+    //
+    //    BOOL renderLabelsAtNativeResolution = [[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsRenderLabelsAtNativeResolution];
+    //
+    //    if (renderLabelsAtNativeResolution)
+    //    {
+    //        self.mapLabelSizeSegmentedControl.selectedSegmentIndex = 0;
+    //    }
+    //    else
+    //    {
+    //        self.mapLabelSizeSegmentedControl.selectedSegmentIndex = 1;
+    //    }
+    //
     for (UISegmentedControl *segmentedControl in self.segmentedControls)
     {
         segmentedControl.backgroundColor = [segmentedControl.tintColor colorWithAlphaComponent:.1];
@@ -74,27 +74,20 @@
         [segmentedControl setTitleTextAttributes:titleTextAttributes
                                         forState:UIControlStateSelected];
     }
+
+    self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = [super tableView:tableView heightForRowAtIndexPath:indexPath];
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        if (indexPath.section > 1 && indexPath.section < 9)
-        {
-            // Approximation for text cells based on the iPhone height since we do not have self sizing table view cells in iOS 7
-            height /= 1.4;
-        }
-    }
-
-    return height;
+    return UITableViewAutomaticDimension;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == (tableView.numberOfSections - 1))
     {
@@ -141,31 +134,38 @@
 
 }
 
-// On iOS 8 use an unwind segue?
-- (IBAction)doneTouched:(UIBarButtonItem *)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (IBAction)sdotTouched:(UIButton *)sender
 {
     [Flurry logEvent:@"Information_SDOTWebsiteTouched"];
 
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.seattle.gov/transportation/"]];
+    NSURL *URL = [NSURL URLWithString:@"http://www.seattle.gov/transportation/"];
+    if (URL)
+    {
+        [[UIApplication sharedApplication] openURL:URL];
+    }
 }
 
 - (IBAction)seattleParkingMapTouched:(UIButton *)sender
 {
     [Flurry logEvent:@"Information_SPMWebsiteTouched"];
 
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://web6.seattle.gov/sdot/seattleparkingmap/"]];
+    NSURL *URL = [NSURL URLWithString:@"http://web6.seattle.gov/sdot/seattleparkingmap/"];
+    if (URL)
+    {
+        [[UIApplication sharedApplication] openURL:URL];
+    }
+
 }
 
 - (IBAction)arcGISRuntimeTouched:(UIButton *)sender
 {
     [Flurry logEvent:@"Information_ArcGISWebsiteTouched"];
 
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://developers.arcgis.com/ios/"]];
+    NSURL *URL = [NSURL URLWithString:@"http://developers.arcgis.com/ios/"];
+    if (URL)
+    {
+        [[UIApplication sharedApplication] openURL:URL];
+    }
 }
 
 - (NSString *)localizedAppVersionString
@@ -192,37 +192,35 @@
         [controller setToRecipients:[NSArray arrayWithObject:NSLocalizedString(@"feedback@taplightsoftware.com", @"Feedback email address")]];
         NSString *messageBody = [NSString stringWithFormat:NSLocalizedString(@"System: %@ (%@)\n\n", @"Email body system version header"), deviceModel, [[UIDevice currentDevice] systemVersion]];
         [controller setMessageBody:messageBody isHTML:NO];
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
-            controller.modalPresentationStyle = UIModalPresentationFormSheet;
-        }
-
+        controller.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:controller animated:YES completion:nil];
     }
     else
     {
         [Flurry logError:@"Information_ContactTouchedNoMail" message:@"No mail accounts set up" error:nil];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Mail Accounts", nil)
-                                                            message:NSLocalizedString(@"Please set up a Mail account in order to send email.", nil)
-                                                           delegate:nil
-                                                  cancelButtonTitle:nil
-                                                  otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
-        [alertView show];
+
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Mail Accounts", nil)
+                                                                            message:NSLocalizedString(@"Please set up a Mail account in order to send email.", nil)
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:nil]];
+
+        [self presentViewController:controller animated:YES completion:nil];
     }
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller
-          didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+          didFinishWithResult:(MFMailComposeResult)result error:(nullable NSError *)error
 {
     if (error)
     {
         [Flurry logError:@"Information_ContactTouchedEmailFinished" message:@"MessageUI framework finished with error" error:error];
     }
-
-	[self dismissViewControllerAnimated:YES completion:^{
+    
+    [self dismissViewControllerAnimated:YES completion:^{
         [self becomeFirstResponder];
     }];
 }

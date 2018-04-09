@@ -1,3 +1,9 @@
+# 1.2
+* Apple Watch App and Glance (requires watchOS 2 and iOS 9)
+* Split View support for iPad
+* Midnight maintenance warning
+* iOS 8 is now the minimum required system version
+
 # 1.1
 * Removed advertisements.
 * Support for iPhone 6 and iPhone 6 Plus.

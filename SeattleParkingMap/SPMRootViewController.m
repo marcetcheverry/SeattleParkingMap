@@ -28,14 +28,14 @@
 //#define kMapVETiledLabelsURL @"http://gisrevprxy.seattle.gov/ArcGIS/rest/services/ext/VE_CityBM_Labels/MapServer/"
 //#define kMapVETiledAerialURL @"http://gisrevprxy.seattle.gov/ArcGIS/rest/services/ext/VE_CityBM_Orthos/MapServer/"
 
-@interface SPMRootViewController () <AGSMapViewLayerDelegate, AGSCalloutDelegate, AGSLayerCalloutDelegate, UIAlertViewDelegate, AGSLayerDelegate> // UISearchBarDelegate, AGSMapServiceInfoDelegate
+@interface SPMRootViewController () <AGSMapViewLayerDelegate, AGSCalloutDelegate, AGSLayerCalloutDelegate, AGSLayerDelegate, CLLocationManagerDelegate> // UISearchBarDelegate, AGSMapServiceInfoDelegate
 
 @property (weak, nonatomic) IBOutlet AGSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIImageView *legendsImageView;
 @property (weak, nonatomic) IBOutlet UIButton *legendsButton;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSegmentedControl;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *legendsContainerHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *legendContainerWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *legendsContainerCollapsedHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *legendContainerCollapsedWidthConstraint;
 
 @property (weak, nonatomic) IBOutlet UIButton *parkingButton;
 @property (weak, nonatomic) IBOutlet UIButton *locationButton;
@@ -64,13 +64,15 @@
 @property (nonatomic) BOOL renderMapsAtNativeResolution;
 @property (nonatomic) BOOL needsMapRefreshOnAppearance;
 
+@property (nonatomic) CLLocationManager *locationManager;
+
 @end
 
 @implementation SPMRootViewController
 
 - (void)dealloc
 {
-//    self.searchBar.delegate = nil;
+    //    self.searchBar.delegate = nil;
 
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationWillEnterForegroundNotification
@@ -83,6 +85,13 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsNeedsBackgroundLocationWarning])
+    {
+        [self showLocationSettingsAlertForAlwaysAuthorization:YES];
+        [[NSUserDefaults standardUserDefaults] setBool:NO
+                                                forKey:SPMDefaultsNeedsBackgroundLocationWarning];
+    }
+
     // Try Again
     if (!self.mapView.loaded)
     {
@@ -90,11 +99,23 @@
     }
     else
     {
-        [self centerOnCurrentLocation];
+        // Hapens if you set a parking spot while app is backgrounded (from watch)
+        if ([self hasStoredParkingSpot] && ![self isParkingSpotShownOnMap])
+        {
+            [self restoreParkingSpotMarker];
+        }
+        else if (![self hasStoredParkingSpot] && [self isParkingSpotShownOnMap])
+        {
+            [self removeCurrentParkingSpotFromWatch];
+        }
+        else
+        {
+            [self centerOnCurrentLocation];
+        }
     }
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return UIInterfaceOrientationMaskAll; // rotate upside down on the iPhone for car users
 }
@@ -150,39 +171,32 @@
                                                                                     action:@selector(legendsImageViewTapped)];
     [self.legendsImageView addGestureRecognizer:tapRecognizer];
 
-#if TARGET_IPHONE_SIMULATOR
-    UITapGestureRecognizer *screenshotTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                           action:@selector(screenshotLaunchImage)];
-    screenshotTapRecognizer.numberOfTapsRequired = 2;
-    [self.legendSlider addGestureRecognizer:screenshotTapRecognizer];
-#endif
+    //    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    //    self.searchBar.delegate = self;
+    //    self.searchBar.placeholder = NSLocalizedString(@"Search", nil);
+    //    self.navigationItem.titleView = self.searchBar;
 
-//    self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-//    self.searchBar.delegate = self;
-//    self.searchBar.placeholder = NSLocalizedString(@"Search", nil);
-//    self.navigationItem.titleView = self.searchBar;
-
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//        NSError *serviceInfoError;
-//        self.serviceInfo = [[AGSMapServiceInfo alloc] initWithURL:[NSURL URLWithString:kMapDynamicParkingURL] error:&serviceInfoError];
-//
-//        if (serviceInfoError)
-//        {
-//            NSLog(@"Failed to load info %@", serviceInfoError);
-//        }
-//        else
-//        {
-//            self.serviceInfo.delegate = self;
-//            [self.serviceInfo retrieveLegendInfo];
-//        }
-//    });
-//
+    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    //        NSError *serviceInfoError;
+    //        self.serviceInfo = [[AGSMapServiceInfo alloc] initWithURL:[NSURL URLWithString:kMapDynamicParkingURL] error:&serviceInfoError];
+    //
+    //        if (serviceInfoError)
+    //        {
+    //            NSLog(@"Failed to load info %@", serviceInfoError);
+    //        }
+    //        else
+    //        {
+    //            self.serviceInfo.delegate = self;
+    //            [self.serviceInfo retrieveLegendInfo];
+    //        }
+    //    });
+    //
 
     for (UIView *borderedView in self.borderedViews)
     {
         borderedView.layer.borderColor = [UIColor whiteColor].CGColor;
         borderedView.layer.borderWidth = 1;
-        
+
         borderedView.layer.shadowColor = [UIColor blackColor].CGColor;
         borderedView.layer.shadowRadius = 10;
         borderedView.layer.shadowOpacity = .7;
@@ -206,9 +220,9 @@
     self.mapSegmentedControl.layer.masksToBounds = NO;
     self.mapSegmentedControl.clipsToBounds = NO;
 
-//#define DEGREES_TO_RADIANS(x) (M_PI * (x) / 180.0)
-//    self.searchButton.layer.transform = CATransform3DMakeRotation(DEGREES_TO_RADIANS(45), 0, 0, 1);
-//    self.searchButton.titleLabel.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(45));
+    //#define DEGREES_TO_RADIANS(x) (M_PI * (x) / 180.0)
+    //    self.searchButton.layer.transform = CATransform3DMakeRotation(DEGREES_TO_RADIANS(45), 0, 0, 1);
+    //    self.searchButton.titleLabel.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(45));
 
     // Set up the map
     self.mapView.allowRotationByPinching = YES;
@@ -217,18 +231,29 @@
     SPMMapType selectedMapType = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapType];
     self.mapSegmentedControl.selectedSegmentIndex = selectedMapType;
 
-    [self loadMapView];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+    {
+        [self loadMapView];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    if (self.needsMapRefreshOnAppearance)
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
     {
-        [self refreshMapSettingsIfNeeded];
-        self.needsMapRefreshOnAppearance = NO;
+        if (self.needsMapRefreshOnAppearance)
+        {
+            NSLog(@"needs");
+            [self refreshMapSettingsIfNeeded];
+            self.needsMapRefreshOnAppearance = NO;
+        }
     }
+}
+
+- (IBAction)unwindFromInformationViewController:(UIStoryboardSegue *)segue
+{
 }
 
 - (void)userDefaultsChanged:(NSNotification *)notification
@@ -291,7 +316,7 @@
     }
 }
 
-- (AGSLayer *)layerForMapType:(SPMMapType)mapType
+- (nullable AGSLayer *)layerForMapType:(SPMMapType)mapType
 {
     AGSLayer *mapLayer;
 
@@ -363,10 +388,10 @@
 
 - (void)loadMapView
 {
-//    for (AGSLayer *layer in self.mapView.mapLayers)
-//    {
-//        [self.mapView removeMapLayer:layer];
-//    }
+    //    for (AGSLayer *layer in self.mapView.mapLayers)
+    //    {
+    //        [self.mapView removeMapLayer:layer];
+    //    }
 
     [self.mapView reset];
 
@@ -398,7 +423,7 @@
 
     // Add parking data
 
-	self.dynamicLayer = [[AGSDynamicMapServiceLayer alloc] initWithURL:[NSURL URLWithString:kMapDynamicParkingURL]];
+    self.dynamicLayer = [[AGSDynamicMapServiceLayer alloc] initWithURL:[NSURL URLWithString:kMapDynamicParkingURL]];
     self.dynamicLayer.renderNativeResolution = self.renderMapsAtNativeResolution;
     self.dynamicLayer.delegate = self;
 
@@ -423,10 +448,10 @@
     self.dynamicLayer.visibleLayers = @[@1, @6, @7];
     //    self.dynamicLayer.visibleLayers = @[@1, @7, @5, @6, @8, @9];
 
-	// This is the name that is displayed if there was a property page, tocs, etc...
-	[self.mapView addMapLayer:self.dynamicLayer withName:NSLocalizedString(@"Parking", nil)];
+    // This is the name that is displayed if there was a property page, tocs, etc...
+    [self.mapView addMapLayer:self.dynamicLayer withName:NSLocalizedString(@"Parking", nil)];
 
-	self.dynamicLayer.opacity = [[NSUserDefaults standardUserDefaults] floatForKey:SPMDefaultsLegendOpacity];
+    self.dynamicLayer.opacity = [[NSUserDefaults standardUserDefaults] floatForKey:SPMDefaultsLegendOpacity];
 
     self.parkingSpotGraphicsLayer = [AGSGraphicsLayer graphicsLayer];
     self.parkingSpotGraphicsLayer.renderNativeResolution = YES;
@@ -471,13 +496,32 @@
             break;
     }
 
-    [Flurry logEvent:@"Map_viewDidAppear" withParameters:@{SPMDefaultsLegendHidden: [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLegendHidden],
-                                                           SPMDefaultsSelectedMapProvider: mapProviderName,
-                                                           SPMDefaultsSelectedMapType: mapTypeName,
-                                                           @"SPMDefaultsHasStoredParkingPoint": @([self hasStoredParkingSpot]),
-                                                           SPMDefaultsRenderMapsAtNativeResolution: @([[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsRenderMapsAtNativeResolution]),
-                                                           SPMDefaultsLegendOpacity: [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLegendOpacity]}];
+    BOOL watchAppInstalled = NO;
+
+    if ([WCSession isSupported])
+    {
+        watchAppInstalled = [WCSession defaultSession].isWatchAppInstalled;
+    }
+
+    BOOL watchAppReachable = NO;
+
+    if ([WCSession isSupported])
+    {
+        watchAppReachable = [WCSession defaultSession].isReachable;
+    }
+
+    [Flurry logEvent:@"Map_viewDidAppear"
+      withParameters:@{SPMDefaultsLegendHidden: [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLegendHidden],
+                       SPMDefaultsSelectedMapProvider: mapProviderName,
+                       SPMDefaultsSelectedMapType: mapTypeName,
+                       @"SPMDefaultsHasStoredParkingPoint": @([self hasStoredParkingSpot]),
+                       SPMDefaultsRenderMapsAtNativeResolution: @([[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsRenderMapsAtNativeResolution]),
+                       SPMDefaultsLegendOpacity: [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLegendOpacity],
+                       @"watchAppInstalled": @(watchAppInstalled),
+                       @"watchAppReachable": @(watchAppReachable)
+                       }];
 }
+
 //#pragma mark - UISearchBarDelegate
 //
 //- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
@@ -553,7 +597,7 @@
     {
         return UIStatusBarStyleLightContent;
     }
-    
+
     return UIStatusBarStyleDefault;
 }
 
@@ -572,15 +616,16 @@
 
     NSString *errorTitle = [NSString stringWithFormat:NSLocalizedString(@"Could not load map for: %@. Please try again later.", nil), layer.name];
 
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:errorTitle
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                              otherButtonTitles:nil];
-    [alertView show];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:errorTitle
+                                                                        message:nil
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+    [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                   style:UIAlertActionStyleCancel
+                                                 handler:nil]];
+
+    [self presentViewController:controller animated:YES completion:nil];
 
     [Flurry logError:@"Map_LayerFailedToLoad" message:errorTitle error:error];
-
 }
 
 #pragma mark - Actions
@@ -589,20 +634,20 @@
 //{
 //    [self shareTab];
 //    return;
-    
+
 //    NSString *text = @"Here is my location";
-//    
+//
 //    if ([self currentParkingSpot])
 //    {
-//        
+//
 //    }
 //    // if parking spot
 //    // if current location
 //    // check oput parkign
-//    
+//
 //    SPMMapActivityProvider *mapActivityItemProvider = [[SPMMapActivityProvider alloc] initWithPlaceholderItem:[UIImage imageNamed:@"Search"]];
 //    mapActivityItemProvider.screenshotView = self.mapView;
-//    
+//
 //    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:@[mapActivityItemProvider] applicationActivities:nil];
 //    [self presentViewController:activityVC animated:YES completion:nil];
 //}
@@ -610,11 +655,11 @@
 //- (void)shareTab
 //{
 //    CLLocation *geoPoint = ((AGSCLLocationManagerLocationDisplayDataSource *)self.mapView.locationDisplay.dataSource).locationManager.location;
-//    
+//
 //    CLLocation *userLocation = geoPoint;
 //    CLGeocoder *geocoder;
 //    geocoder = [[CLGeocoder alloc]init];
-//    
+//
 //    [geocoder reverseGeocodeLocation:userLocation completionHandler:^(NSArray *placemarks, NSError *error)
 //    {
 ////        CLPlacemark *evolvedPlacemark = placemarks[0];
@@ -623,36 +668,36 @@
 //        ABRecordRef persona = ABPersonCreate();
 //        ABRecordSetValue(persona, kABPersonFirstNameProperty, (__bridge CFTypeRef)(evolvedPlacemark.name), nil);
 //        ABMutableMultiValueRef multiHome = ABMultiValueCreateMutable(kABMultiDictionaryPropertyType);
-//        
+//
 //        bool didAddHome = ABMultiValueAddValueAndLabel(multiHome, (__bridge CFTypeRef)(evolvedPlacemark.addressDictionary), kABHomeLabel, NULL);
-//        
+//
 //        if(didAddHome)
 //        {
 //            ABRecordSetValue(persona, kABPersonAddressProperty, multiHome, NULL);
-//            
+//
 //            NSLog(@"Address saved.");
 //        }
-//        
+//
 //        NSArray *individual = [[NSArray alloc]initWithObjects:(__bridge id)(persona), nil];
 //        CFArrayRef arrayRef = (__bridge CFArrayRef)individual;
 //        NSData *vcards = (__bridge NSData *)ABPersonCreateVCardRepresentationWithPeople(arrayRef);
-//        
+//
 //        NSString* vcardString;
 //        vcardString = [[NSString alloc] initWithData:vcards encoding:NSASCIIStringEncoding];
 //        NSLog(@"%@",vcardString);
-//        
-//        
+//
+//
 //        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 //        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
-//        
+//
 //        NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"pin.loc.vcf"];
 //        [vcardString writeToFile:filePath
 //                      atomically:YES encoding:NSUTF8StringEncoding error:&error];
-//        
+//
 //        NSURL *url =  [NSURL fileURLWithPath:filePath];
 //        NSLog(@"url> %@ ", [url absoluteString]);
-//        
-//        
+//
+//
 //        // Share Code //
 //        NSArray *itemsToShare = [[NSArray alloc] initWithObjects: url, nil] ;
 //        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:itemsToShare applicationActivities:nil];
@@ -661,9 +706,9 @@
 //                                             UIActivityTypeAssignToContact,
 //                                             UIActivityTypeSaveToCameraRoll,
 //                                             UIActivityTypePostToWeibo];
-//        
+//
 //        [self presentViewController:activityVC animated:YES completion:nil];
-//        
+//
 //    }];
 //}
 
@@ -699,75 +744,6 @@
                      }];
 }
 
-#if TARGET_IPHONE_SIMULATOR
-- (void)screenshotLaunchImage
-{
-    self.mapSegmentedControl.enabled = NO;
-    self.locationButton.enabled = NO;
-    self.parkingButton.enabled = NO;
-    self.legendSlider.enabled = NO;
-    self.locationButton.layer.borderColor = [UIColor colorWithWhite:1 alpha:.5].CGColor;
-    self.parkingButton.layer.borderColor = [UIColor colorWithWhite:1 alpha:.5].CGColor;
-
-    UIColor *preBackgroundColor = self.view.backgroundColor;
-    // This is to take a Default.png screenshot without the status bar
-    self.mapView.hidden = YES;
-    // Matches the ArcGIS grid background color
-    self.view.backgroundColor = [UIColor colorWithWhite:0.286 alpha:1.000]; // 73x3
-    [self legendsImageViewTapped];
-    self.mapSegmentedControl.hidden = YES;
-    self.legendContainerView.hidden = YES;
-
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Taking Screenshot...", nil)
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:nil];
-    [alertView show];
-
-    // Wait a little bit for the screen to update
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, [[UIScreen mainScreen] scale]);
-        [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
-        UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
-
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateStyle = NSDateFormatterLongStyle;
-        dateFormatter.timeStyle = NSDateFormatterLongStyle;
-
-        NSString *orientation = @"Portrait";
-        if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-        {
-            orientation = @"Landscape";
-        }
-        
-        // Warning, this is hardcoded for convenience.
-        NSString *filePath = [NSString stringWithFormat:@"/Users/marc/Desktop/LaunchImage %@ %@.png", orientation, [dateFormatter stringFromDate:[NSDate date]]];
-        [UIImagePNGRepresentation(viewImage) writeToFile:filePath atomically:YES];
-        //            UIImageView *view = [[UIImageView alloc] initWithImage:viewImage];
-        ////            CGRect frame = view.frame;
-        ////            frame.origin.y = 50;
-        ////            view.frame = frame;
-        //
-        //            [self.view addSubview:view];
-        self.mapSegmentedControl.hidden = NO;
-        self.legendContainerView.hidden = NO;
-        self.mapView.hidden = NO;
-        self.view.backgroundColor = preBackgroundColor;
-        self.mapSegmentedControl.enabled = YES;
-        self.locationButton.enabled = YES;
-        self.locationButton.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.parkingButton.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.parkingButton.enabled = YES;
-        self.legendSlider.enabled = YES;
-
-        [alertView dismissWithClickedButtonIndex:alertView.cancelButtonIndex animated:YES];
-    });
-}
-#endif
-
 - (IBAction)legendsTouched:(UIButton *)sender
 {
     [UIView animateWithDuration:.3
@@ -790,8 +766,8 @@
 
     if (hidden)
     {
-        self.legendsContainerHeightConstraint.constant = 36;
-        self.legendContainerWidthConstraint.constant = 75;
+        self.legendsContainerCollapsedHeightConstraint.priority = UILayoutPriorityDefaultHigh + 1;
+        self.legendContainerCollapsedWidthConstraint.priority = UILayoutPriorityDefaultHigh + 1;
 
         CGFloat adjustedValue = self.legendSlider.value + .5;
         if (adjustedValue > 1)
@@ -810,14 +786,8 @@
     }
     else
     {
-        self.legendsContainerHeightConstraint.constant = 175;//self.legendsImageView.intrinsicContentSize.height;
-        self.legendContainerWidthConstraint.constant = 125;
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
-            self.legendsContainerHeightConstraint.constant *= 1.12;
-            self.legendContainerWidthConstraint.constant *= 1.5;
-        }
+        self.legendsContainerCollapsedHeightConstraint.priority = UILayoutPriorityDefaultLow;
+        self.legendContainerCollapsedWidthConstraint.priority = UILayoutPriorityDefaultLow;
 
         self.legendsButton.alpha = 0;
 
@@ -855,6 +825,127 @@
     return nil;
 }
 
+- (void)synchronizeParkingSpotDisplayFromDataStore
+{
+    if ([self hasStoredParkingSpot] && ![self isParkingSpotShownOnMap])
+    {
+        [self restoreParkingSpotMarker];
+    }
+    else if (![self hasStoredParkingSpot] && [self isParkingSpotShownOnMap])
+    {
+        [self removeCurrentParkingSpotFromWatch];
+    }
+}
+
+- (BOOL)attemptToSetParkingSpotInCurrentLocationFromWatch:(BOOL)fromWatch
+                                                    error:(NSError **)error
+{
+    if (fromWatch)
+    {
+        CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+        if (authorizationStatus != kCLAuthorizationStatusAuthorizedAlways &&
+            authorizationStatus != kCLAuthorizationStatusAuthorizedWhenInUse)
+        {
+            [self showLocationSettingsAlertForAlwaysAuthorization:NO];
+            if (error != NULL)
+            {
+                *error = [NSError errorWithDomain:SPMErrorDomain
+                                             code:SPMErrorCodeLocationAuthorization
+                                         userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Please Enable Location Services on your iPhone", nil)}];
+            }
+            return NO;
+        }
+        else if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse)
+        {
+            [self showLocationSettingsAlertForAlwaysAuthorization:YES];
+            if (error != NULL)
+            {
+                *error = [NSError errorWithDomain:SPMErrorDomain
+                                             code:SPMErrorCodeLocationBackgroundAuthorization
+                                         userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Open the App on iPhone to Enable Watch Location Support", nil)}];
+            }
+            return NO;
+        }
+    }
+
+    AGSPoint *parkingPoint = self.mapView.locationDisplay.mapLocation;
+
+    if ([[self availableMapDataEnvelope] containsPoint:parkingPoint])
+    {
+        if (fromWatch)
+        {
+            [Flurry logEvent:@"ParkingSpot_SetFromWatch_Success"];
+        }
+        else
+        {
+            [Flurry logEvent:@"ParkingSpot_Set_Success"];
+        }
+
+        parkingPoint = [AGSPoint pointWithX:parkingPoint.x
+                                          y:parkingPoint.y
+                           spatialReference:self.mapView.spatialReference];
+
+        NSDate *parkDate = [NSDate date];
+
+        [self addAndShowParkingSpotMarkerWithPoint:parkingPoint
+                                              date:parkDate];
+
+        [[NSUserDefaults standardUserDefaults] setObject:[parkingPoint encodeToJSON]
+                                                  forKey:SPMDefaultsLastParkingPoint];
+        [[NSUserDefaults standardUserDefaults] setObject:parkDate
+                                                  forKey:SPMDefaultsLastParkingDate];
+
+        if (!fromWatch)
+        {
+            if ([WCSession isSupported] && [WCSession defaultSession].isReachable)
+            {
+                NSDictionary *location = [self watchSessionEncodedParkingDictionary];
+
+                NSMutableDictionary *message = [@{SPMWatchAction: SPMWatchActionSetParkingSpot,
+                                                  SPMWatchResponseStatus: SPMWatchResponseSuccess} mutableCopy];
+                [message addEntriesFromDictionary:location];
+
+                [[WCSession defaultSession] sendMessage:message
+                                           replyHandler:nil
+                                           errorHandler:^(NSError * _Nonnull error) {
+                                               NSLog(@"Could not send message to watch: %@", error);
+                                           }];
+            }
+        }
+
+        return YES;
+    }
+    else
+    {
+        if (fromWatch)
+        {
+            [Flurry logError:@"ParkingSpot_SetFromWatch_Failure" message:@"Outside of service area" error:nil];
+        }
+        else
+        {
+            [Flurry logError:@"ParkingSpot_Set_Failure" message:@"Outside of service area" error:nil];
+        }
+
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Could Not Set a Parking Spot", nil)
+                                                                            message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:nil]];
+
+        [self presentViewController:controller animated:YES completion:nil];
+
+        if (error != NULL)
+        {
+            *error = [NSError errorWithDomain:SPMErrorDomain
+                                         code:SPMErrorCodeLocationServiceArea
+                                     userInfo:@{NSLocalizedFailureReasonErrorKey: @"Outside of SDOT Service Area"}];
+        }
+    }
+
+    return NO;
+}
+
 - (IBAction)parkingTouched:(id)sender
 {
     if (self.parkingSpotGraphicsLayer.graphicsCount)
@@ -863,34 +954,7 @@
         return;
     }
 
-    AGSPoint *parkingPoint = self.mapView.locationDisplay.mapLocation;
-
-    if ([[self availableMapDataEnvelope] containsPoint:parkingPoint])
-    {
-        [Flurry logEvent:@"ParkingSpot_Set_Success"];
-
-        parkingPoint = [AGSPoint pointWithX:parkingPoint.x// - 20
-                                          y:parkingPoint.y// - 20
-                           spatialReference:self.mapView.spatialReference];
-
-        NSDate *parkDate = [NSDate date];
-
-        [self addAndShowParkingSpotMarkerWithPoint:parkingPoint date:parkDate];
-
-        [[NSUserDefaults standardUserDefaults] setObject:[parkingPoint encodeToJSON] forKey:SPMDefaultsLastParkingPoint];
-        [[NSUserDefaults standardUserDefaults] setObject:parkDate forKey:SPMDefaultsLastParkingDate];
-    }
-    else
-    {
-        [Flurry logError:@"ParkingSpot_Set_Failure" message:@"Outside of service area" error:nil];
-
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Could Not Set a Parking Spot", nil)
-                                                            message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
-                                                           delegate:nil
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }
+    [self attemptToSetParkingSpotInCurrentLocationFromWatch:NO error:nil];
 }
 
 //- (IBAction)unwindFromLegend:(UIStoryboardSegue *)segue
@@ -908,7 +972,7 @@
     {
         adjustedValue = 1;
     }
-    
+
     self.legendsImageView.alpha = adjustedValue;
     self.legendSlider.alpha = adjustedValue;
 }
@@ -934,13 +998,13 @@
     {
         return;
     }
-//    if ([self.mapView.callout.representedFeature isEqual:parkingGraphic])
-//    {
-//        //            if (![self.mapView isHidden])
-//        //            {
-//        return;
-//        //            }
-//    }
+    //    if ([self.mapView.callout.representedFeature isEqual:parkingGraphic])
+    //    {
+    //        //            if (![self.mapView isHidden])
+    //        //            {
+    //        return;
+    //        //            }
+    //    }
 
     AGSPoint *parkingPoint = (AGSPoint *)parkingGraphic.geometry;
 
@@ -980,23 +1044,61 @@
     [self.mapView zoomToEnvelope:[self SDOTEnvelope] animated:YES];
 }
 
+- (void)showLocationSettingsAlertForAlwaysAuthorization:(BOOL)alwaysAuthorization
+{
+    NSString *title;
+    NSString *message;
+
+    if (alwaysAuthorization)
+    {
+        title = NSLocalizedString(@"Not Authorized to Use Background Location Services", nil);
+        message = NSLocalizedString(@"To use the Apple Watch application, please go into the privacy settings and allow 'Always' location access.", nil);
+    }
+    else
+    {
+        title = NSLocalizedString(@"Not Authorized to Use Location Services", nil);
+        message = NSLocalizedString(@"Please go into your privacy settings and allow access to location services for this application.", nil);
+    }
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open Settings", nil)
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+                                                               // I don't see the need for canOpenURL here and dependent UIAlertActions
+                                                               NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                                                               [[UIApplication sharedApplication] openURL:settingsURL];
+                                                           }];
+
+    UIAlertAction *laterAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Later", nil)
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:nil];
+
+    [alertController addAction:settingsAction];
+    [alertController addAction:laterAction];
+
+    [self presentViewController:alertController animated:YES completion:nil];
+
+    if (alwaysAuthorization)
+    {
+        [Flurry logError:@"Location_Disabled_Always" message:@"User has disabled background location" error:nil];
+    }
+    else
+    {
+        [Flurry logError:@"Location_Disabled" message:@"User has disabled location" error:nil];
+    }
+}
+
 - (void)centerOnCurrentLocation
 {
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    if (authorizationStatus != kCLAuthorizationStatusAuthorized &&
-        authorizationStatus != kCLAuthorizationStatusAuthorizedAlways &&
+    if (authorizationStatus != kCLAuthorizationStatusAuthorizedAlways &&
         authorizationStatus != kCLAuthorizationStatusAuthorizedWhenInUse &&
         authorizationStatus != kCLAuthorizationStatusNotDetermined)
     {
-        // iOS 8 Settings
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Please go into your device's privacy settings and allow location services to be used by this application.", nil)
-                                                            message:nil
-                                                           delegate:nil
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                                  otherButtonTitles:nil];
-        [alertView show];
-
-        [Flurry logError:@"Location_Disabled" message:@"User has disabled location" error:nil];
+        [self showLocationSettingsAlertForAlwaysAuthorization:NO];
     }
     else
     {
@@ -1022,12 +1124,14 @@
             {
                 [Flurry logError:@"Location_OutOfArea" message:@"User has tried to center on a location outside the service area" error:nil];
 
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Parking Data Available", nil)
-                                                                    message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
-                                                                   delegate:nil
-                                                          cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                                          otherButtonTitles:nil];
-                [alertView show];
+                UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Parking Data Available", nil)
+                                                                                    message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil]];
+
+                [self presentViewController:controller animated:YES completion:nil];
             }
 
             // Attempt to center on something
@@ -1043,24 +1147,17 @@
     }
 }
 
-// We use this because there is no way to set a modalPresentationStyle in a storyboard. Fix in iOS 8?
-- (IBAction)presentInformationViewController:(UIButton *)sender
-{
-    SPMInformationTableViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"SPMInformationTableViewController"];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-    navigationController.navigationBar.barStyle = UIBarStyleBlack;
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-    }
-    
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:nil];
-}
-
 #pragma mark - Parking Spot
+
+- (BOOL)isParkingSpotShownOnMap
+{
+    if (self.parkingSpotGraphicsLayer.graphicsCount)
+    {
+        return YES;
+    }
+
+    return NO;
+}
 
 - (BOOL)hasStoredParkingSpot
 {
@@ -1074,12 +1171,24 @@
 
 - (void)restoreParkingSpotMarker
 {
-    id lastParkingPoint = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingPoint];
+    NSDictionary *lastParkingPoint = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingPoint];
 
     if ([lastParkingPoint isKindOfClass:[NSDictionary class]])
     {
-        AGSPoint *parkingPoint = [[AGSPoint alloc] initWithJSON:lastParkingPoint
-                                               spatialReference:self.mapView.spatialReference];
+        AGSPoint *parkingPoint = (AGSPoint *)AGSGeometryWithJSON(lastParkingPoint);
+
+        // This does not convert, might as well use the convenience method
+//        AGSPoint *parkingPoint = [[AGSPoint alloc] initWithJSON:lastParkingPoint
+//                                               spatialReference:self.mapView.spatialReference];
+
+        // This is for a bug introduced during the watch app's development
+        NSAssert([parkingPoint.spatialReference isEqualToSpatialReference:self.mapView.spatialReference], @"Mismatched spatial references");
+
+        if (![parkingPoint.spatialReference isEqualToSpatialReference:self.mapView.spatialReference])
+        {
+            parkingPoint = (AGSPoint *)[[AGSGeometryEngine defaultGeometryEngine] projectGeometry:parkingPoint
+                                                                               toSpatialReference:self.mapView.spatialReference];
+        }
 
         if ([[self availableMapDataEnvelope] containsPoint:parkingPoint])
         {
@@ -1090,25 +1199,41 @@
                 lastParkingDate = nil;
             }
 
-            [self addAndShowParkingSpotMarkerWithPoint:parkingPoint date:lastParkingDate];
+            [self addAndShowParkingSpotMarkerWithPoint:parkingPoint
+                                                  date:lastParkingDate];
         }
         else
         {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Could Not Restore Your Parking Spot", nil)
-                                                                message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area. Your stored parking spot will now be removed.", nil)
-                                                               delegate:nil
-                                                      cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                                      otherButtonTitles:nil];
-            [alertView show];
+            UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Could Not Restore Your Parking Spot", nil)
+                                                                                message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area. Your stored parking spot will now be removed.", nil)
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+            [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil]];
+
+            [self presentViewController:controller animated:YES completion:nil];
             [Flurry logError:@"ParkingSpot_Restore_Failure" message:@"Outside of service area" error:nil];
 
-            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:SPMDefaultsLastParkingPoint];
-            [[NSUserDefaults standardUserDefaults] setObject:nil forKey:SPMDefaultsLastParkingDate];
+            [[NSUserDefaults standardUserDefaults] setObject:nil
+                                                      forKey:SPMDefaultsLastParkingPoint];
+            [[NSUserDefaults standardUserDefaults] setObject:nil
+                                                      forKey:SPMDefaultsLastParkingDate];
+
+            if ([WCSession isSupported] && [WCSession defaultSession].isReachable)
+            {
+                [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionRemoveParkingSpot,
+                                                          SPMWatchResponseStatus: SPMWatchResponseSuccess}
+                                           replyHandler:nil
+                                           errorHandler:^(NSError * _Nonnull error) {
+                                               NSLog(@"Could not send message to watch: %@", error);
+                                           }];
+            }
         }
     }
 }
 
-- (void)addAndShowParkingSpotMarkerWithPoint:(nonnull AGSPoint *)parkingPoint date:(nullable NSDate *)date
+- (void)addAndShowParkingSpotMarkerWithPoint:(nonnull AGSPoint *)parkingPoint
+                                        date:(nullable NSDate *)date
 {
     NSAssert(parkingPoint != nil, @"Must have a parking point");
     if (!parkingPoint)
@@ -1155,6 +1280,55 @@
                     completion:nil];
 }
 
+#pragma mark - WatchKit
+
+- (nullable NSDictionary *)watchSessionEncodedParkingDictionary
+{
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingPoint] != nil)
+    {
+        NSDictionary *lastParkingPoint = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingPoint];
+
+        if ([lastParkingPoint isKindOfClass:[NSDictionary class]])
+        {
+            // WGS_1984_Web_Mercator_Auxiliary_Sphere (wkid: 4326)
+            //            AGSSpatialReference *reference = [AGSSpatialReference spatialReferenceWithWKID:102100];
+            //            AGSPoint *parkingPoint = [[AGSPoint alloc] initWithJSON:lastParkingPoint
+            //                                                   spatialReference:reference];
+            AGSPoint *parkingPoint = (AGSPoint *)AGSGeometryWithJSON(lastParkingPoint);
+
+            // We don't store in web mercator, don't assume.
+//            AGSPoint *locationPoint = (AGSPoint *)AGSGeometryWebMercatorToGeographic(parkingPoint);
+
+            AGSGeometryEngine *engine = [AGSGeometryEngine defaultGeometryEngine];
+            AGSPoint *locationPoint = (AGSPoint *)[engine projectGeometry:parkingPoint
+                                                       toSpatialReference:[AGSSpatialReference wgs84SpatialReference]];
+
+            NSDictionary *coordinates = @{SPMWatchObjectParkingPointLatitude: @(locationPoint.y),
+                                          SPMWatchObjectParkingPointLongitude: @(locationPoint.x)};
+
+            NSDate *lastParkingDate = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingDate];
+            NSAssert([lastParkingDate isKindOfClass:[NSDate class]], @"Parking date is wrong");
+            if (![lastParkingDate isKindOfClass:[NSDate class]])
+            {
+                lastParkingDate = [NSDate date];
+            }
+
+            return @{SPMWatchObjectParkingPoint: coordinates,
+                     SPMWatchObjectParkingDate: lastParkingDate};
+        }
+    }
+
+    return nil;
+}
+
+- (void)removeCurrentParkingSpotFromWatch
+{
+    [Flurry logEvent:@"ParkingSpot_RemoveFromWatch"];
+
+    [self didClickAccessoryButtonForCallout:self.mapView.callout
+                                  fromWatch:YES];
+}
+
 #pragma mark - AGSCalloutDelegate
 
 - (void)calloutDidDismiss:(AGSCallout *)callout
@@ -1165,9 +1339,30 @@
 
 - (void)didClickAccessoryButtonForCallout:(AGSCallout *)callout
 {
+    [self didClickAccessoryButtonForCallout:callout
+                                  fromWatch:NO];
+}
+
+- (void)didClickAccessoryButtonForCallout:(AGSCallout *)callout
+                                fromWatch:(BOOL)fromWatch
+{
     [((AGSGraphicsLayer *)callout.representedLayer) removeGraphic:(AGSGraphic *)callout.representedFeature];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:SPMDefaultsLastParkingPoint];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:SPMDefaultsLastParkingDate];
+
+    if (!fromWatch)
+    {
+        if ([WCSession isSupported] && [WCSession defaultSession].isReachable)
+        {
+            [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionRemoveParkingSpot,
+                                                      SPMWatchResponseStatus: SPMWatchResponseSuccess}
+                                       replyHandler:nil
+                                       errorHandler:^(NSError * _Nonnull error) {
+                                           NSLog(@"Could not send message to watch: %@", error);
+                                       }];
+        }
+    }
+
     [callout dismiss];
 
     [UIView transitionWithView:self.parkingButton
@@ -1195,15 +1390,15 @@
     callout.accessoryButtonImage = [UIImage imageNamed:@"Close"];
     callout.delegate = self;
     callout.color = [UIColor colorWithWhite:0 alpha:.8];
-//    callout.borderColor = [UIColor colorWithWhite:1 alpha:.5];
-//    callout.borderWidth = 2;
+    //    callout.borderColor = [UIColor colorWithWhite:1 alpha:.5];
+    //    callout.borderWidth = 2;
     callout.titleColor = [UIColor whiteColor];
     callout.detailColor = [UIColor whiteColor];
 
-	callout.title = (NSString *)[feature attributeForKey:@"title"];
-	callout.detail = (NSString *)[feature attributeForKey:@"date"];
+    callout.title = (NSString *)[feature attributeForKey:@"title"];
+    callout.detail = (NSString *)[feature attributeForKey:@"date"];
 
-	return YES;
+    return YES;
 }
 
 #pragma mark - AGSMapViewLayerDelegate
@@ -1212,8 +1407,13 @@
 - (AGSEnvelope *)SDOTEnvelope
 {
     // This was obtained by zooming out to the limits of the city of Seattle and inspecting the ArcGIS map view's properties.
-    AGSSpatialReference *reference = [AGSSpatialReference spatialReferenceWithWKID:2926];
-    AGSEnvelope *envelope = [AGSEnvelope envelopeWithXmin:1236463.072915 ymin:183835.269949 xmax:1303549.175423 ymax:273283.406628 spatialReference:reference];
+    // NAD_1983_HARN_StatePlane_Washington_North_FIPS_4601_Feet
+    AGSSpatialReference *reference = [AGSSpatialReference spatialReferenceWithWKID:SPMSpatialReferenceWKIDSDOT];
+    AGSEnvelope *envelope = [AGSEnvelope envelopeWithXmin:1236463.072915
+                                                     ymin:183835.269949
+                                                     xmax:1303549.175423
+                                                     ymax:273283.406628
+                                         spatialReference:reference];
     return envelope;
 }
 
@@ -1241,16 +1441,48 @@
         [self centerOnSDOTEnvelope];
     }
 
-    // Official SDOT Wording: There may be a time lag between sign installation and record data entry; consequently, the map may not reflect on- the-ground reality. Always comply with city parking rules and regulations
+    // We could check against our server for a true datetime, but I don't think it is that critical for this app and our audience.
+    NSDate *currentDate = [NSDate date];
 
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:(NSCalendarUnitHour | NSCalendarUnitDay) fromDate:currentDate];
+    NSInteger hour = [components hour];
+    if (hour >= 0 && hour < 3)
+    {
+        // Have we shown this already?
+        NSDate *lastShownDate = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsShownMaintenanceWarningDate];
+        if (!lastShownDate || ![calendar isDate:lastShownDate inSameDayAsDate:currentDate])
+        {
+            [[NSUserDefaults standardUserDefaults] setObject:currentDate forKey:SPMDefaultsShownMaintenanceWarningDate];
+
+            UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Maintenance Warning", nil)
+                                                                                message:NSLocalizedString(@"SDOT performs daily maintenance on the map overnight from 12 midnight to 3 AM. There may be performance issues and missing data during this time period.", nil)
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
+            [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:SPMDefaultsShownMaintenanceWarningDate];
+                                                         }]];
+
+            [self presentViewController:controller
+                               animated:YES
+                             completion:nil];
+        }
+    }
+
+    // Official SDOT Wording: There may be a time lag between sign installation and record data entry; consequently, the map may not reflect on- the-ground reality. Always comply with city parking rules and regulations
     if (![[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsShownInitialWarning])
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning", nil)
-                                                            message:NSLocalizedString(@"The map may not always reflect the on-the-ground reality since there might be a delay between on-street changes and the data being entered into the system.\n\nAlways double check before parking and comply with city parking rules and regulations posted on the street.", nil)
-                                                           delegate:self
-                                                  cancelButtonTitle:NSLocalizedString(@"OK", nil)
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", nil)
+                                                                            message:NSLocalizedString(@"The map may not always reflect the on-the-ground reality since there might be a delay between on-street changes and the data being entered into the system.\n\nAlways double check before parking and comply with city parking rules and regulations posted on the street.", nil)
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                         [self beginLocationUpdates];
+                                                     }]];
+
+        [self presentViewController:controller animated:YES completion:nil];
 
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:SPMDefaultsShownInitialWarning];
     }
@@ -1271,18 +1503,40 @@
         self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeDefault;
     }
 
-//    self.mapView.locationDisplay.wanderExtentFactor = 1;
+    //    self.mapView.locationDisplay.wanderExtentFactor = 1;
 
-//    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeCompassNavigation;
+    //    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeCompassNavigation;
     self.mapView.locationDisplay.showsPing = YES;
+
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsNeedsBackgroundLocationWarning])
+    {
+        if ([WCSession isSupported])
+        {
+            if ([WCSession defaultSession].isWatchAppInstalled)
+            {
+                CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+                if (authorizationStatus != kCLAuthorizationStatusAuthorizedAlways)
+                {
+                    self.locationManager = [[CLLocationManager alloc] init];
+                    self.locationManager.delegate = self;
+                    [self.locationManager requestAlwaysAuthorization];
+                    return;
+                }
+            }
+        }
+    }
+
     [self.mapView.locationDisplay startDataSource];
 }
 
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    [self beginLocationUpdates];
+    if (status != kCLAuthorizationStatusNotDetermined)
+    {
+        [self.mapView.locationDisplay startDataSource];
+        self.locationManager.delegate = nil;
+        self.locationManager = nil;
+    }
 }
 
 //#pragma mark - AGSMapServiceInfoDelegate

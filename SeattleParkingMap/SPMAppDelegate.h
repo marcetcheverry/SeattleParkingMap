@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Tap Light Software. All rights reserved.
 //
 
-@interface SPMAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SPMAppDelegate : UIResponder <UIApplicationDelegate, WCSessionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
