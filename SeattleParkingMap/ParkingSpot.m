@@ -14,7 +14,7 @@ static NSString * const SPMWatchObjectParkingLocation = @"SPMWatchObjectParkingL
 static NSString * const SPMWatchObjectParkingLocationLatitude = @"SPMWatchObjectParkingLocationLatitude";
 static NSString * const SPMWatchObjectParkingLocationLongitude = @"SPMWatchObjectParkingLocationLongitude";
 static NSString * const SPMWatchObjectParkingDate = @"SPMWatchObjectParkingDate";
-static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAddress";
+NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAddress";
 
 @interface ParkingSpot ()
 
@@ -30,25 +30,25 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
 {
     NSParameterAssert(location);
     NSParameterAssert(date);
-
+    
     if (!location)
     {
         return nil;
     }
-
+    
     if (!date)
     {
         return nil;
     }
-
+    
     self = [super init];
-
+    
     if (self)
     {
         self.location = location;
         self.date = date;
     }
-
+    
     return self;
 }
 
@@ -67,16 +67,16 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
 - (BOOL)isEqualToParkingSpot:(ParkingSpot *)parkingSpot
 {
     NSParameterAssert(parkingSpot);
-
+    
     if (!parkingSpot)
     {
         return NO;
     }
-
+    
     BOOL haveEqualDate = (!self.date && !parkingSpot.date) || [self.date isEqualToDate:parkingSpot.date];
     BOOL haveEqualLocation = (!self.location && !parkingSpot.location) || [self.location distanceFromLocation:parkingSpot.location] < 1;
     BOOL haveEqualTimeLimit = (!self.timeLimit && !parkingSpot.timeLimit) || [self.timeLimit isEqualToParkingTimeLimit:parkingSpot.timeLimit];
-
+    
     return haveEqualDate && haveEqualLocation && haveEqualTimeLimit;
 }
 
@@ -86,12 +86,12 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
     {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[self class]])
     {
         return NO;
     }
-
+    
     return [self isEqualToParkingSpot:(ParkingSpot *)object];
 }
 
@@ -105,20 +105,20 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
 - (nullable instancetype)initWithWatchConnectivityDictionary:(nonnull NSDictionary *)dictionary
 {
     //    NSParameterAssert(dictionary);
-
+    
     if (!dictionary)
     {
         return nil;
     }
-
+    
     NSNumber *latitude = dictionary[SPMWatchObjectParkingLocation][SPMWatchObjectParkingLocationLatitude];
     NSNumber *longitude = dictionary[SPMWatchObjectParkingLocation][SPMWatchObjectParkingLocationLongitude];
-
+    
     CLLocation *location = [[CLLocation alloc] initWithLatitude:[latitude doubleValue]
                                                       longitude:[longitude doubleValue]];
     ParkingSpot *spot = [self initWithLocation:location
                                           date:dictionary[SPMWatchObjectParkingDate]];
-
+    
     spot.timeLimit = [[ParkingTimeLimit alloc] initWithWatchConnectivityDictionary:dictionary[SPMWatchObjectParkingTimeLimit]];
     spot.address = dictionary[SPMWatchObjectParkingAddress];
     return spot;
@@ -128,21 +128,21 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
 {
     NSDictionary *coordinates = @{SPMWatchObjectParkingLocationLatitude: @(self.location.coordinate.latitude),
                                   SPMWatchObjectParkingLocationLongitude: @(self.location.coordinate.longitude)};
-
+    
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:2];
     dictionary[SPMWatchObjectParkingLocation] = coordinates;
     dictionary[SPMWatchObjectParkingDate] = self.date;
-
+    
     if (self.timeLimit)
     {
         dictionary[SPMWatchObjectParkingTimeLimit] =[self.timeLimit watchConnectivityDictionaryRepresentation];
     }
-
+    
     if (self.address)
     {
         dictionary[SPMWatchObjectParkingAddress] = self.address;
     }
-
+    
     return dictionary;
 }
 
@@ -152,9 +152,14 @@ static NSString * const SPMWatchObjectParkingAddress = @"SPMWatchObjectParkingAd
                                 inSameDayAsDate:[NSDate date]];
 }
 
-- (nullable NSString *)localizedDateString
+- (nonnull NSString *)localizedDateString
 {
     return [self.date SPMLocalizedRelativeString];
+}
+
+- (nonnull NSString *)localizedAbsoluteDateString
+{
+    return [self.date SPMLocalizedString];
 }
 
 @end

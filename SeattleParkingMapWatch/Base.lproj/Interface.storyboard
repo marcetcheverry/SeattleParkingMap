@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="4t0-Es-icU">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13771" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="4t0-Es-icU">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="9515"/>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13756"/>
     </dependencies>
     <scenes>
         <!--Map-->
@@ -26,10 +30,10 @@
                                                 <fontDescription key="font" type="system" pointSize="15"/>
                                             </label>
                                             <imageView alignment="center" verticalAlignment="center" image="MapTimeLimit" id="hos-NC-hYf">
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </imageView>
                                         </items>
-                                        <color key="backgroundColor" white="0.15203979863221886" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="0.1520397961139679" green="0.1520397961139679" blue="0.1520397961139679" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                     </group>
                                     <connections>
@@ -37,7 +41,7 @@
                                     </connections>
                                 </button>
                                 <button width="1" alignment="center" verticalAlignment="bottom" title="Remove Spot" id="wwq-O0-iK3">
-                                    <color key="backgroundColor" red="1" green="0.1323590875" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.98619067668914795" green="0.0" blue="0.027344245463609695" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
                                     <connections>
                                         <action selector="removeParkingSpotTouched" destination="AgC-eL-Hgc" id="pIP-UB-Kah"/>
@@ -75,7 +79,7 @@ Cg
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="288" y="-103"/>
+            <point key="canvasLocation" x="104" y="-105"/>
         </scene>
         <!--Time Limit-->
         <scene sceneID="Vcp-nb-Wee">
@@ -94,7 +98,7 @@ Cg
                                     <items>
                                         <group width="1" alignment="left" layout="vertical" id="Sel-DW-F56" userLabel="Hour Group">
                                             <items>
-                                                <picker width="35" height="35" alignment="left" focusStyle="stack" id="mvF-ke-XNC" userLabel="Hour Picker">
+                                                <picker width="40" height="40" alignment="left" focusStyle="stack" id="mvF-ke-XNC" userLabel="Hour Picker">
                                                     <connections>
                                                         <action selector="pickerHoursSelectedIndex:" destination="zgM-e8-xgW" id="vbA-1S-xs8"/>
                                                     </connections>
@@ -107,7 +111,7 @@ Cg
                                         <label height="35" alignment="left" text=":" id="qYM-Td-vnB"/>
                                         <group width="1" alignment="left" layout="vertical" id="8E3-jd-ZgJ" userLabel="Minute Group">
                                             <items>
-                                                <picker width="35" height="35" alignment="right" focusStyle="stack" id="Cjf-69-2SH" userLabel="Minute Picker">
+                                                <picker width="40" height="40" alignment="right" focusStyle="stack" id="Cjf-69-2SH" userLabel="Minute Picker">
                                                     <connections>
                                                         <action selector="pickerMinutesSelectedIndex:" destination="zgM-e8-xgW" id="b3u-5x-e8b"/>
                                                     </connections>
@@ -120,8 +124,8 @@ Cg
                                     </items>
                                 </group>
                                 <button width="1" alignment="right" verticalAlignment="bottom" title="Set Time Limit" id="L1z-9A-PQN">
-                                    <color key="titleColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="backgroundColor" red="1" green="0.78334659337997437" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.99475514888763428" green="0.74394536018371582" blue="0.036487799137830734" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
                                     <connections>
                                         <action selector="touchedSetTimeLimit" destination="zgM-e8-xgW" id="yNM-sd-bY8"/>
@@ -152,7 +156,7 @@ Cg
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="445" y="-122"/>
+            <point key="canvasLocation" x="322" y="-122"/>
         </scene>
         <!--Parking-->
         <scene sceneID="foa-Fu-40t">
@@ -174,7 +178,7 @@ Cg
                                     </items>
                                 </group>
                                 <button width="1" alignment="center" verticalAlignment="bottom" title="📍 Park Here" id="wJG-IL-7we">
-                                    <color key="backgroundColor" red="0.0" green="0.55772668123245239" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.054191768169403076" green="0.46488898992538452" blue="0.99842417240142822" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
                                     <connections>
                                         <action selector="parkHereTouched" destination="4t0-Es-icU" id="Co9-dz-wQA"/>
@@ -210,38 +214,8 @@ Cg
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="129" y="-122"/>
-        </scene>
-        <!--Glance-->
-        <scene sceneID="rjY-Ar-IMT">
-            <objects>
-                <glanceController identifier="Glance" spacing="0.0" topTemplateType="body1Medium" id="Sv0-Ai-Zie" customClass="GlanceInterfaceController">
-                    <items>
-                        <label alignment="left" text="Seattle Parking" minimumScaleFactor="0.80000000000000004" id="vDn-Ga-I2H">
-                            <color key="textColor" red="0.2036917359" green="0.72705197330000004" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
-                        </label>
-                        <label alignment="left" text="Loading…" minimumScaleFactor="0.59999999999999998" id="sl3-vS-RGx"/>
-                        <group alignment="left" layout="vertical" spacing="0.0" id="eew-Gs-W6Y">
-                            <items>
-                                <map height="100" alignment="center" verticalAlignment="center" hidden="YES" alpha="0.0" id="mlQ-VR-ezz"/>
-                                <label width="1" height="1" alignment="center" text="Ⓟ" textAlignment="center" id="yjt-RH-pd9">
-                                    <fontDescription key="font" type="boldSystem" pointSize="75"/>
-                                </label>
-                            </items>
-                        </group>
-                    </items>
-                    <edgeInsets key="margins" left="0.0" right="0.0" top="0.0" bottom="14"/>
-                    <connections>
-                        <outlet property="interfaceMap" destination="mlQ-VR-ezz" id="xCZ-4Q-N1U"/>
-                        <outlet property="labelHeader" destination="vDn-Ga-I2H" id="Paa-Y6-EdQ"/>
-                        <outlet property="labelParkingIcon" destination="yjt-RH-pd9" id="4o4-sZ-SjS"/>
-                        <outlet property="labelTime" destination="sl3-vS-RGx" id="RE4-pB-v0h"/>
-                    </connections>
-                </glanceController>
-            </objects>
-            <point key="canvasLocation" x="129" y="101"/>
+            <point key="canvasLocation" x="-132" y="-122"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="0.04768893773346794" green="0.59425500798828867" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="0.04768893773346794" green="0.59425500798828867" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

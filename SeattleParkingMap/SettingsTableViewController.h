@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Tap Light Software. All rights reserved.
 //
 
-@interface SettingsTableViewController : UITableViewController
+#import "BaseTableViewController.h"
+
+@interface SettingsTableViewController : BaseTableViewController
 
 @end

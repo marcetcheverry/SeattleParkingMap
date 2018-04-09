@@ -22,7 +22,7 @@
 
 static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 
-@interface ParkInterfaceController() <WCSessionDelegate>
+@interface ParkInterfaceController()
 
 @property (weak, nonatomic) IBOutlet WKInterfaceButton *buttonCurrent;
 @property (weak, nonatomic) IBOutlet WKInterfaceLabel *labelParkingGraphic;
@@ -32,6 +32,7 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 @property (nonatomic) NSOrderedSet <NSNumber *> *pickerTimeLimitIntervals;
 @property (nonatomic) NSInteger pickerTimeLimitSelectedIndex;
 @property (nonatomic) BOOL needsPickerTimeLimitUpdateOnAppearance;
+@property (nonatomic, copy) dispatch_block_t willActivateBlock;
 @property (nonatomic) BOOL isPresentingModalController;
 
 @end
@@ -41,19 +42,19 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 - (void)awakeWithContext:(id)context
 {
     [super awakeWithContext:context];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveSessionMessage:)
                                                  name:SPMWatchSessionNotificationReceivedMessage
                                                object:nil];
-
+    
     [self.extensionDelegate addObserver:self
                              forKeyPath:@"userDefinedParkingTimeLimit"
                                 options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
                                 context:ParkInterfaceControllerContext];
-
+    
     [self getLastParkingPointPresentingMapAutomatically:YES];
-
+    
     [self buildTimeLimitsWithCustomInterval:self.extensionDelegate.userDefinedParkingTimeLimit
                     selectingCustomInterval:YES];
 }
@@ -62,24 +63,33 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 {
     // This method is called when watch view controller is about to be visible to user
     [super willActivate];
-    [self updateParkingInterface];
+    
+    if (self.willActivateBlock)
+    {
+        self.willActivateBlock();
+        self.willActivateBlock = nil;
+    }
+    else
+    {
+        [self updateParkingInterface];
+    }
 }
 
 - (void)didAppear
 {
     [super didAppear];
-
+    
     [self updateUserActivity:SPMWatchHandoffActivityCurrentScreen
                     userInfo:@{SPMWatchHandoffUserInfoKeyCurrentScreen : NSStringFromClass(self.class)}
                   webpageURL:nil];
-
+    
     if (self.needsPickerTimeLimitUpdateOnAppearance)
     {
         [self buildTimeLimitsWithCustomInterval:self.extensionDelegate.userDefinedParkingTimeLimit
                         selectingCustomInterval:YES];
         self.needsPickerTimeLimitUpdateOnAppearance = NO;
     }
-
+    
     if (!self.extensionDelegate.currentSpot)
     {
         if (!self.currentOperation || self.currentOperation.finished)
@@ -92,7 +102,7 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 - (void)didDeactivate
 {
     [super didDeactivate];
-
+    
     self.isPresentingModalController = NO;
 }
 
@@ -112,6 +122,12 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     [self invalidateUserActivity];
 }
 
+- (void)presentMapInterfaceWithContext:(id)context
+{
+    [self presentControllerWithName:@"Map"
+                            context:context];
+}
+
 - (void)parkWithNoTimeLimit
 {
     [self.pickerTimeLimit setSelectedItemIndex:0];
@@ -121,34 +137,12 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     [self parkHereTouched];
 }
 
-- (void)handleUserActivity:(NSDictionary *)userInfo
-{
-    // Let the user set the time limit
-    if ([userInfo[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingSpot])
-    {
-        [self parkWithNoTimeLimit];
-    }
-    else if (userInfo[CLKLaunchedTimelineEntryDateKey])
-    {
-        if (self.extensionDelegate.currentSpot)
-        {
-            // Workaround for: https://forums.developer.apple.com/message/101186
-            [WKInterfaceController reloadRootControllersWithNames:@[@"Park"]
-                                                         contexts:nil];
-        }
-        else
-        {
-            [self parkWithNoTimeLimit];
-        }
-    }
-}
-
 - (void)dealloc
 {
     [self.extensionDelegate removeObserver:self
                                 forKeyPath:@"userDefinedParkingTimeLimit"
                                    context:ParkInterfaceControllerContext];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SPMWatchSessionNotificationReceivedMessage
                                                   object:nil];
@@ -165,30 +159,30 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     WKPickerItem *itemOther = [[WKPickerItem alloc] init];
     itemOther.title = NSLocalizedString(@"Other", nil);
     itemOther.caption = NSLocalizedString(@"Time Limit", nil);
-
+    
     NSOrderedSet *predefinedIntervals = [ParkingTimeLimit defaultLengthTimeIntervals];
     if (customInterval)
     {
         NSMutableOrderedSet *mutablePredefinedIntervals = [predefinedIntervals mutableCopy];
         [mutablePredefinedIntervals addObject:customInterval];
-
+        
         NSSortDescriptor *lowestToHighest = [NSSortDescriptor sortDescriptorWithKey:@"self"
                                                                           ascending:YES];
         [mutablePredefinedIntervals sortUsingDescriptors:@[lowestToHighest]];
-
+        
         predefinedIntervals = mutablePredefinedIntervals;
     }
-
+    
     self.pickerTimeLimitIntervals = predefinedIntervals;
-
+    
     NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
     formatter.allowedUnits = NSCalendarUnitHour | NSCalendarUnitMinute;
     formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropAll;
-
+    
     NSUInteger predefinedIntervalsCount = [predefinedIntervals count];
     self.pickerTimeLimitItems = [[NSMutableArray alloc] initWithCapacity:predefinedIntervalsCount + 2];
     [self.pickerTimeLimitItems addObject:itemNone];
-
+    
     NSUInteger indexToSelect = 0;
     for (NSUInteger i = 0; i < predefinedIntervalsCount; i++)
     {
@@ -197,9 +191,9 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
         {
             indexToSelect = i + 1;
         }
-
+        
         NSTimeInterval interval = [itemInterval doubleValue];
-
+        
         NSInteger days = ((NSInteger) interval) / (60 * 60 * 24);
         NSInteger hours = (((NSInteger) interval) / (60 * 60)) - (days * 24);
         NSInteger minutes = (((NSInteger) interval) / 60) - (days * 24 * 60) - (hours * 60);
@@ -211,15 +205,15 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
         {
             formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleShort;
         }
-
+        
         WKPickerItem *item = [[WKPickerItem alloc] init];
         item.title = [[formatter stringFromTimeInterval:interval] lowercaseString];
         item.caption = NSLocalizedString(@"Time Limit", nil);
         [self.pickerTimeLimitItems addObject:item];
     }
-
+    
     [self.pickerTimeLimitItems addObject:itemOther];
-
+    
     [self.pickerTimeLimit setItems:self.pickerTimeLimitItems];
     [self.pickerTimeLimit setSelectedItemIndex:indexToSelect];
     if (selectingCustomInterval)
@@ -281,9 +275,9 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
 - (void)didReceiveSessionMessage:(NSNotification *)notification
 {
     NSDictionary *message = [notification userInfo];
-
+    
     //    NSLog(@"Watch (Park) Received Message from App %@", message);
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([message[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingSpot])
         {
@@ -291,16 +285,31 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
                 self.extensionDelegate.currentSpot)
             {
                 [self updateParkingInterface];
-                [self presentControllerWithName:@"Map"
-                                        context:message];
+                [self presentMapInterfaceWithContext:message];
             }
-
+            
             [self setLoadingIndicatorHidden:YES];
         }
         else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingSpot] ||
                  [message[SPMWatchAction] isEqualToString:SPMWatchActionGetParkingSpot])
         {
             [self updateParkingInterface];
+            
+            if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingSpot])
+            {
+                if ([self.currentOperation.identifier isEqual:SPMWatchActionGetParkingSpot])
+                {
+                    if (!self.currentOperation.isFinished)
+                    {
+                        self.currentOperation.cancelled = YES;
+                        [self setLoadingIndicatorHidden:YES
+                                               animated:YES];
+                        return;
+                    }
+                }
+
+                [self dismissController];
+            }
         }
     });
 }
@@ -328,12 +337,12 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
                                                                                attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:49]}];
         [self.labelParkingGraphic setAttributedText:attributedString];
         [self.labelParkingGraphic sizeToFitHeight];
-
+        
         if (self.pickerTimeLimitSelectedIndex == ([self.pickerTimeLimitItems count] - 1))
         {
             UIFont *font = [UIFont systemFontOfSize:15
                                              weight:UIFontWeightMedium];
-
+            
             [self.buttonCurrent setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Set Time Limit", nil)
                                                                                    attributes:@{NSFontAttributeName:font,
                                                                                                 NSForegroundColorAttributeName: [UIColor blackColor]}]];
@@ -360,14 +369,14 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     {
         [self.pickerTimeLimit focus];
     }
-
+    
     [super setLoadingIndicatorHidden:hidden];
 }
 
 - (IBAction)pickerTimeLimitSelectedIndex:(NSInteger)selectedIndex
 {
     self.pickerTimeLimitSelectedIndex = selectedIndex;
-
+    
     [self updateParkingInterface];
 }
 
@@ -380,26 +389,26 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
         {
             self.currentOperation.cancelled = YES;
         }
-
+        
         WKAlertAction *actionDismiss = [WKAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil)
                                                                 style:WKAlertActionStyleCancel
                                                               handler:^{
                                                                   [self dismissController];
-
+                                                                  
                                                                   // This is for a bug that leaves the screen empty
                                                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                                       [self setLoadingIndicatorHidden:YES
                                                                                              animated:YES];
                                                                   });
                                                               }];
-
+        
         WKAlertAction *actionTryAgain = [WKAlertAction actionWithTitle:NSLocalizedString(@"Try Again", nil)
                                                                  style:WKAlertActionStyleDefault
                                                                handler:^{
                                                                    [self dismissController];
                                                                    [self getLastParkingPointPresentingMapAutomatically:YES];
                                                                }];
-
+        
         [self presentAlertControllerWithTitle:NSLocalizedString(@"Warning", nil)
                                       message:NSLocalizedString(@"Could not determine your current parking spot. Please try again if there is one set on your iPhone", nil)
                                preferredStyle:WKAlertControllerStyleSideBySideButtonsAlert
@@ -417,88 +426,87 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     {
         return 0;
     }
-
+    
     return [super loadingIndicatorDelay];
 }
 
 - (void)getLastParkingPointPresentingMapAutomatically:(BOOL)presentMapAutomatically
 {
     self.labelLoading.text = NSLocalizedString(@"Loading", nil);
-
+    
     self.buttonCancel.alpha = 0;
-
+    
     WatchConnectivityOperation *localOperation = [[WatchConnectivityOperation alloc] init];
     localOperation.identifier = SPMWatchActionGetParkingSpot;
     self.currentOperation = localOperation;
-
+    
     [self setLoadingIndicatorHidden:NO
                            animated:YES];
-
+    
     // Add a timeout to show the cancel button
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (localOperation.finished)
         {
             return;
         }
-
+        
         [self animateWithDuration:0.3
                        animations:^{
                            self.buttonCancel.alpha = 1;
                        }];
     });
+    
+    [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:@{SPMWatchAction: SPMWatchActionGetParkingSpot}
+                                                                       replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   return;
+                                                                               }
 
-    [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionGetParkingSpot}
-                               replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
+                                                                               //                         NSLog(@"Watch received reply: %@", replyMessage);
 
-                                       //                         NSLog(@"Watch received reply: %@", replyMessage);
+                                                                               self.extensionDelegate.userDefinedParkingTimeLimit = replyMessage[SPMWatchObjectUserDefinedParkingTimeLimit];
+                                                                               self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
 
-                                       self.extensionDelegate.userDefinedParkingTimeLimit = replyMessage[SPMWatchObjectUserDefinedParkingTimeLimit];
-                                       self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
+                                                                               [self setLoadingIndicatorHidden:YES
+                                                                                                      animated:YES];
+                                                                               self.buttonCancel.alpha = 1;
+                                                                               [self updateParkingInterface];
 
-                                       [self setLoadingIndicatorHidden:YES
-                                                              animated:YES];
-                                       self.buttonCancel.alpha = 1;
-                                       [self updateParkingInterface];
+                                                                               if (presentMapAutomatically)
+                                                                               {
+                                                                                   if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess] &&
+                                                                                       self.extensionDelegate.currentSpot)
+                                                                                   {
+                                                                                       [self presentMapInterfaceWithContext:replyMessage];
+                                                                                   }
+                                                                               }
 
-                                       if (presentMapAutomatically)
-                                       {
-                                           if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess] &&
-                                               self.extensionDelegate.currentSpot)
-                                           {
-                                               [self presentControllerWithName:@"Map"
-                                                                       context:replyMessage];
-                                           }
-                                       }
+                                                                               //                         NSLog(@"Finished getLastParkingPoint");
+                                                                               localOperation.finished = YES;
+                                                                           });
+                                                                       }
+                                                                       errorHandler:^(NSError * _Nonnull error) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   return;
+                                                                               }
 
-                                       //                         NSLog(@"Finished getLastParkingPoint");
-                                       localOperation.finished = YES;
-                                   });
-                               }
-                               errorHandler:^(NSError * _Nonnull error) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
-
-                                       NSLog(@"Watch received error: %@", error);
-                                       self.extensionDelegate.currentSpot = nil;
-                                       [self setLoadingIndicatorHidden:YES
-                                                              animated:YES];
-                                       self.buttonCancel.alpha = 1;
-                                       localOperation.finished = YES;
-                                   });
-                               }];
+                                                                               NSLog(@"Watch received error: %@", error);
+                                                                               self.extensionDelegate.currentSpot = nil;
+                                                                               [self setLoadingIndicatorHidden:YES
+                                                                                                      animated:YES];
+                                                                               self.buttonCancel.alpha = 1;
+                                                                               localOperation.finished = YES;
+                                                                           });
+                                                                       }];
 }
 
-- (nonnull NSNumber *)currentTimePickerIntervalNumber
+- (nullable NSNumber *)currentTimePickerIntervalNumber
 {
     if (self.pickerTimeLimitSelectedIndex == 0)
     {
@@ -508,54 +516,53 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
     {
         return nil;
     }
-
+    
     NSUInteger index = self.pickerTimeLimitSelectedIndex;
     // Account for the +1 of the Unlimited first object,
     if (index > 0)
     {
         index -= 1;
     }
-
+    
     return self.pickerTimeLimitIntervals[index];
 }
 
 - (IBAction)parkHereTouched
 {
-    if (self.pickerTimeLimitSelectedIndex == ([self.pickerTimeLimitItems count] - 1))
+    // Note that we check this here first before the time limit
+    if (self.extensionDelegate.currentSpot)
+    {
+        [self presentMapInterfaceWithContext:nil];
+        return;
+    }
+    else if (self.pickerTimeLimitSelectedIndex == ([self.pickerTimeLimitItems count] - 1))
     {
         [self presentControllerWithName:@"TimeLimit"
                                 context:SPMWatchContextUserDefinedParkingTimeLimit];
         return;
     }
-
-    if (self.extensionDelegate.currentSpot)
-    {
-        [self presentControllerWithName:@"Map"
-                                context:nil];
-        return;
-    }
-
+    
     self.labelLoading.text = NSLocalizedString(@"Finding Current Location", nil);
-
+    
     [self setLoadingIndicatorHidden:NO
                            animated:YES];
-
+    
     //    NSLog(@"Sending SPMWatchActionSetParkingSpot");
-
+    
     // Blocks will keep their own local reference of the cancel flag.
     // Note that if you fire two sendMessage calls quickly and cancel them, it will take 5 minutes for the second one to fail
     WatchConnectivityOperation *localOperation = [[WatchConnectivityOperation alloc] init];
     //    NSLog(@"Will set new %p, over %p", localOperation, self.currentOperation);
     self.currentOperation = localOperation;
-
+    
     NSDictionary *message = @{SPMWatchAction: SPMWatchActionSetParkingSpot};
-
+    
     NSNumber *selectedTimeLimit = [self currentTimePickerIntervalNumber];
-
+    
     if (selectedTimeLimit)
     {
         NSDate *limitStartDate = [NSDate date];
-
+        
         if (self.extensionDelegate.currentSpot.date)
         {
             if ([limitStartDate SPMIsBeforeDate:self.extensionDelegate.currentSpot.date])
@@ -565,7 +572,7 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
                 limitStartDate = self.extensionDelegate.currentSpot.date;
             }
         }
-
+        
         ParkingTimeLimit *timeLimit = [[ParkingTimeLimit alloc] initWithStartDate:limitStartDate
                                                                            length:selectedTimeLimit
                                                                 reminderThreshold:nil];
@@ -576,54 +583,72 @@ static void *ParkInterfaceControllerContext = &ParkInterfaceControllerContext;
             message = mutableMessage;
         }
     }
+    
+    [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:message
+                                                                       replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
 
-    [[WCSession defaultSession] sendMessage:message
-                               replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
+                                                                                   self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
+                                                                                   [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
+                                                                                                                                       object:nil
+                                                                                                                                     userInfo:replyMessage];
 
-                                           [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
-                                           self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
-                                                                                               object:nil
-                                                                                             userInfo:replyMessage];
+                                                                                   return;
+                                                                               }
 
-                                           return;
-                                       }
+                                                                               //                         NSLog(@"Watch received reply: %@", replyMessage);
 
-                                       //                         NSLog(@"Watch received reply: %@", replyMessage);
+                                                                               dispatch_block_t successBlock = ^{
+                                                                                   self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
+                                                                                   [self updateParkingInterface];
+                                                                                   [self setLoadingIndicatorHidden:YES
+                                                                                                          animated:NO];
+                                                                                   [self presentMapInterfaceWithContext:replyMessage];
+                                                                                   [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
+                                                                               };
 
-                                       if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           self.extensionDelegate.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
-                                           [self updateParkingInterface];
-                                           [self setLoadingIndicatorHidden:YES
-                                                                  animated:NO];
-                                           [self presentControllerWithName:@"Map"
-                                                                   context:replyMessage];
-                                           [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeSuccess];
-                                       }
-                                       else
-                                       {
-                                           [self displayErrorMessage:replyMessage[NSLocalizedFailureReasonErrorKey] ?: NSLocalizedString(@"Could Not Set Parking Spot", nil)];
-                                       }
-                                   });
-                               }
-                               errorHandler:^(NSError * _Nonnull error) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
-                                       
-                                       self.extensionDelegate.currentSpot = nil;
-                                       NSLog(@"Watch received error: %@", error);
-                                       [self displayErrorMessage:NSLocalizedString(@"Could Not Set Parking Spot", nil)];
-                                   });
-                               }];
+                                                                               if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                                                               {
+                                                                                   successBlock();
+                                                                               }
+                                                                               else
+                                                                               {
+                                                                                   BOOL hideLoadingIndicator = YES;
+                                                                                   if ([replyMessage[SPMErrorCode] integerValue] == SPMErrorCodeDataDiscrepancy)
+                                                                                   {
+                                                                                       self.labelLoading.text = NSLocalizedString(@"Loading", nil);
+                                                                                       hideLoadingIndicator = NO;
+                                                                                   }
+
+                                                                                   [self displayErrorMessage:replyMessage[NSLocalizedFailureReasonErrorKey] ?: NSLocalizedString(@"Could Not Set\nParking Spot", nil)
+                                                                                        hideLoadingIndicator:hideLoadingIndicator
+                                                                                            dismissalHandler:^{
+                                                                                                if ([replyMessage[SPMErrorCode] integerValue] == SPMErrorCodeDataDiscrepancy)
+                                                                                                {
+                                                                                                    // Because we can't update the UI yet
+                                                                                                    self.willActivateBlock = successBlock;
+                                                                                                }
+                                                                                            }];
+                                                                               }
+                                                                           });
+                                                                       }
+                                                                       errorHandler:^(NSError * _Nonnull error) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   //                             NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   return;
+                                                                               }
+
+                                                                               self.extensionDelegate.currentSpot = nil;
+                                                                               NSLog(@"Watch received error: %@", error);
+                                                                               [self displayErrorMessage:NSLocalizedString(@"Could Not Set\nParking Spot", nil)];
+                                                                           });
+                                                                       }];
 }
 
 @end

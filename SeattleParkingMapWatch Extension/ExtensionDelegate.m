@@ -8,17 +8,24 @@
 
 #import "ExtensionDelegate.h"
 
-#import "ParkingSpot.h"
+#import "ParkingSpot+Watch.h"
 #import "ParkingTimeLimit.h"
 
+#import "ParkInterfaceController.h"
+
 @import ClockKit;
+@import UserNotifications;
 
 static void *ExtensionDelegateContext = &ExtensionDelegateContext;
 
-@interface ExtensionDelegate() <WCSessionDelegate>
+extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
 
-@property (nonatomic, readwrite, getter=isCurrentSpotLoaded) BOOL currentSpotLoaded;
+@interface ExtensionDelegate() <WCSessionDelegate, UNUserNotificationCenterDelegate>
+
 @property (nonatomic) BOOL needsToFetchParkingSpot;
+@property (atomic) BOOL initialActivationCompleted;
+@property (atomic, strong) NSMutableArray <NSDictionary *> *pendingMessages;
+@property (nonatomic, readwrite, getter=isCurrentSpotLoaded) BOOL currentSpotLoaded;
 @property (nonatomic) BOOL isLoading;
 
 @end
@@ -29,16 +36,28 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
 
 - (void)applicationDidFinishLaunching
 {
+    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+
     // Perform any final initialization of your application.
     [self establishSession];
-
+    
     [self addObserver:self
            forKeyPath:@"currentSpot"
               options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
               context:ExtensionDelegateContext];
-
+    
     [self addObserver:self
            forKeyPath:@"currentSpot.timeLimit"
+              options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+              context:ExtensionDelegateContext];
+
+    [self addObserver:self
+           forKeyPath:@"currentSpot.address"
+              options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+              context:ExtensionDelegateContext];
+
+    [self addObserver:self
+           forKeyPath:@"currentSpotLoaded"
               options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
               context:ExtensionDelegateContext];
 }
@@ -46,7 +65,7 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
 - (void)applicationDidBecomeActive
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-
+    
     // Avoid the first time, as our root interface will take care of it
     if (self.needsToFetchParkingSpot)
     {
@@ -58,18 +77,21 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
 - (void)applicationWillResignActive
 {
     self.needsToFetchParkingSpot = YES;
-
+    
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, etc.
 }
 
-- (void)handleActionWithIdentifier:(nullable NSString *)identifier
-              forLocalNotification:(UILocalNotification *)localNotification
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
-    if ([localNotification.category isEqualToString:SPMNotificationCategoryTimeLimit])
+    if ([notification.request.content.categoryIdentifier isEqualToString:SPMNotificationCategoryTimeLimit])
     {
         [self updateComplications];
     }
+
+    completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 #pragma mark - Session
@@ -79,6 +101,52 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
     WCSession *session = [WCSession defaultSession];
     session.delegate = self;
     [session activateSession];
+    SPMLog(@"Activating Watch Session");
+}
+
+#pragma mark - Messaging
+
+- (void)sendMessageToPhone:(NSDictionary<NSString *, id> *)message
+              replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
+              errorHandler:(nullable void (^)(NSError *error))errorHandler
+{
+    NSParameterAssert(message);
+    if (!message)
+    {
+        return;
+    }
+    
+    SPMLog(@"Watch->Device Message (reachable %lu, activationState %lu): %@", (unsigned long)WCSession.defaultSession.isReachable, (unsigned long)WCSession.defaultSession.activationState, message);
+    
+    if (!self.initialActivationCompleted)
+    {
+        if (!self.pendingMessages)
+        {
+            self.pendingMessages = [[NSMutableArray alloc] initWithCapacity:1];
+        }
+        
+        SPMLog(@"Watch->Device Message Added to Pending Activation Queue");
+        
+        [self.pendingMessages addObject:@{@"message": message, @"replyHandler": [replyHandler copy], @"errorHandler": [errorHandler copy]}];
+        return;
+    }
+    
+    if (WCSession.defaultSession.isReachable && WCSession.defaultSession.activationState == WCSessionActivationStateActivated)
+    {
+        [WCSession.defaultSession sendMessage:message
+                                 replyHandler:replyHandler
+                                 errorHandler:^(NSError * _Nonnull sessionError) {
+                                     NSLog(@"Could not send message to device: %@. Message: %@", sessionError, message);
+                                     if (errorHandler)
+                                     {
+                                         errorHandler(sessionError);
+                                     }
+                                 }];
+    }
+    else
+    {
+        NSLog(@"Watch->Device Message Not Sent!");
+    }
 }
 
 #pragma mark - Complications
@@ -98,6 +166,7 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
 - (void)updateComplications
 {
     CLKComplicationServer *server = [CLKComplicationServer sharedInstance];
+    SPMLog(@"Updating complications %@", server.activeComplications);
     for (CLKComplication *complication in server.activeComplications)
     {
         [server reloadTimelineForComplication:complication];
@@ -112,13 +181,21 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
     if (_userDefinedParkingTimeLimit != userDefinedParkingTimeLimit)
     {
         _userDefinedParkingTimeLimit = userDefinedParkingTimeLimit;
-
-        NSError *error;
-        [[WCSession defaultSession] updateApplicationContext:@{SPMWatchContextUserDefinedParkingTimeLimit: _userDefinedParkingTimeLimit}
-                                                       error:&error];
-        if (error)
+        
+        if (WCSession.defaultSession.activationState == WCSessionActivationStateActivated)
         {
-            NSLog(@"Could not update application context from watch to device: %@", error);
+            NSError *error;
+            
+            [WCSession.defaultSession updateApplicationContext:@{SPMWatchContextUserDefinedParkingTimeLimit: _userDefinedParkingTimeLimit}
+                                                         error:&error];
+            if (error)
+            {
+                NSLog(@"Could not update application context from device to watch: %@", error);
+            }
+        }
+        else
+        {
+            NSLog(@"Device->Watch: could not update application context because activationState is %lu", (unsigned long)WCSession.defaultSession.activationState);
         }
     }
 }
@@ -133,12 +210,35 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
     if (context == ExtensionDelegateContext)
     {
         if ([keyPath isEqualToString:@"currentSpot.timeLimit"] ||
+            [keyPath isEqualToString:@"currentSpot.address"] ||
             [keyPath isEqualToString:@"currentSpot"])
         {
             if (![change[NSKeyValueChangeOldKey] isEqual:change[NSKeyValueChangeNewKey]])
             {
+                NSDate *nextUpdateDate = _currentSpot.nextComplicationUpdateDate;
+                if (nextUpdateDate)
+                {
+                    [WKExtension.sharedExtension scheduleBackgroundRefreshWithPreferredDate:_currentSpot.nextComplicationUpdateDate
+                                                                                   userInfo:@{SPMWatchNeedsComplicationUpdate: @YES}
+                                                                        scheduledCompletion:^(NSError * _Nullable error) {
+                                                                            if (error)
+                                                                            {
+                                                                                NSLog(@"Could not complete background refresh: %@", error);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                SPMLog(@"Completed complication refresh background task");
+                                                                            }
+                                                                        }];
+                }
+
+                SPMLog(@"Will update complications driven by KVO: %@", keyPath);
                 [self updateComplications];
             }
+        }
+        else if ([keyPath isEqualToString:@"currentSpotLoaded"])
+        {
+            SPMLog(@"Current spot loaded: %@", @(self.currentSpotLoaded));
         }
     }
 }
@@ -150,43 +250,43 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
     if (!self.isLoading)
     {
         self.isLoading = YES;
-        [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionGetParkingSpot}
-                                   replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                       self.isLoading = NO;
-                                       NSDictionary *message = replyMessage;
-
-                                       // If it is an empty get parking point, convert to a remove action!
-                                       if ([message[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           self.userDefinedParkingTimeLimit = message[SPMWatchObjectUserDefinedParkingTimeLimit];
-                                           self.currentSpotLoaded = YES;
-
-                                           if (!message[SPMWatchObjectParkingSpot])
-                                           {
-                                               message = [replyMessage mutableCopy];
-                                               ((NSMutableDictionary *)message)[SPMWatchAction] = SPMWatchActionRemoveParkingSpot;
-                                               [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
-                                                                                                   object:nil
-                                                                                                 userInfo:message];
-                                               self.currentSpot = nil;
-                                           }
-                                           else
-                                           {
-                                               ParkingSpot *newSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
-
-                                               if (![self.currentSpot isEqual:newSpot])
-                                               {
-                                                   //                             NSLog(@"New parking information received.\nNew: %@\nOld: %@", replyMessage, self.currentSpot);
-                                                   self.currentSpot = newSpot;
-                                               }
-                                           }
-                                       }
-                                   }
-                                   errorHandler:^(NSError * _Nonnull error) {
-                                       self.currentSpotLoaded = YES;
-                                       self.isLoading = NO;
-                                       NSLog(@"Attempt to get new parking information in %@ failed with error %@", NSStringFromSelector(_cmd), error);
-                                   }];
+        [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:@{SPMWatchAction: SPMWatchActionGetParkingSpot}
+                                                                           replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                                                               self.isLoading = NO;
+                                                                               NSDictionary *message = replyMessage;
+                                                                               
+                                                                               // If it is an empty get Parking Spot, convert to a remove action!
+                                                                               if ([message[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                                                               {
+                                                                                   self.userDefinedParkingTimeLimit = message[SPMWatchObjectUserDefinedParkingTimeLimit];
+                                                                                   self.currentSpotLoaded = YES;
+                                                                                   
+                                                                                   if (!message[SPMWatchObjectParkingSpot])
+                                                                                   {
+                                                                                       message = [replyMessage mutableCopy];
+                                                                                       ((NSMutableDictionary *)message)[SPMWatchAction] = SPMWatchActionRemoveParkingSpot;
+                                                                                       [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
+                                                                                                                                           object:nil
+                                                                                                                                         userInfo:message];
+                                                                                       self.currentSpot = nil;
+                                                                                   }
+                                                                                   else
+                                                                                   {
+                                                                                       ParkingSpot *newSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingSpot]];
+                                                                                       
+                                                                                       if (![self.currentSpot isEqual:newSpot])
+                                                                                       {
+                                                                                           //                             NSLog(@"New parking information received.\nNew: %@\nOld: %@", replyMessage, self.currentSpot);
+                                                                                           self.currentSpot = newSpot;
+                                                                                       }
+                                                                                   }
+                                                                               }
+                                                                           }
+                                                                           errorHandler:^(NSError * _Nonnull error) {
+                                                                               self.currentSpotLoaded = YES;
+                                                                               self.isLoading = NO;
+                                                                               NSLog(@"Attempt to get new parking information in %@ failed with error %@", NSStringFromSelector(_cmd), error);
+                                                                           }];
     }
 }
 
@@ -216,13 +316,30 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
     }
 }
 
+- (void)session:(WCSession *)session didReceiveUserInfo:(NSDictionary<NSString *, id> *)userInfo
+{
+    if (!self.currentSpotLoaded)
+    {
+        return;
+    }
+    
+    SPMLog(@"Watch didReceiveUserInfo: %@", userInfo);
+    [self session:session didReceiveMessage:userInfo];
+
+    if (((NSNumber *)userInfo[SPMWatchNeedsComplicationUpdate]).boolValue)
+    {
+        SPMLog(@"Updating complications in handleBackgroundTasks:");
+        [self updateComplications];
+    }
+}
+
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message
 {
+    SPMLog(@"Watch didReceiveMessage: %@", message);
     if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingSpot])
     {
         self.currentSpot = nil;
         self.currentSpotLoaded = YES;
-        [self updateComplications];
     }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionGetParkingSpot])
     {
@@ -241,21 +358,103 @@ static void *ExtensionDelegateContext = &ExtensionDelegateContext;
         NSParameterAssert(self.currentSpot);
         self.currentSpot.timeLimit = [[ParkingTimeLimit alloc] initWithWatchConnectivityDictionary:message[SPMWatchObjectParkingTimeLimit]];
     }
-    else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionUpdateComplications])
-    {
-        SPMLog(@"Received notification to update complications!");
-        [self updateComplications];
-    }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionUpdateGeocoding])
     {
-        self.currentSpotLoaded = YES;
-        self.currentSpot.address = message[SPMWatchObjectParkingSpotAddress];
-        [self updateComplication:CLKComplicationFamilyModularLarge];
+        if (self.currentSpot != nil)
+        {
+            self.currentSpot.address = message[SPMWatchObjectParkingSpot][SPMWatchObjectParkingAddress];
+        }
+        else
+        {
+            // Just in case we did not have it!
+            self.currentSpot = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:message[SPMWatchObjectParkingSpot]];
+            self.userDefinedParkingTimeLimit = message[SPMWatchObjectUserDefinedParkingTimeLimit];
+            self.currentSpotLoaded = YES;
+        }
     }
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
                                                         object:nil
                                                       userInfo:message];
+}
+
+- (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error {
+    if (activationState != WCSessionActivationStateNotActivated)
+    {
+        self.initialActivationCompleted = YES;
+        SPMLog(@"Watch Session activated");
+        
+        if (self.pendingMessages.count)
+        {
+            for (NSDictionary *pendingMessage in self.pendingMessages)
+            {
+                NSDictionary *message = pendingMessage[@"message"];
+                id replyHandler = pendingMessage[@"replyHandler"];
+                id errorHandler = pendingMessage[@"errorHandler"];
+                
+                SPMLog(@"Scheduling pending message: %@", message);
+                [self sendMessageToPhone:message
+                            replyHandler:replyHandler
+                            errorHandler:errorHandler];
+            }
+            self.pendingMessages = nil;
+        }
+    }
+    else
+    {
+        NSLog(@"Could not activate watch session. State: %lu, error: %@", (unsigned long)activationState, error);
+    }
+}
+
+#pragma mark - Handoff
+
+- (void)handleUserActivity:(NSDictionary *)userInfo
+{
+    ParkInterfaceController *controller = (ParkInterfaceController *)WKExtension.sharedExtension.rootInterfaceController;
+
+    if (userInfo[CLKLaunchedTimelineEntryDateKey])
+    {
+        // Only if the app has gone to the background
+        // This gets called before applicationDidBecomeActive on ExtensionDelegate, and we take advantage of that
+        if (self.needsToFetchParkingSpot)
+        {
+            if (!self.currentSpot)
+            {
+                // Don't refetch it in the ExtensionDelegate's -applicationDidBecomeActive
+                self.needsToFetchParkingSpot = NO;
+                [controller parkWithNoTimeLimit];
+            }
+            else
+            {
+                [controller presentMapInterfaceWithContext:nil];
+            }
+        }
+    }
+    // Let the user set the time limit
+    else if ([userInfo[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingSpot])
+    {
+        [controller parkWithNoTimeLimit];
+    }
+}
+
+#pragma mark - Background Tasks
+
+- (void)handleBackgroundTasks:(NSSet <WKRefreshBackgroundTask *> *)backgroundTasks
+{
+    for (WKRefreshBackgroundTask *task in backgroundTasks)
+    {
+        if ([((NSObject *)task.userInfo) isKindOfClass:[NSDictionary class]])
+        {
+            NSDictionary *userInfo = (NSDictionary *)task.userInfo;
+            if (((NSNumber *)userInfo[SPMWatchNeedsComplicationUpdate]).boolValue)
+            {
+                SPMLog(@"Updating complications in handleBackgroundTasks:");
+                [self updateComplications];
+            }
+        }
+        
+        [task setTaskCompletedWithSnapshot:YES];
+    }
 }
 
 @end

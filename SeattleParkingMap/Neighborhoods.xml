@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DataSet xmlns="http://cgdb.seattle.gov/">
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="NHOODS">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="NAME" type="xs:string" minOccurs="0" />
+                <xs:element name="NHOOD_ID" type="xs:double" minOccurs="0" />
+                <xs:element name="MinX" type="xs:double" minOccurs="0" />
+                <xs:element name="MinY" type="xs:double" minOccurs="0" />
+                <xs:element name="MaxX" type="xs:double" minOccurs="0" />
+                <xs:element name="MaxY" type="xs:double" minOccurs="0" />
+                <xs:element name="MINLONG" type="xs:string" minOccurs="0" />
+                <xs:element name="MINLAT" type="xs:string" minOccurs="0" />
+                <xs:element name="MAXLONG" type="xs:string" minOccurs="0" />
+                <xs:element name="MAXLAT" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <diffgr:diffgram xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:diffgr="urn:schemas-microsoft-com:xml-diffgram-v1">
+    <NewDataSet xmlns="">
+      <NHOODS diffgr:id="NHOODS1" msdata:rowOrder="0">
+        <NAME>Alki/Admiral</NAME>
+        <NHOOD_ID>1.4000000000000001</NHOOD_ID>
+        <MinX>1248611.65004286</MinX>
+        <MinY>207284.243233069</MinY>
+        <MaxX>1259840.70003732</MaxX>
+        <MaxY>221089.39998192602</MaxY>
+        <MINLONG>-122.420223620248</MINLONG>
+        <MINLAT>47.5571853191789</MINLAT>
+        <MAXLONG>-122.375876629423</MAXLONG>
+        <MAXLAT>47.5956500909796</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS2" msdata:rowOrder="1">
+        <NAME>Arbor Heights</NAME>
+        <NHOOD_ID>1.1</NHOOD_ID>
+        <MinX>1253505.35001542</MinX>
+        <MinY>184850.113164175</MinY>
+        <MaxX>1260569.358726</MaxX>
+        <MaxY>193659.99669238</MaxY>
+        <MINLONG>-122.398560832198</MINLONG>
+        <MINLAT>47.4959699749455</MINLAT>
+        <MAXLONG>-122.370703347048</MAXLONG>
+        <MAXLAT>47.5205076422002</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS3" msdata:rowOrder="2">
+        <NAME>Ballard</NAME>
+        <NHOOD_ID>10.4</NHOOD_ID>
+        <MinX>1257467.42118711</MinX>
+        <MinY>243246.418114561</MinY>
+        <MaxX>1262968.58791223</MaxX>
+        <MaxY>249128.049096039</MaxY>
+        <MINLONG>-122.387306555201</MINLONG>
+        <MINLAT>47.6562501197169</MINLAT>
+        <MAXLONG>-122.365464368511</MAXLONG>
+        <MAXLAT>47.6726736581761</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS4" msdata:rowOrder="3">
+        <NAME>BallardDistrict</NAME>
+        <NHOOD_ID>10</NHOOD_ID>
+        <MinX>1252056.70003007</MinX>
+        <MinY>243246.418114561</MinY>
+        <MaxX>1267012.14734</MaxX>
+        <MaxY>263714.781653624</MaxY>
+        <MINLONG>-122.387306555201</MINLONG>
+        <MINLAT>47.6562501197169</MINLAT>
+        <MAXLONG>-122.382412870713</MAXLONG>
+        <MAXLAT>47.7128746611723</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS5" msdata:rowOrder="4">
+        <NAME>Beacon Hill</NAME>
+        <NHOOD_ID>3.5</NHOOD_ID>
+        <MinX>1273078.79809765</MinX>
+        <MinY>202567.46076467598</MinY>
+        <MaxX>1281781.51733775</MaxX>
+        <MaxY>208419.605154126</MaxY>
+        <MINLONG>-122.32078298109</MINLONG>
+        <MINLAT>47.545596605951</MINLAT>
+        <MAXLONG>-122.28599906347</MAXLONG>
+        <MAXLAT>47.5620930105778</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS6" msdata:rowOrder="5">
+        <NAME>Belltown</NAME>
+        <NHOOD_ID>13.1</NHOOD_ID>
+        <MinX>1263368.9552726</MinX>
+        <MinY>225777.311282292</MinY>
+        <MaxX>1268905.77498976</MaxX>
+        <MaxY>229829.33394206502</MaxY>
+        <MINLONG>-122.361957124886</MINLONG>
+        <MINLAT>47.6086923896782</MINLAT>
+        <MAXLONG>-122.339837118231</MAXLONG>
+        <MAXLAT>47.6200981160948</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS7" msdata:rowOrder="6">
+        <NAME>Broadview/Bitter Lake</NAME>
+        <NHOOD_ID>9.1</NHOOD_ID>
+        <MinX>1259753.74643724</MinX>
+        <MinY>261380.060755449</MinY>
+        <MaxX>1268425.84654131</MaxX>
+        <MaxY>271598.525020966</MaxY>
+        <MINLONG>-122.379509586505</MINLONG>
+        <MINLAT>47.7060793547664</MINLAT>
+        <MAXLONG>-122.34510966941</MAXLONG>
+        <MAXLAT>47.7345598411368</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS8" msdata:rowOrder="7">
+        <NAME>Capitol Hill</NAME>
+        <NHOOD_ID>6.2</NHOOD_ID>
+        <MinX>1271335.12142402</MinX>
+        <MinY>225471.772466007</MinY>
+        <MaxX>1275650.35867604</MaxX>
+        <MaxY>231608.019767722</MaxY>
+        <MINLONG>-122.329644903496</MINLONG>
+        <MINLAT>47.6082841083823</MINLAT>
+        <MAXLONG>-122.31263276656</MAXLONG>
+        <MAXLAT>47.6253321197005</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS9" msdata:rowOrder="8">
+        <NAME>Cascade/Eastlake</NAME>
+        <NHOOD_ID>11.3</NHOOD_ID>
+        <MinX>1266053.6513391</MinX>
+        <MinY>226739.55243518803</MinY>
+        <MaxX>1273948.52878646</MaxX>
+        <MaxY>236939.99097268799</MaxY>
+        <MINLONG>-122.35115261595</MINLONG>
+        <MINLAT>47.6114755172259</MINLAT>
+        <MAXLONG>-122.319950442193</MAXLONG>
+        <MAXLAT>47.6398570417321</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS10" msdata:rowOrder="9">
+        <NAME>Cedar Park/Meadowbrook</NAME>
+        <NHOOD_ID>8.3</NHOOD_ID>
+        <MinX>1278663.87957485</MinX>
+        <MinY>256765.36775915202</MinY>
+        <MaxX>1286286.69993395</MaxX>
+        <MaxY>271085.117404488</MaxY>
+        <MINLONG>-122.302361816617</MINLONG>
+        <MINLAT>47.6944462179419</MINLAT>
+        <MAXLONG>-122.272501224909</MAXLONG>
+        <MAXLAT>47.73409134438</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS11" msdata:rowOrder="10">
+        <NAME>Central Area/Squire Park</NAME>
+        <NHOOD_ID>5.3</NHOOD_ID>
+        <MinX>1275424.23822783</MinX>
+        <MinY>222875.58046358902</MinY>
+        <MaxX>1280968.79068099</MaxX>
+        <MaxY>231763.02904786603</MaxY>
+        <MINLONG>-122.312868792026</MINLONG>
+        <MINLAT>47.6013847366152</MINLAT>
+        <MAXLONG>-122.291081119888</MAXLONG>
+        <MAXLAT>47.6260352122519</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS12" msdata:rowOrder="11">
+        <NAME>CentralDistrict</NAME>
+        <NHOOD_ID>5</NHOOD_ID>
+        <MinX>1274303.07048279</MinX>
+        <MinY>219005.001771984</MinY>
+        <MaxX>1283730.70005957</MaxX>
+        <MaxY>232162.42565623802</MaxY>
+        <MINLONG>-122.302576929986</MINLONG>
+        <MINLAT>47.5909050262096</MINLAT>
+        <MAXLONG>-122.302248493339</MAXLONG>
+        <MAXLAT>47.6272728280952</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS13" msdata:rowOrder="12">
+        <NAME>Columbia City</NAME>
+        <NHOOD_ID>4.2</NHOOD_ID>
+        <MinX>1279119.22511127</MinX>
+        <MinY>197224.3549677</MinY>
+        <MaxX>1287157.76553476</MaxX>
+        <MaxY>212624.09655004198</MaxY>
+        <MINLONG>-122.295918467563</MINLONG>
+        <MINLAT>47.5312685951517</MINLAT>
+        <MAXLONG>-122.264544107031</MAXLONG>
+        <MAXLAT>47.5738937122376</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS14" msdata:rowOrder="13">
+        <NAME>Delridge NeighborhoodsDistrict</NAME>
+        <NHOOD_ID>2</NHOOD_ID>
+        <MinX>1257816.01869143</MinX>
+        <MinY>191081.706513979</MinY>
+        <MaxX>1270979.45883169</MaxX>
+        <MaxY>219062.800044038</MaxY>
+        <MINLONG>-122.355056545729</MINLONG>
+        <MINLAT>47.513648589642</MINLAT>
+        <MAXLONG>-122.361019506379</MAXLONG>
+        <MAXLAT>47.5904957921248</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS15" msdata:rowOrder="14">
+        <NAME>Downtown Commercial Core</NAME>
+        <NHOOD_ID>13.200000000000001</NHOOD_ID>
+        <MinX>1267199.89748417</MinX>
+        <MinY>223065.426863766</MinY>
+        <MaxX>1271780.04187244</MaxX>
+        <MaxY>227106.84945953</MaxY>
+        <MINLONG>-122.34621366071</MINLONG>
+        <MINLAT>47.6014667651447</MINLAT>
+        <MAXLONG>-122.327970311494</MAXLONG>
+        <MAXLAT>47.6127895101073</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS16" msdata:rowOrder="15">
+        <NAME>DowntownDistrict</NAME>
+        <NHOOD_ID>13</NHOOD_ID>
+        <MinX>1263368.9552726</MinX>
+        <MinY>220867.070125719</MinY>
+        <MaxX>1274461.18901093</MaxX>
+        <MaxY>229829.33394206502</MaxY>
+        <MINLONG>-122.339531617441</MINLONG>
+        <MINLAT>47.595527498289</MINLAT>
+        <MAXLONG>-122.339837118231</MAXLONG>
+        <MAXLAT>47.6200981160948</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS17" msdata:rowOrder="16">
+        <NAME>Duwamish/SODO</NAME>
+        <NHOOD_ID>3.3000000000000003</NHOOD_ID>
+        <MinX>1266936.19994792</MinX>
+        <MinY>205278.402719201</MinY>
+        <MaxX>1274769.73339522</MaxX>
+        <MaxY>222191.765038952</MaxY>
+        <MINLONG>-122.345865383046</MINLONG>
+        <MINLAT>47.552699007648</MINLAT>
+        <MAXLONG>-122.315467862484</MAXLONG>
+        <MAXLAT>47.5994758854121</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS18" msdata:rowOrder="17">
+        <NAME>EastDistrict</NAME>
+        <NHOOD_ID>6</NHOOD_ID>
+        <MinX>1269455.29447827</MinX>
+        <MinY>222985.622191692</MinY>
+        <MaxX>1284978.19996473</MaxX>
+        <MaxY>237853.212093538</MaxY>
+        <MINLONG>-122.293749608116</MINLONG>
+        <MINLAT>47.601369201943</MINLAT>
+        <MAXLONG>-122.312875701716</MAXLONG>
+        <MAXLAT>47.6429354834178</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS19" msdata:rowOrder="18">
+        <NAME>Fauntleroy/Seaview</NAME>
+        <NHOOD_ID>1.2</NHOOD_ID>
+        <MinX>1252575.29996655</MinX>
+        <MinY>192260.631699077</MinY>
+        <MaxX>1259415.01312492</MaxX>
+        <MaxY>208612.510626306</MaxY>
+        <MINLONG>-122.402933615107</MINLONG>
+        <MINLAT>47.5162297061219</MINLAT>
+        <MAXLONG>-122.376587558764</MAXLONG>
+        <MAXLAT>47.561428288367</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS20" msdata:rowOrder="19">
+        <NAME>First Hill</NAME>
+        <NHOOD_ID>6.1000000000000005</NHOOD_ID>
+        <MinX>1269455.29447827</MinX>
+        <MinY>222985.622191692</MinY>
+        <MaxX>1275527.01070793</MaxX>
+        <MaxY>228309.18264465</MaxY>
+        <MINLONG>-122.337067143794</MINLONG>
+        <MINLAT>47.601369201943</MINLAT>
+        <MAXLONG>-122.312875701716</MAXLONG>
+        <MAXLAT>47.61628356479</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS21" msdata:rowOrder="20">
+        <NAME>Fremont</NAME>
+        <NHOOD_ID>11.1</NHOOD_ID>
+        <MinX>1262519.98055181</MinX>
+        <MinY>238684.500030312</MinY>
+        <MaxX>1272354.30619297</MaxX>
+        <MaxY>247665.382470677</MaxY>
+        <MINLONG>-122.366440451772</MINLONG>
+        <MINLAT>47.6440240029145</MINLAT>
+        <MAXLONG>-122.327260466223</MAXLONG>
+        <MAXLAT>47.6691704106972</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS22" msdata:rowOrder="21">
+        <NAME>Georgetown</NAME>
+        <NHOOD_ID>3.2</NHOOD_ID>
+        <MinX>1267933.20001285</MinX>
+        <MinY>194680.15234133</MinY>
+        <MaxX>1279648.22325576</MaxX>
+        <MaxY>206412.83100825702</MaxY>
+        <MINLONG>-122.340987980088</MINLONG>
+        <MINLAT>47.523703215353</MINLAT>
+        <MAXLONG>-122.294483669209</MAXLONG>
+        <MAXLAT>47.5564817291218</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS23" msdata:rowOrder="22">
+        <NAME>Greater DuwamishDistrict</NAME>
+        <NHOOD_ID>3</NHOOD_ID>
+        <MinX>1266936.19994792</MinX>
+        <MinY>188350.840207435</MinY>
+        <MaxX>1285419.73020514</MaxX>
+        <MaxY>222191.765038952</MaxY>
+        <MINLONG>-122.312855045246</MINLONG>
+        <MINLAT>47.5067181421216</MINLAT>
+        <MAXLONG>-122.315467862484</MAXLONG>
+        <MAXLAT>47.5994758854121</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS24" msdata:rowOrder="23">
+        <NAME>Green Lake</NAME>
+        <NHOOD_ID>9.4</NHOOD_ID>
+        <MinX>1267385.14138834</MinX>
+        <MinY>246150.237125265</MinY>
+        <MaxX>1274879.19925132</MaxX>
+        <MaxY>255788.905678242</MaxY>
+        <MINLONG>-122.347303653875</MINLONG>
+        <MINLAT>47.6647512430876</MINLAT>
+        <MAXLONG>-122.317650621094</MAXLONG>
+        <MAXLAT>47.6915706782799</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS25" msdata:rowOrder="24">
+        <NAME>Greenwood/Phinney Ridge</NAME>
+        <NHOOD_ID>9.3</NHOOD_ID>
+        <MinX>1260971.70765437</MinX>
+        <MinY>246244.314437353</MinY>
+        <MaxX>1268255.32340515</MaxX>
+        <MaxY>260898.82197100102</MaxY>
+        <MINLONG>-122.37333370072</MINLONG>
+        <MINLAT>47.6646602554119</MINLAT>
+        <MAXLONG>-122.344948483105</MAXLONG>
+        <MAXLAT>47.705223315775</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS26" msdata:rowOrder="25">
+        <NAME>Haller Lake</NAME>
+        <NHOOD_ID>9.5</NHOOD_ID>
+        <MinX>1268322.36506922</MinX>
+        <MinY>261439.207251504</MinY>
+        <MaxX>1276308.29019665</MaxX>
+        <MaxY>271441.129308819</MaxY>
+        <MINLONG>-122.344719349623</MINLONG>
+        <MINLAT>47.7067080952149</MINLAT>
+        <MAXLONG>-122.3130709817</MAXLONG>
+        <MAXLAT>47.734548410266</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS27" msdata:rowOrder="26">
+        <NAME>High Point</NAME>
+        <NHOOD_ID>2.2</NHOOD_ID>
+        <MinX>1259255.78867677</MinX>
+        <MinY>198417.625624811</MinY>
+        <MaxX>1263204.09485645</MaxX>
+        <MaxY>205821.876255707</MaxY>
+        <MINLONG>-122.376404433725</MINLONG>
+        <MINLAT>47.5334759616329</MINLAT>
+        <MAXLONG>-122.361019506379</MAXLONG>
+        <MAXLAT>47.5539865568623</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS28" msdata:rowOrder="27">
+        <NAME>Highland Park</NAME>
+        <NHOOD_ID>2.5</NHOOD_ID>
+        <MinX>1264385.33248955</MinX>
+        <MinY>191081.706513979</MinY>
+        <MaxX>1270979.45883169</MaxX>
+        <MaxY>200758.012570991</MaxY>
+        <MINLONG>-122.355056545729</MINLONG>
+        <MINLAT>47.513648589642</MINLAT>
+        <MAXLONG>-122.329139238558</MAXLONG>
+        <MAXLAT>47.5405254036217</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS29" msdata:rowOrder="28">
+        <NAME>Interbay</NAME>
+        <NHOOD_ID>12.200000000000001</NHOOD_ID>
+        <MinX>1255197.73504099</MinX>
+        <MinY>229736.539061979</MinY>
+        <MaxX>1263620.81933684</MaxX>
+        <MaxY>245847.997636984</MaxY>
+        <MINLONG>-122.39540158833</MINLONG>
+        <MINLAT>47.6190945780384</MINLAT>
+        <MAXLONG>-122.362553002322</MAXLONG>
+        <MAXLAT>47.6637187883669</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS30" msdata:rowOrder="29">
+        <NAME>Judkins Park</NAME>
+        <NHOOD_ID>5.2</NHOOD_ID>
+        <MinX>1274303.07048279</MinX>
+        <MinY>219790.876076716</MinY>
+        <MaxX>1278047.34376627</MaxX>
+        <MaxY>223006.721071711</MaxY>
+        <MINLONG>-122.317171370232</MINLONG>
+        <MINLAT>47.5928704412911</MINLAT>
+        <MAXLONG>-122.302248493339</MAXLONG>
+        <MAXLAT>47.6018819419927</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS31" msdata:rowOrder="30">
+        <NAME>Lake UnionDistrict</NAME>
+        <NHOOD_ID>11</NHOOD_ID>
+        <MinX>1262519.98055181</MinX>
+        <MinY>226739.55243518803</MinY>
+        <MaxX>1274812.35534726</MaxX>
+        <MaxY>248804.475847737</MaxY>
+        <MINLONG>-122.347183748071</MINLONG>
+        <MINLAT>47.6114755172259</MINLAT>
+        <MAXLONG>-122.327260466223</MAXLONG>
+        <MAXLAT>47.6724230077905</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS32" msdata:rowOrder="31">
+        <NAME>Laurelhurst/Sand Point</NAME>
+        <NHOOD_ID>7.5</NHOOD_ID>
+        <MinX>1280772.89756081</MinX>
+        <MinY>239715.999935273</MinY>
+        <MaxX>1292554.30006778</MaxX>
+        <MaxY>255024.935245531</MaxY>
+        <MINLONG>-122.292486853014</MINLONG>
+        <MINLAT>47.6478240921721</MINLAT>
+        <MAXLONG>-122.245837935663</MAXLONG>
+        <MAXLAT>47.6903885801828</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS33" msdata:rowOrder="32">
+        <NAME>Licton Springs</NAME>
+        <NHOOD_ID>9.2000000000000011</NHOOD_ID>
+        <MinX>1266928.21121192</MinX>
+        <MinY>255468.09185394298</MinY>
+        <MaxX>1270981.25851169</MaxX>
+        <MaxY>261497.626323559</MaxY>
+        <MINLONG>-122.349902809253</MINLONG>
+        <MINLAT>47.6902663756368</MINLAT>
+        <MAXLONG>-122.333926734183</MAXLONG>
+        <MAXLAT>47.7070108569408</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS34" msdata:rowOrder="33">
+        <NAME>Madison Park</NAME>
+        <NHOOD_ID>6.5</NHOOD_ID>
+        <MinX>1280285.68360836</MinX>
+        <MinY>230447.923510641</MinY>
+        <MaxX>1284978.19996473</MaxX>
+        <MaxY>237853.212093538</MaxY>
+        <MINLONG>-122.293749608116</MINLONG>
+        <MINLAT>47.6223950087599</MINLAT>
+        <MAXLONG>-122.275287443025</MAXLONG>
+        <MAXLAT>47.6429354834178</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS35" msdata:rowOrder="34">
+        <NAME>Madrona/Leschi</NAME>
+        <NHOOD_ID>5.1000000000000005</NHOOD_ID>
+        <MinX>1277889.89199013</MinX>
+        <MinY>219005.001771984</MinY>
+        <MaxX>1283730.70005957</MaxX>
+        <MaxY>232162.42565623802</MaxY>
+        <MINLONG>-122.302576929986</MINLONG>
+        <MINLAT>47.5909050262096</MINLAT>
+        <MAXLONG>-122.279913235273</MAXLONG>
+        <MAXLAT>47.6272728280952</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS36" msdata:rowOrder="35">
+        <NAME>Magnolia</NAME>
+        <NHOOD_ID>12.1</NHOOD_ID>
+        <MinX>1245522.70002398</MinX>
+        <MinY>233692.699961663</MinY>
+        <MaxX>1256934.25293061</MaxX>
+        <MaxY>248955.30003987803</MaxY>
+        <MINLONG>-122.434956630664</MINLONG>
+        <MINLAT>47.6293928946489</MINLAT>
+        <MAXLONG>-122.389938032184</MAXLONG>
+        <MAXLAT>47.67186820089</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS37" msdata:rowOrder="36">
+        <NAME>Magnolia/Queen AnneDistrict</NAME>
+        <NHOOD_ID>12</NHOOD_ID>
+        <MinX>1245522.70002398</MinX>
+        <MinY>229327.33970159802</MinY>
+        <MaxX>1269336.75879816</MaxX>
+        <MaxY>248955.30003987803</MaxY>
+        <MINLONG>-122.375178958011</MINLONG>
+        <MINLAT>47.6182483110054</MINLAT>
+        <MAXLONG>-122.389938032184</MAXLONG>
+        <MAXLAT>47.67186820089</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS38" msdata:rowOrder="37">
+        <NAME>Miller Park</NAME>
+        <NHOOD_ID>6.4</NHOOD_ID>
+        <MinX>1275575.59336397</MinX>
+        <MinY>228925.478709224</MinY>
+        <MaxX>1279994.49448809</MaxX>
+        <MaxY>234160.790074099</MaxY>
+        <MINLONG>-122.312726791881</MINLONG>
+        <MINLAT>47.6179753819568</MINLAT>
+        <MAXLONG>-122.295216147663</MAXLONG>
+        <MAXLAT>47.6325567991522</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS39" msdata:rowOrder="38">
+        <NAME>Montlake/Portage Bay</NAME>
+        <NHOOD_ID>7.1000000000000005</NHOOD_ID>
+        <MinX>1271523.6000162</MinX>
+        <MinY>231115.251255263</MinY>
+        <MaxX>1282553.61679447</MaxX>
+        <MaxY>241506.69996894101</MaxY>
+        <MINLONG>-122.329325683959</MINLONG>
+        <MINLAT>47.6237627662704</MINLAT>
+        <MAXLONG>-122.285400873357</MAXLONG>
+        <MAXLAT>47.6528247267404</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS40" msdata:rowOrder="39">
+        <NAME>Mt. Baker/North Rainier</NAME>
+        <NHOOD_ID>4.4</NHOOD_ID>
+        <MinX>1277760.35778201</MinX>
+        <MinY>211259.448740771</MinY>
+        <MaxX>1284143.69999595</MaxX>
+        <MaxY>219456.384684405</MaxY>
+        <MINLONG>-122.302502566801</MINLONG>
+        <MINLAT>47.5696677521927</MINLAT>
+        <MAXLONG>-122.277271902169</MAXLONG>
+        <MAXLAT>47.5924667533389</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS41" msdata:rowOrder="40">
+        <NAME>North Beach/Blue Ridge</NAME>
+        <NHOOD_ID>10.1</NHOOD_ID>
+        <MinX>1253984.83187186</MinX>
+        <MinY>255715.727310174</MinY>
+        <MaxX>1267012.14734</MaxX>
+        <MaxY>263714.781653624</MaxY>
+        <MINLONG>-122.402466258508</MINLONG>
+        <MINLAT>47.6902337796105</MINLAT>
+        <MAXLONG>-122.350222028307</MAXLONG>
+        <MAXLAT>47.7128746611723</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS42" msdata:rowOrder="41">
+        <NAME>North Beacon Hill/Jefferson Park</NAME>
+        <NHOOD_ID>3.6</NHOOD_ID>
+        <MinX>1274032.53736253</MinX>
+        <MinY>207597.43836936</MinY>
+        <MaxX>1279954.77378405</MaxX>
+        <MaxY>220867.070125719</MaxY>
+        <MINLONG>-122.317314702348</MINLONG>
+        <MINLAT>47.5594341535276</MINLAT>
+        <MAXLONG>-122.294353675512</MAXLONG>
+        <MAXLAT>47.5961167110165</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS43" msdata:rowOrder="42">
+        <NAME>North Capitol Hill</NAME>
+        <NHOOD_ID>6.3</NHOOD_ID>
+        <MinX>1272204.33857683</MinX>
+        <MinY>231212.61343135402</MinY>
+        <MaxX>1275747.14165213</MaxX>
+        <MaxY>236832.250812587</MaxY>
+        <MINLONG>-122.326573401271</MINLONG>
+        <MINLAT>47.6240658761602</MINLAT>
+        <MAXLONG>-122.312647578424</MAXLONG>
+        <MAXLAT>47.639656741065</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS44" msdata:rowOrder="43">
+        <NAME>North Delridge</NAME>
+        <NHOOD_ID>2.1</NHOOD_ID>
+        <MinX>1259297.69523681</MinX>
+        <MinY>205757.859359647</MinY>
+        <MaxX>1267201.20001217</MaxX>
+        <MaxY>219062.800044038</MaxY>
+        <MINLONG>-122.376830748552</MINLONG>
+        <MINLAT>47.5535974097026</MINLAT>
+        <MAXLONG>-122.345889523585</MAXLONG>
+        <MAXLAT>47.5904957921248</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS45" msdata:rowOrder="44">
+        <NAME>NorthDistrict</NAME>
+        <NHOOD_ID>8</NHOOD_ID>
+        <MinX>1270632.39310337</MinX>
+        <MinY>254655.094093186</MinY>
+        <MaxX>1286286.69993395</MaxX>
+        <MaxY>271309.885532697</MaxY>
+        <MINLONG>-122.302361816617</MINLONG>
+        <MINLAT>47.6882370975461</MINLAT>
+        <MAXLONG>-122.303706783271</MAXLONG>
+        <MAXLAT>47.7344700396547</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS46" msdata:rowOrder="45">
+        <NAME>NortheastDistrict</NAME>
+        <NHOOD_ID>7</NHOOD_ID>
+        <MinX>1271523.6000162</MinX>
+        <MinY>231115.251255263</MinY>
+        <MaxX>1292554.30006778</MaxX>
+        <MaxY>260531.05659465902</MaxY>
+        <MINLONG>-122.292486853014</MINLONG>
+        <MINLAT>47.6237627662704</MINLAT>
+        <MAXLONG>-122.286985077953</MAXLONG>
+        <MAXLAT>47.7052465528328</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS47" msdata:rowOrder="46">
+        <NAME>Northgate/Maple Leaf</NAME>
+        <NHOOD_ID>8.1</NHOOD_ID>
+        <MinX>1270632.39310337</MinX>
+        <MinY>254655.094093186</MinY>
+        <MaxX>1278468.98907867</MaxX>
+        <MaxY>263903.018837799</MaxY>
+        <MINLONG>-122.334801219784</MINLONG>
+        <MINLAT>47.6882370975461</MINLAT>
+        <MAXLONG>-122.303706783271</MAXLONG>
+        <MAXLAT>47.7140001771065</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS48" msdata:rowOrder="47">
+        <NAME>NorthwestDistrict</NAME>
+        <NHOOD_ID>9</NHOOD_ID>
+        <MinX>1259753.74643724</MinX>
+        <MinY>246150.237125265</MinY>
+        <MaxX>1276308.29019665</MaxX>
+        <MaxY>271598.525020966</MaxY>
+        <MINLONG>-122.344719349623</MINLONG>
+        <MINLAT>47.6646602554119</MINLAT>
+        <MAXLONG>-122.34510966941</MAXLONG>
+        <MAXLAT>47.7345598411368</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS49" msdata:rowOrder="48">
+        <NAME>Olympic Hills/Victory Heights</NAME>
+        <NHOOD_ID>8.2</NHOOD_ID>
+        <MinX>1273613.51566614</MinX>
+        <MinY>258894.311377134</MinY>
+        <MaxX>1281685.95701766</MaxX>
+        <MaxY>271309.885532697</MaxY>
+        <MINLONG>-122.32303289775</MINLONG>
+        <MINLAT>47.7000154588401</MINLAT>
+        <MAXLONG>-122.291211290507</MAXLONG>
+        <MAXLAT>47.7344700396547</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS50" msdata:rowOrder="49">
+        <NAME>Pioneer Square/International District</NAME>
+        <NHOOD_ID>13.3</NHOOD_ID>
+        <MinX>1268805.69998167</MinX>
+        <MinY>220867.070125719</MinY>
+        <MaxX>1274461.18901093</MaxX>
+        <MaxY>223275.590447962</MaxY>
+        <MINLONG>-122.339531617441</MINLONG>
+        <MINLAT>47.595527498289</MINLAT>
+        <MAXLONG>-122.316802901241</MAXLONG>
+        <MAXLAT>47.6024303333265</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS51" msdata:rowOrder="50">
+        <NAME>Queen Anne</NAME>
+        <NHOOD_ID>12.3</NHOOD_ID>
+        <MinX>1260177.94675763</MinX>
+        <MinY>229327.33970159802</MinY>
+        <MaxX>1269336.75879816</MaxX>
+        <MaxY>243803.70003508</MaxY>
+        <MINLONG>-122.375178958011</MINLONG>
+        <MINLAT>47.6182483110054</MINLAT>
+        <MAXLONG>-122.33919859701</MAXLONG>
+        <MAXLAT>47.6584244525682</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS52" msdata:rowOrder="51">
+        <NAME>Rainier Beach</NAME>
+        <NHOOD_ID>4.1</NHOOD_ID>
+        <MinX>1283471.94357932</MinX>
+        <MinY>184055.475595435</MinY>
+        <MaxX>1293772.90410092</MaxX>
+        <MaxY>197242.235543716</MaxY>
+        <MINLONG>-122.277302035602</MINLONG>
+        <MINLAT>47.4953979933939</MINLAT>
+        <MAXLONG>-122.23661296791</MAXLONG>
+        <MAXLAT>47.5320655830125</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS53" msdata:rowOrder="52">
+        <NAME>Ravenna/Bryant</NAME>
+        <NHOOD_ID>7.3</NHOOD_ID>
+        <MinX>1274839.24712329</MinX>
+        <MinY>244555.965635781</MinY>
+        <MaxX>1288094.68111963</MaxX>
+        <MaxY>255323.092173808</MaxY>
+        <MINLONG>-122.316933576601</MINLONG>
+        <MINLAT>47.6607793671784</MINLAT>
+        <MAXLONG>-122.263964698329</MAXLONG>
+        <MAXLAT>47.6909800034716</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS54" msdata:rowOrder="53">
+        <NAME>Riverview</NAME>
+        <NHOOD_ID>2.3000000000000003</NHOOD_ID>
+        <MinX>1261891.22304723</MinX>
+        <MinY>198383.639832779</MinY>
+        <MaxX>1269476.82177429</MaxX>
+        <MaxY>208410.577314118</MaxY>
+        <MINLONG>-122.365735374192</MINLONG>
+        <MINLAT>47.5335271682144</MINLAT>
+        <MAXLONG>-122.335826546614</MAXLONG>
+        <MAXLAT>47.5614206220501</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS55" msdata:rowOrder="54">
+        <NAME>Roxhill/Westwood</NAME>
+        <NHOOD_ID>2.4</NHOOD_ID>
+        <MinX>1257816.01869143</MinX>
+        <MinY>191784.92456263403</MinY>
+        <MaxX>1264543.7449057</MaxX>
+        <MaxY>200531.50850678</MaxY>
+        <MINLONG>-122.381691374934</MINLONG>
+        <MINLAT>47.5152168596209</MINLAT>
+        <MAXLONG>-122.355171786152</MAXLONG>
+        <MAXLAT>47.5395586660761</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS56" msdata:rowOrder="55">
+        <NAME>Seward Park</NAME>
+        <NHOOD_ID>4.3</NHOOD_ID>
+        <MinX>1283910.71311573</MinX>
+        <MinY>197193.571607671</MinY>
+        <MaxX>1291500.8000348</MaxX>
+        <MaxY>208345.799970057</MaxY>
+        <MINLONG>-122.276524061298</MINLONG>
+        <MINLAT>47.5314321984027</MINLAT>
+        <MAXLONG>-122.246634212879</MAXLONG>
+        <MAXLAT>47.5623868343487</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS57" msdata:rowOrder="56">
+        <NAME>South Beacon Hill/NewHolly</NAME>
+        <NHOOD_ID>3.4</NHOOD_ID>
+        <MinX>1274763.79675521</MinX>
+        <MinY>188350.840207435</MinY>
+        <MaxX>1285419.73020514</MaxX>
+        <MaxY>203465.699741512</MaxY>
+        <MINLONG>-122.312855045246</MINLONG>
+        <MINLAT>47.5067181421216</MINLAT>
+        <MAXLONG>-122.27089099503</MAXLONG>
+        <MAXLAT>47.5487016002463</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS58" msdata:rowOrder="57">
+        <NAME>South Park</NAME>
+        <NHOOD_ID>3.1</NHOOD_ID>
+        <MinX>1267757.45870069</MinX>
+        <MinY>191079.353361977</MinY>
+        <MaxX>1275690.04866008</MaxX>
+        <MaxY>201332.636315526</MaxY>
+        <MINLONG>-122.341413551499</MINLONG>
+        <MINLAT>47.5138241102816</MINLAT>
+        <MAXLONG>-122.310115991787</MAXLONG>
+        <MAXLAT>47.5423498347134</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS59" msdata:rowOrder="58">
+        <NAME>SoutheastDistrict</NAME>
+        <NHOOD_ID>4</NHOOD_ID>
+        <MinX>1277760.35778201</MinX>
+        <MinY>184055.475595435</MinY>
+        <MaxX>1293772.90410092</MaxX>
+        <MaxY>219456.384684405</MaxY>
+        <MINLONG>-122.276524061298</MINLONG>
+        <MINLAT>47.4953979933939</MINLAT>
+        <MAXLONG>-122.277271902169</MAXLONG>
+        <MAXLAT>47.5924667533389</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS60" msdata:rowOrder="59">
+        <NAME>SouthwestDistrict</NAME>
+        <NHOOD_ID>1</NHOOD_ID>
+        <MinX>1248611.65004286</MinX>
+        <MinY>184850.113164175</MinY>
+        <MaxX>1260569.358726</MaxX>
+        <MaxY>221089.39998192602</MaxY>
+        <MINLONG>-122.398560832198</MINLONG>
+        <MINLAT>47.4959699749455</MINLAT>
+        <MAXLONG>-122.376587558764</MAXLONG>
+        <MAXLAT>47.5956500909796</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS61" msdata:rowOrder="60">
+        <NAME>Sunset Hill/Loyal Heights</NAME>
+        <NHOOD_ID>10.3</NHOOD_ID>
+        <MinX>1252056.70003007</MinX>
+        <MinY>246665.967301746</MinY>
+        <MaxX>1258979.30278851</MaxX>
+        <MaxY>258425.914192698</MaxY>
+        <MINLONG>-122.409540843322</MINLONG>
+        <MINLAT>47.6653211751697</MINLAT>
+        <MAXLONG>-122.382412870713</MAXLONG>
+        <MAXLAT>47.6979395626054</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS62" msdata:rowOrder="61">
+        <NAME>University District</NAME>
+        <NHOOD_ID>7.2</NHOOD_ID>
+        <MinX>1274160.49205065</MinX>
+        <MinY>239638.500031201</MinY>
+        <MaxX>1282324.42882626</MaxX>
+        <MaxY>250046.697672894</MaxY>
+        <MINLONG>-122.319302151507</MINLONG>
+        <MINLAT>47.6472648123226</MINLAT>
+        <MAXLONG>-122.286985077953</MAXLONG>
+        <MAXLAT>47.6762209706491</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS63" msdata:rowOrder="62">
+        <NAME>Wallingford</NAME>
+        <NHOOD_ID>11.200000000000001</NHOOD_ID>
+        <MinX>1267321.14522828</MinX>
+        <MinY>241395.349056837</MinY>
+        <MaxX>1274812.35534726</MaxX>
+        <MaxY>248804.475847737</MaxY>
+        <MINLONG>-122.347183748071</MINLONG>
+        <MINLAT>47.651714855852</MINLAT>
+        <MAXLONG>-122.317375128268</MAXLONG>
+        <MAXLAT>47.6724230077905</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS64" msdata:rowOrder="63">
+        <NAME>Wedgwood/View Ridge</NAME>
+        <NHOOD_ID>7.4</NHOOD_ID>
+        <MinX>1277204.96782949</MinX>
+        <MinY>249822.704456686</MinY>
+        <MaxX>1287927.58812747</MaxX>
+        <MaxY>260531.05659465902</MaxY>
+        <MINLONG>-122.307744722754</MINLONG>
+        <MINLAT>47.6753400221699</MINLAT>
+        <MAXLONG>-122.265036416686</MAXLONG>
+        <MAXLAT>47.7052465528328</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS65" msdata:rowOrder="64">
+        <NAME>West Seattle Junction/Genesee Hill</NAME>
+        <NHOOD_ID>1.3</NHOOD_ID>
+        <MinX>1252749.75999871</MinX>
+        <MinY>205158.58383908903</MinY>
+        <MaxX>1259610.4745011</MaxX>
+        <MaxY>216901.724330026</MaxY>
+        <MINLONG>-122.403292494116</MINLONG>
+        <MINLAT>47.5515917350835</MINLAT>
+        <MAXLONG>-122.376469219649</MAXLONG>
+        <MAXLAT>47.5841592714487</MAXLAT>
+      </NHOODS>
+      <NHOODS diffgr:id="NHOODS66" msdata:rowOrder="65">
+        <NAME>Whittier Heights</NAME>
+        <NHOOD_ID>10.200000000000001</NHOOD_ID>
+        <MinX>1257517.06598715</MinX>
+        <MinY>249013.130055932</MinY>
+        <MaxX>1262968.99367223</MaxX>
+        <MaxY>255745.372494202</MaxY>
+        <MINLONG>-122.387577702617</MINLONG>
+        <MINLAT>47.672059000106</MINLAT>
+        <MAXLONG>-122.365997612056</MAXLONG>
+        <MAXLAT>47.6908113653319</MAXLAT>
+      </NHOODS>
+    </NewDataSet>
+  </diffgr:diffgram>
+</DataSet>

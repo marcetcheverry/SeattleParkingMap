@@ -22,7 +22,14 @@
 - (BOOL)wasParkedToday;
 
 /// Includes 'at' prefix for curent day times, otherwise just the output of NSDateFormatter
-- (nullable NSString *)localizedDateString;
+- (nonnull NSString *)localizedDateString;
+
+/**
+ *  Return the full absolute localized date. Useful for sharing to contexts outside of the app.
+ *
+ *  @return A `NSString` without any prefixes.
+ */
+- (nonnull NSString *)localizedAbsoluteDateString;
 
 @property (nonnull, nonatomic, readonly) NSDate *date;
 @property (nonnull, nonatomic, readonly) CLLocation *location;

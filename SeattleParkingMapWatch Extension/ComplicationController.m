@@ -8,14 +8,12 @@
 
 #import "ComplicationController.h"
 
-#import "ParkingSpot.h"
+#import "ParkingSpot+Watch.h"
 #import "ParkingTimeLimit.h"
 
 #import "ParkingTimeLimit+Watch.h"
 #import "UIColor+SPM.h"
 #import "NSDate+SPM.h"
-
-static NSTimeInterval const SPMComplicationEntryInterval = 60;
 
 @interface NSDate (SPMComplication)
 
@@ -51,14 +49,14 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
 - (nullable UIColor *)complicationTintColorAtDate:(nonnull NSDate *)date
 {
     NSParameterAssert(date);
-
+    
     if (!date)
     {
         return nil;
     }
-
+    
     NSTimeInterval timeInterval = [self remainingTimeIntervalAtDate:date];
-
+    
     // Expired
     if (timeInterval <= [self timeIntervalForThreshold:SPMParkingTimeLimitThresholdExpired])
     {
@@ -75,60 +73,60 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
         // Yellow
         return [UIColor colorWithRed:0.998 green:0.881 blue:0.001 alpha:1];
     }
-
+    
     return nil;
 }
 
 - (BOOL)isExpiringAtDate:(nonnull NSDate *)date
 {
     NSParameterAssert(date);
-
+    
     NSComparisonResult comparisonResult = [[self dateForThreshold:SPMParkingTimeLimitThresholdWarning] compare:date];
     if (comparisonResult == NSOrderedAscending || comparisonResult == NSOrderedSame)
     {
         return YES;
     }
-
+    
     return NO;
 }
 
 - (BOOL)isExpiredAtDate:(nonnull NSDate *)date
 {
     NSParameterAssert(date);
-
+    
     NSComparisonResult comparisonResult = [self.endDate compare:date];
     if (comparisonResult == NSOrderedAscending || comparisonResult == NSOrderedSame)
     {
         return YES;
     }
-
+    
     return NO;
 }
 
 - (float)fillFractionAtDate:(NSDate *)date
 {
     NSParameterAssert(date);
-
+    
     if (!date)
     {
         return 0;
     }
-
+    
     if ([self isExpiredAtDate:date])
     {
         return 0;
     }
-
+    
     NSTimeInterval length = [self.length doubleValue];
     NSTimeInterval timeInterval = [self.endDate timeIntervalSinceDate:date];
-
+    
     NSAssert(length >= timeInterval, @"Length must always be bigger or equal");
     float fraction = (length - timeInterval) / length;
     fraction = 1.0 - fraction;
-
+    
     //    NSLog(@"Time Limit fraction is %f", fraction);
     NSAssert((fraction >= 0 && fraction <= 1), @"Fraction must be in th renage of 0 to 1");
-
+    
     if (fraction < 0)
     {
         fraction = 0;
@@ -137,59 +135,8 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
     {
         fraction = 1;
     }
-
+    
     return fraction;
-}
-
-@end
-
-@interface ParkingSpot (SPMComplication)
-
-- (nonnull NSDate *)nextComplicationUpdateDate;
-- (nullable NSDate *)complicationStartDate;
-- (nullable NSDate *)complicationEndDate;
-
-@end
-
-@implementation ParkingSpot (SPMComplication)
-
-- (nonnull NSDate *)nextComplicationUpdateDate
-{
-    if (!self.timeLimit)
-    {
-        return [NSDate dateWithTimeIntervalSinceNow:(SPMDefaultsParkingTimeLimitMinuteInterval / 2) * 60];
-    }
-
-    NSTimeInterval timeInterval = [self.timeLimit remainingTimeIntervalAtDate:[NSDate date]];
-
-    NSTimeInterval warningInterval = [self.timeLimit timeIntervalForThreshold:SPMParkingTimeLimitThresholdWarning];
-    NSTimeInterval urgentInterval = [self.timeLimit timeIntervalForThreshold:SPMParkingTimeLimitThresholdWarning];
-
-    if (timeInterval < warningInterval)
-    {
-        return [self.timeLimit.endDate dateByAddingTimeInterval:-urgentInterval];
-    }
-    else if (timeInterval < urgentInterval)
-    {
-        return [self.timeLimit.endDate dateByAddingTimeInterval:1];
-    }
-
-    return [self.timeLimit.endDate dateByAddingTimeInterval:-warningInterval];
-}
-
-- (nullable NSDate *)complicationStartDate
-{
-    if (self.timeLimit)
-    {
-        return [self.date dateByAddingTimeInterval:-(SPMComplicationEntryInterval * 2)];
-    }
-
-    return nil;
-}
-
-- (nullable NSDate *)complicationEndDate
-{
-    return [self.timeLimit.endDate dateByAddingTimeInterval:SPMComplicationEntryInterval + 1];
 }
 
 @end
@@ -260,22 +207,22 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
 - (void)assertSpacingInComplicationEntries:(nonnull NSArray <CLKComplicationTimelineEntry *> *)entries
 {
     NSParameterAssert(entries);
-
+    
     NSUInteger count = [entries count];
-
+    
     if (!count)
     {
         return;
     }
-
+    
     for (NSUInteger i = 0; i < count; i++)
     {
         NSDate *date = entries[i].date;
-
+        
         if (i < (count - 1))
         {
             NSDate *nextDate = entries[i + 1].date;
-
+            
             if (fabs([date timeIntervalSinceDate:nextDate]) < SPMComplicationEntryInterval)
             {
                 SPMLog(@"Date: %@ and %@ are below the minimum spacing threshold", date, nextDate);
@@ -289,12 +236,12 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
 - (void)assertComplicationEntriesOrder:(nonnull NSArray <CLKComplicationTimelineEntry *> *)entries
 {
     NSParameterAssert(entries);
-
+    
     if (![entries count])
     {
         return;
     }
-
+    
     NSArray *sortedEntries = [entries sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"date"
                                                                                                   ascending:YES]]];
     NSAssert([entries isEqual:sortedEntries], @"Wrong sort order");
@@ -305,14 +252,14 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
 {
     NSParameterAssert(entries);
     NSParameterAssert(dates);
-
+    
     if (![entries count] || ![dates count])
     {
         return;
     }
-
+    
     NSMutableArray *testedDates = [dates mutableCopy];
-
+    
     for (CLKComplicationTimelineEntry *entry in entries)
     {
         for (NSDate *date in dates)
@@ -322,13 +269,13 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 [testedDates removeObject:date];
             }
         }
-
+        
         if (![testedDates count])
         {
             break;
         }
     }
-
+    
     NSUInteger testedDatesCount = [testedDates count];
     if (testedDatesCount > 0)
     {
@@ -347,31 +294,31 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                               withHandler:(void(^)(NSArray<CLKComplicationTimelineEntry *> * __nullable entries))handler
 {
     //    SPMLog(@"beforeDate: begin timelime entries  %@ - limit %i", date, limit);
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSDate *beginDate = [self.extensionDelegate.currentSpot complicationStartDate];
-
+        
         if (!beginDate || [date SPMIsEqualOrBeforeDate:beginDate])
         {
             //            NSLog(@"Not returning anything for beforeDate");
             handler(nil);
             return;
         }
-
+        
         //        NSDateFormatter *debugFormatter = [[NSDateFormatter alloc] init];
         //        debugFormatter.dateStyle = NSDateFormatterShortStyle;
         //        debugFormatter.timeStyle = NSDateFormatterFullStyle;
-
+        
         NSDate *dateToBackwards = date;
         NSDate *complicationEndDate = [self.extensionDelegate.currentSpot.timeLimit endDate];
         if ([date SPMIsEqualOrAfterDate:complicationEndDate])
         {
             dateToBackwards = complicationEndDate;
         }
-
+        
         NSDate *dateWarning = [self.extensionDelegate.currentSpot.timeLimit dateForThreshold:SPMParkingTimeLimitThresholdWarning];
         NSDate *dateUrgent = [self.extensionDelegate.currentSpot.timeLimit dateForThreshold:SPMParkingTimeLimitThresholdUrgent];
-
+        
         // No need for granularity for these as they use relative dates
         if (complication.family == CLKComplicationFamilyModularLarge ||
             complication.family == CLKComplicationFamilyUtilitarianLarge)
@@ -384,9 +331,9 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                [complicationEndDate dateByAddingTimeInterval:-59],
                                dateToBackwards,
                                [complicationEndDate dateByAddingTimeInterval:60]];
-
+            
             NSMutableArray <CLKComplicationTimelineEntry *> *array = [[NSMutableArray alloc] initWithCapacity:[dates count]];
-
+            
             for (NSDate *entryDate in dates)
             {
                 NSComparisonResult result = [entryDate compare:date];
@@ -394,7 +341,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 {
                     continue;
                 }
-
+                
                 //            SPMLog(@"%f Will return %@", -adjustInterval, [debugFormatter stringFromDate:entryDate]);
                 CLKComplicationTemplate *template = [self templateForComplication:complication
                                                                            atDate:entryDate];
@@ -402,10 +349,10 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                              complicationTemplate:template];
                 [array addObject:entry];
             }
-
+            
             [array sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"date"
                                                                         ascending:YES]]];
-
+            
             //            SPMLog(@"Modular large key dates %@, adjusted for beforeDate: %@: %@", dates, date, [array valueForKey:@"date"]);
 #ifdef DEBUG
             [self assertComplicationEntriesOrder:array];
@@ -413,13 +360,13 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             handler(array);
             return;
         }
-
+        
         NSTimeInterval spanLength = [dateToBackwards timeIntervalSinceDate:beginDate];
         //        SPMLog(@"%@ (beforeDate) timeIntervalSinceDate %@ (parkDate) = %f", [debugFormatter stringFromDate:dateToBackwards], [debugFormatter stringFromDate:beginDate], spanLength);
         NSAssert(spanLength > 0, @"Span length must be positive");
         NSUInteger adjustedLimit = limit - 1;
         NSTimeInterval interval = spanLength / adjustedLimit;
-
+        
         //        SPMLog(@"Original interval %f limit %lu", interval, (unsigned long)adjustedLimit);
         if (interval < SPMComplicationEntryInterval)
         {
@@ -429,26 +376,26 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             //            SPMLog(@"Adjusted interval %f limit %lu", interval, (unsigned long)adjustedLimit);
             NSAssert(adjustedLimit > 0, @"We must have at least one");
         }
-
+        
         NSMutableArray <CLKComplicationTimelineEntry *> *array = [[NSMutableArray alloc] initWithCapacity:adjustedLimit];
-
+        
         // Transition anchors. We could probably use a set, but this seems more efficient. WatchOS will ignore any bouding entries less than 60 seconds away. We don't adjust our second intervals based on the position of these transition anchors.
         BOOL dateWarningAdded = NO;
         BOOL dateUrgentAdded = NO;
-
+        
         // This must be from older to newest, otherwise it won't work!
         for (NSUInteger i = adjustedLimit; i > 0; i--)
         {
             NSTimeInterval adjustInterval = i * interval;
             NSDate *entryDate = [dateToBackwards dateByAddingTimeInterval:-adjustInterval];
-
+            
             if (fabs([entryDate timeIntervalSinceDate:dateWarning]) < interval)
             {
                 if (dateWarningAdded)
                 {
                     continue;
                 }
-
+                
                 entryDate = dateWarning;
                 dateWarningAdded = YES;
             }
@@ -461,19 +408,19 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 entryDate = dateUrgent;
                 dateUrgentAdded = YES;
             }
-
+            
             //            SPMLog(@"%f Will return %@", -adjustInterval, [debugFormatter stringFromDate:entryDate]);
-
+            
             //            SPMLog(@"Adding entry date %@", entryDate);
             NSAssert([entryDate compare:date] == NSOrderedAscending, @"Entry date is after before date");
-
+            
             CLKComplicationTemplate *template = [self templateForComplication:complication
                                                                        atDate:entryDate];
             CLKComplicationTimelineEntry *entry = [CLKComplicationTimelineEntry entryWithDate:entryDate
                                                                          complicationTemplate:template];
             [array addObject:entry];
         }
-
+        
 #ifdef DEBUG
         NSMutableArray *datesToTest = [[NSMutableArray alloc] initWithCapacity:3];
         if ([dateWarning SPMIsBeforeDate:date])
@@ -487,7 +434,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             NSAssert(dateUrgentAdded, @"The urgent date should have been added");
         }
 #endif
-
+        
         // We already checked that it is before the Apple required date
         if (dateToBackwards == complicationEndDate)
         {
@@ -499,7 +446,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 //                {
                 [array removeLastObject];
                 //                }
-
+                
                 // Final one so we always show the "time expired"
                 CLKComplicationTemplate *template = [self templateForComplication:complication
                                                                            atDate:dateToBackwards];
@@ -511,18 +458,18 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
 #endif
             }
         }
-
+        
         NSAssert([array count] <= adjustedLimit, @"Array must match adjusted limit");
-
+        
 #ifdef DEBUG
         [self assertSpacingInComplicationEntries:array];
         [self assertComplicationEntriesOrder:array];
         [self assertComplicationEntries:array
                            containDates:datesToTest];
 #endif
-
+        
         NSAssert([[array firstObject].date SPMIsEqualOrBeforeDate:beginDate], @"Oldest date must be on or after our beginDate");
-
+        
         handler(array);
         //        SPMLog(@"beforeDate: end\n\n");
     });
@@ -534,24 +481,24 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                               withHandler:(void(^)(NSArray<CLKComplicationTimelineEntry *> * __nullable entries))handler
 {
     //    SPMLog(@"afterDate: begin timelime entries %@ - limit %i", date, limit);
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSDate *dateEnd = [self.extensionDelegate.currentSpot.timeLimit endDate];
-
+        
         if (!dateEnd || [date SPMIsEqualOrAfterDate:dateEnd])
         {
             //            SPMLog(@"Not returning anything for afterDate");
             handler(nil);
             return;
         }
-
+        
         //        NSDateFormatter *debugFormatter = [[NSDateFormatter alloc] init];
         //        debugFormatter.dateStyle = NSDateFormatterShortStyle;
         //        debugFormatter.timeStyle = NSDateFormatterFullStyle;
-
+        
         NSDate *dateWarning = [self.extensionDelegate.currentSpot.timeLimit dateForThreshold:SPMParkingTimeLimitThresholdWarning];
         NSDate *dateUrgent = [self.extensionDelegate.currentSpot.timeLimit dateForThreshold:SPMParkingTimeLimitThresholdUrgent];
-
+        
         // No need for granularity for these as they use relative dates
         if (complication.family == CLKComplicationFamilyModularLarge ||
             complication.family == CLKComplicationFamilyUtilitarianLarge)
@@ -562,18 +509,18 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                dateEnd,
                                [dateEnd dateByAddingTimeInterval:60]
                                ];
-
+            
             NSMutableArray <CLKComplicationTimelineEntry *> *array = [[NSMutableArray alloc] initWithCapacity:[dates count]];
-
+            
             for (NSDate *entryDate in dates)
             {
                 NSComparisonResult result = [entryDate compare:date];
-
+                
                 if (result == NSOrderedAscending || result == NSOrderedSame)
                 {
                     continue;
                 }
-
+                
                 NSAssert([entryDate compare:date] == NSOrderedDescending, @"Entry date is before start date");
                 //            SPMLog(@"%f Will return %@", -adjustInterval, [debugFormatter stringFromDate:entryDate]);
                 CLKComplicationTemplate *template = [self templateForComplication:complication
@@ -582,9 +529,9 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                              complicationTemplate:template];
                 [array addObject:entry];
             }
-
+            
             //            SPMLog(@"Modular large key dates %@, adjusted for afterDate: %@: %@", dates, date, [array valueForKey:@"date"]);
-
+            
 #ifdef DEBUG
             [self assertComplicationEntriesOrder:array];
 #endif
@@ -598,33 +545,33 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             }
             return;
         }
-
+        
         NSTimeInterval spanLength = [dateEnd timeIntervalSinceDate:date];
         //        SPMLog(@"%@ (afterDate) timeIntervalSinceDate %@ (limit end date) = %f", [debugFormatter stringFromDate:date], [debugFormatter stringFromDate:endDate], spanLength);
         NSAssert(spanLength > 0, @"Span length must be positive");
-
+        
         if (spanLength == 0)
         {
             NSLog(@"Error: Span length is 0");
             handler(nil);
             return;
         }
-
+        
         NSUInteger adjustedLimit = limit;
         NSTimeInterval interval = spanLength / adjustedLimit;
-
+        
         //        SPMLog(@"Original interval %f limit %lu", interval, (unsigned long)adjustedLimit);
         if (interval < SPMComplicationEntryInterval)
         {
             interval = SPMComplicationEntryInterval;
             adjustedLimit = ceil(spanLength / interval);
-
+            
             NSAssert(adjustedLimit <= limit, @"Our adjusted limit must not exceed Apple's");
             if (adjustedLimit > limit)
             {
                 adjustedLimit = limit;
             }
-
+            
             NSAssert(adjustedLimit > 0, @"We must have at least one");
             if (adjustedLimit == 0)
             {
@@ -632,43 +579,43 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 handler(nil);
                 return;
             }
-
+            
             //            SPMLog(@"Adjusted interval %f limit %lu", interval, (unsigned long)adjustedLimit);
         }
-
+        
         NSMutableArray <CLKComplicationTimelineEntry *> *array = [[NSMutableArray alloc] initWithCapacity:adjustedLimit];
-
+        
         // Transition anchors. We could probably use a set, but this seems more efficient. WatchOS will ignore any bouding entries less than 60 seconds away. We don't adjust our second intervals based on the position of these transition anchors.
         BOOL dateWarningAdded = NO;
         BOOL dateUrgentAdded = NO;
         BOOL dateEndAdded = NO;
-
+        
         NSUInteger index = 0;
         while (index != adjustedLimit)
         {
             index++;
-
+            
             NSTimeInterval adjustInterval = index * interval;
             NSDate *entryDate = [date dateByAddingTimeInterval:adjustInterval];
-
+            
             if (dateWarningAdded && [entryDate isEqualToDate:dateWarning])
             {
                 //                SPMLog(@"We already added the warning date!");
                 continue;
             }
-
+            
             if (dateUrgentAdded && [entryDate isEqualToDate:dateUrgent])
             {
                 //                SPMLog(@"We already added the urgent date!");
                 continue;
             }
-
+            
             if (dateEndAdded && [entryDate isEqualToDate:dateEnd])
             {
                 //                SPMLog(@"We already added the end date!");
                 continue;
             }
-
+            
             BOOL skipEntryDateInsertion = NO;
             // Test case 24 hour time limit. All of these should fall through!
             if (fabs([entryDate timeIntervalSinceDate:dateWarning]) < interval)
@@ -685,7 +632,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     skipEntryDateInsertion = YES;
                 }
             }
-
+            
             if (fabs([entryDate timeIntervalSinceDate:dateUrgent]) < interval)
             {
                 if (![entryDate isEqualToDate:dateWarning])
@@ -704,7 +651,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     }
                 }
             }
-
+            
             if (fabs([entryDate timeIntervalSinceDate:dateEnd]) < interval)
             {
                 // This should always be at the end
@@ -733,33 +680,33 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     }
                 }
             }
-
+            
             if (skipEntryDateInsertion)
             {
                 //                SPMLog(@"%lu Continue!", (unsigned long)index);
                 continue;
             }
-
+            
             NSAssert([entryDate compare:date] == NSOrderedDescending, @"Entry date is before start date");
-
+            
             if ([entryDate compare:date] != NSOrderedDescending)
             {
                 //                SPMLog(@"Entry date %@ is before start date %@, continuing!", entryDate, date);
                 continue;
             }
-
+            
             CLKComplicationTemplate *template = [self templateForComplication:complication
                                                                        atDate:entryDate];
             CLKComplicationTimelineEntry *entry = [CLKComplicationTimelineEntry entryWithDate:entryDate
                                                                          complicationTemplate:template];
             [array addObject:entry];
-
+            
             if (entryDate != dateEnd && dateEndAdded)
             {
                 NSAssert(0, @"The loop should be done");
             }
         }
-
+        
         CLKComplicationTimelineEntry *lastEntry = array.lastObject;
         if (!dateEndAdded &&
             ![array.lastObject.date SPMIsEqualOrAfterDate:dateEnd])
@@ -769,19 +716,19 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             {
                 [array removeObject:lastEntry];
             }
-
+            
             // Final one so we always show the "time expired"
             CLKComplicationTemplate *template = [self templateForComplication:complication
                                                                        atDate:dateEnd];
             CLKComplicationTimelineEntry *entry = [CLKComplicationTimelineEntry entryWithDate:dateEnd
                                                                          complicationTemplate:template];
             [array addObject:entry];
-
+            
             dateEndAdded = YES;
         }
-
+        
         //        SPMLog(@"Warning: %@, Urgent: %@, End: %@", dateWarning, dateUrgent, dateEnd);
-
+        
 #ifdef DEBUG
         NSMutableArray *datesToTest = [[NSMutableArray alloc] initWithCapacity:3];
         if ([dateWarning SPMIsAfterDate:date])
@@ -800,18 +747,18 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             NSAssert(dateEndAdded, @"The end date should have been added");
         }
 #endif
-
+        
         NSAssert([array count] <= adjustedLimit, @"Array must match adjusted limit");
-
+        
 #ifdef DEBUG
         [self assertSpacingInComplicationEntries:array];
-
+        
         [self assertComplicationEntriesOrder:array];
-
+        
         [self assertComplicationEntries:array
                            containDates:datesToTest];
 #endif
-
+        
         handler(array);
         //        SPMLog(@"afterDate: end\n\n");
     });
@@ -825,24 +772,24 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                     atDate:date];
     CLKComplicationTimelineEntry *entry = [CLKComplicationTimelineEntry entryWithDate:date
                                                                  complicationTemplate:entryTemplate];
-
+    
     handler(entry);
 }
 
-- (nonnull CLKComplicationTemplate *)templateForComplication:(nonnull CLKComplication *)complication
-                                                      atDate:(nonnull NSDate *)date;
+- (nullable CLKComplicationTemplate *)templateForComplication:(nonnull CLKComplication *)complication
+                                                       atDate:(nonnull NSDate *)date;
 {
     NSParameterAssert(complication);
     NSParameterAssert(date);
-
+    
     if (!complication || !date)
     {
         return nil;
     }
-
+    
     ParkingSpot *currentSpot = self.extensionDelegate.currentSpot;
     CLKComplicationTemplate *entryTemplate;
-
+    
     if (complication.family == CLKComplicationFamilyModularSmall)
     {
         if (!currentSpot)
@@ -871,16 +818,16 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                                                             style:CLKRelativeDateStyleTimer
                                                                                                             units:NSCalendarUnitHour | NSCalendarUnitMinute];
                     template.textProvider = textProvider;
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
                         template.tintColor = tintColor;
                         template.textProvider.tintColor = tintColor;
                     }
-
+                    
                     template.fillFraction = [currentSpot.timeLimit fillFractionAtDate:date];
-
+                    
                     entryTemplate = template;
                 }
             }
@@ -898,12 +845,12 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
     else if (complication.family == CLKComplicationFamilyModularLarge)
     {
         CLKComplicationTemplateModularLargeStandardBody *template = [[CLKComplicationTemplateModularLargeStandardBody alloc] init];
-
+        
         if (!currentSpot)
         {
             template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Seattle Parking", nil)];
-
-            if (!self.extensionDelegate.currentSpotLoaded)
+            
+            if (self.extensionDelegate.currentSpot != nil)
             {
                 template.body1TextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Tap to Open", nil)];
             }
@@ -921,9 +868,9 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 {
                     template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"⚠️ Parking Expired", nil)];
                     template.headerTextProvider.tintColor = [currentSpot.timeLimit textColorForThreshold:SPMParkingTimeLimitThresholdExpired];
-
+                    
                     NSTimeInterval timeInterval = fabs([currentSpot.timeLimit.endDate timeIntervalSinceDate:date]);
-
+                    
                     NSCalendarUnit units;
                     if (timeInterval < 60)
                     {
@@ -933,13 +880,13 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     {
                         units = NSCalendarUnitHour | NSCalendarUnitMinute;
                     }
-
+                    
                     CLKRelativeDateTextProvider *textProvider = [CLKRelativeDateTextProvider textProviderWithDate:currentSpot.timeLimit.endDate
                                                                                                             style:CLKRelativeDateStyleOffset
                                                                                                             units:units];
-
+                    
                     template.body1TextProvider = textProvider;
-
+                    
                     if (currentSpot.address)
                     {
                         template.body2TextProvider = [CLKSimpleTextProvider textProviderWithText:currentSpot.address];
@@ -949,16 +896,16 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 {
                     template.headerImageProvider = [CLKImageProvider imageProviderWithOnePieceImage:[UIImage imageNamed:@"Complication Runtime/ModularLargeTimeLimit"]];
                     template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Parking Expiring", nil)];
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
                         template.headerImageProvider.tintColor = tintColor;
                         template.headerTextProvider.tintColor = tintColor;
                     }
-
+                    
                     NSTimeInterval timeInterval = fabs([currentSpot.timeLimit.endDate timeIntervalSinceDate:date]);
-
+                    
                     if (timeInterval == 0)
                     {
                         template.body1TextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Now", nil)];
@@ -977,11 +924,11 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                         CLKRelativeDateTextProvider *textProvider = [CLKRelativeDateTextProvider textProviderWithDate:currentSpot.timeLimit.endDate
                                                                                                                 style:CLKRelativeDateStyleNatural
                                                                                                                 units:units];
-
+                        
                         template.body1TextProvider = textProvider;
                     }
-
-
+                    
+                    
                     if (currentSpot.address)
                     {
                         template.body2TextProvider = [CLKSimpleTextProvider textProviderWithText:currentSpot.address];
@@ -990,7 +937,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 else
                 {
                     template.headerImageProvider = [CLKImageProvider imageProviderWithOnePieceImage:[UIImage imageNamed:@"Complication Runtime/ModularLargeTimeLimit"]];
-
+                    
                     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                     dateFormatter.doesRelativeDateFormatting = YES;
                     dateFormatter.locale = [NSLocale currentLocale];
@@ -998,7 +945,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     {
                         dateFormatter.timeStyle = NSDateFormatterShortStyle;
                         dateFormatter.dateStyle = NSDateFormatterNoStyle;
-
+                        
                         NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Parked %@", nil), [dateFormatter stringFromDate:currentSpot.date]];
                         template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:title];
                     }
@@ -1006,15 +953,15 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     {
                         dateFormatter.timeStyle = NSDateFormatterNoStyle;
                         dateFormatter.dateStyle = NSDateFormatterShortStyle;
-
+                        
                         NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Parked %@", nil), [dateFormatter stringFromDate:currentSpot.date]];
                         template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:title];
                     }
-
+                    
                     CLKRelativeDateTextProvider *dateProvider = [CLKRelativeDateTextProvider textProviderWithDate:currentSpot.timeLimit.endDate
                                                                                                             style:CLKRelativeDateStyleNatural
                                                                                                             units:NSCalendarUnitHour | NSCalendarUnitMinute];
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
@@ -1026,10 +973,10 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     {
                         dateProvider.tintColor = [UIColor whiteColor];
                     }
-
-
+                    
+                    
                     template.body1TextProvider = dateProvider;
-
+                    
                     if (currentSpot.address)
                     {
                         template.body2TextProvider = [CLKSimpleTextProvider textProviderWithText:currentSpot.address];
@@ -1057,7 +1004,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                     template.headerTextProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Parked", nil)];
                     template.body1TextProvider = [CLKSimpleTextProvider textProviderWithText:[currentSpot.date SPMLocalizedRelativeDateTimeString]];
                 }
-
+                
                 if (currentSpot.address)
                 {
                     if ([currentSpot wasParkedToday])
@@ -1069,7 +1016,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                         template.body2TextProvider = [CLKSimpleTextProvider textProviderWithText:currentSpot.address];
                     }
                 }
-
+                
                 template.headerTextProvider.tintColor = [UIColor SPMWatchTintColor];
             }
         }
@@ -1102,16 +1049,16 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                                                             style:CLKRelativeDateStyleTimer
                                                                                                             units:NSCalendarUnitHour | NSCalendarUnitMinute];
                     template.textProvider = textProvider;
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
                         template.tintColor = tintColor;
                         template.textProvider.tintColor = tintColor;
                     }
-
+                    
                     template.fillFraction = [currentSpot.timeLimit fillFractionAtDate:date];
-
+                    
                     entryTemplate = template;
                 }
             }
@@ -1129,7 +1076,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
         CLKComplicationTemplateUtilitarianLargeFlat *template = [[CLKComplicationTemplateUtilitarianLargeFlat alloc] init];
         if (!currentSpot)
         {
-            if (!self.extensionDelegate.currentSpotLoaded)
+            if (self.extensionDelegate.currentSpot != nil)
             {
                 template.textProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Tap to Open", nil)];
             }
@@ -1151,7 +1098,7 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                 else
                 {
                     NSTimeInterval timeInterval = fabs([currentSpot.timeLimit.endDate timeIntervalSinceDate:date]);
-
+                    
                     if (timeInterval == 0)
                     {
                         template.textProvider = [CLKSimpleTextProvider textProviderWithText:NSLocalizedString(@"Now", nil)];
@@ -1170,11 +1117,11 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                         CLKRelativeDateTextProvider *textProvider = [CLKRelativeDateTextProvider textProviderWithDate:currentSpot.timeLimit.endDate
                                                                                                                 style:CLKRelativeDateStyleNatural
                                                                                                                 units:units];
-
+                        
                         template.textProvider = textProvider;
                     }
                     template.imageProvider = [CLKImageProvider imageProviderWithOnePieceImage:[UIImage imageNamed:@"Complication Runtime/UtilitarianFlatTimeLimit"]];
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
@@ -1226,16 +1173,16 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
                                                                                                             style:CLKRelativeDateStyleTimer
                                                                                                             units:NSCalendarUnitHour | NSCalendarUnitMinute];
                     template.textProvider = textProvider;
-
+                    
                     UIColor *tintColor = [currentSpot.timeLimit complicationTintColorAtDate:date];
                     if (tintColor)
                     {
                         template.tintColor = tintColor;
                         template.textProvider.tintColor = tintColor;
                     }
-
+                    
                     template.fillFraction = [currentSpot.timeLimit fillFractionAtDate:date];
-
+                    
                     entryTemplate = template;
                 }
             }
@@ -1248,47 +1195,17 @@ static NSTimeInterval const SPMComplicationEntryInterval = 60;
             }
         }
     }
-
+    
     return entryTemplate;
-}
-
-#pragma mark Update Scheduling
-
-- (void)getNextRequestedUpdateDateWithHandler:(void(^)(NSDate * __nullable updateDate))handler
-{
-    // Call the handler with the date when you would next like to be given the opportunity to update your complication content
-    //    SPMLog(@"%@", NSStringFromSelector(_cmd));
-
-    handler([self.extensionDelegate.currentSpot nextComplicationUpdateDate]);
-}
-
-- (void)requestedUpdateDidBegin
-{
-    //    SPMLog(@"%@", NSStringFromSelector(_cmd));
-    CLKComplicationServer *server = [CLKComplicationServer sharedInstance];
-    for (CLKComplication *complication in server.activeComplications)
-    {
-        [server reloadTimelineForComplication:complication];
-    }
-}
-
-- (void)requestedUpdateBudgetExhausted
-{
-    //    SPMLog(@"%@", NSStringFromSelector(_cmd));
-    CLKComplicationServer *server = [CLKComplicationServer sharedInstance];
-    for (CLKComplication *complication in server.activeComplications)
-    {
-        [server reloadTimelineForComplication:complication];
-    }
 }
 
 #pragma mark - Placeholder Templates
 
-- (void)getPlaceholderTemplateForComplication:(CLKComplication *)complication
-                                  withHandler:(void(^)(CLKComplicationTemplate * __nullable complicationTemplate))handler
+- (void)getLocalizableSampleTemplateForComplication:(CLKComplication *)complication
+                                        withHandler:(void(^)(CLKComplicationTemplate * __nullable complicationTemplate))handler
 {
     CLKComplicationTemplate *template;
-
+    
     if (complication.family == CLKComplicationFamilyModularSmall)
     {
         CLKComplicationTemplateModularSmallSimpleImage *t = [[CLKComplicationTemplateModularSmallSimpleImage alloc] init];

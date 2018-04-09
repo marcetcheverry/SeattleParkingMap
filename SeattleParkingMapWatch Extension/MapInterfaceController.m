@@ -19,7 +19,7 @@
 
 static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 
-@interface MapInterfaceController () <WCSessionDelegate>
+@interface MapInterfaceController ()
 
 @property (weak, nonatomic) IBOutlet WKInterfaceTimer *timerInterfaceReminder;
 @property (weak, nonatomic) IBOutlet WKInterfaceLabel *labelRemaining;
@@ -41,33 +41,38 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 - (void)awakeWithContext:(id)context
 {
     [super awakeWithContext:context];
-
+    
     self.context = context;
-
+    
     [self.extensionDelegate addObserver:self
-                               forKeyPath:@"currentSpot.timeLimit"
-                                  options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-                                  context:MapInterfaceControllerContext];
-
+                             forKeyPath:@"currentSpot.timeLimit"
+                                options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
+                                context:MapInterfaceControllerContext];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(timeDidChangeSignificantly:)
                                                  name:NSSystemClockDidChangeNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(timeDidChangeSignificantly:)
                                                  name:NSCalendarDayChangedNotification
                                                object:nil];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveSessionMessage:)
+                                                 name:SPMWatchSessionNotificationReceivedMessage
+                                               object:nil];
+    
     [self updateInterface];
 }
 
 - (void)willActivate
 {
     [super willActivate];
-
+    
     NSDate *date = self.extensionDelegate.currentSpot.date;
-
+    
     if (date)
     {
         if (self.parkedOnSameDay != [[NSCalendar currentCalendar] isDate:date inSameDayAsDate:[NSDate date]])
@@ -80,32 +85,31 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 - (void)didAppear
 {
     [super didAppear];
-
+    
     [self updateUserActivity:SPMWatchHandoffActivityCurrentScreen
                     userInfo:@{SPMWatchHandoffUserInfoKeyCurrentScreen : NSStringFromClass(self.class)}
                   webpageURL:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveSessionMessage:)
-                                                 name:SPMWatchSessionNotificationReceivedMessage
-                                               object:nil];
-
+    
+    
     [self updateParkingTimeLimit];
-
+    
     if (self.needsTimeLimitRemovalOnAppearance)
     {
         [self removeTimeLimit];
         self.needsTimeLimitRemovalOnAppearance = NO;
     }
-
+    
     if (self.context[SPMWatchObjectWarningMessage])
     {
+        self.currentlyDisplayedWarningMessage = self.context[SPMWatchObjectWarningMessage];
         [self presentAlertControllerWithTitle:nil
                                       message:self.context[SPMWatchObjectWarningMessage]
                                preferredStyle:WKAlertControllerStyleAlert
                                       actions:@[[WKAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
                                                                          style:WKAlertActionStyleCancel
-                                                                       handler:^{}]]];
+                                                                       handler:^{
+                                                                           self.currentlyDisplayedWarningMessage = nil;
+                                                                       }]]];
         self.context = nil;
     }
 }
@@ -113,38 +117,34 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 - (void)willDisappear
 {
     [super willDisappear];
-
+    
     [self invalidateUserActivity];
-
+    
     if (self.currentOperation)
     {
         self.currentOperation.cancelled = YES;
     }
-
+    
     [self.timerReminder invalidate];
     [self.timerInterfaceReminder stop];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:SPMWatchSessionNotificationReceivedMessage
-                                                  object:nil];
 }
 
 - (void)dealloc
 {
     [self.timerReminder invalidate];
-
+    
     [self.extensionDelegate removeObserver:self
-                                  forKeyPath:@"currentSpot.timeLimit"
-                                     context:MapInterfaceControllerContext];
-
+                                forKeyPath:@"currentSpot.timeLimit"
+                                   context:MapInterfaceControllerContext];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NSSystemClockDidChangeNotification
                                                   object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:NSCalendarDayChangedNotification
                                                   object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:SPMWatchSessionNotificationReceivedMessage
                                                   object:nil];
@@ -189,7 +189,7 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
             [[NSRunLoop currentRunLoop] addTimer:self.timerReminder
                                          forMode:NSRunLoopCommonModes];
         }
-
+        
         NSDate *endDate = timeLimit.endDate;
         self.timerInterfaceReminder.date = endDate;
         [self.timerInterfaceReminder start];
@@ -212,15 +212,15 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
         self.title = NSLocalizedString(@"Parked", nil);
         return;
     }
-
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.doesRelativeDateFormatting = YES;
     formatter.locale = [NSLocale currentLocale];
     formatter.timeStyle = NSDateFormatterShortStyle;
-
+    
     self.parkedOnSameDay = [[NSCalendar currentCalendar] isDate:date
                                                 inSameDayAsDate:[NSDate date]];
-
+    
     if (!self.parkedOnSameDay)
     {
         formatter.dateStyle = NSDateFormatterShortStyle;
@@ -270,19 +270,24 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 - (void)didReceiveSessionMessage:(NSNotification *)notification
 {
     NSDictionary *message = [notification userInfo];
-
+    
     //    NSLog(@"Watch (Map) Received Message from App %@", message);
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        if ([message[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+        if ([message[SPMWatchAction] isEqualToString:SPMWatchActionGetParkingSpot])
         {
-            if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingSpot])
+            if ([message[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+            {
+                // I wonder if this can be called when this controller is deactivated?
+                [self updateInterface];
+            }
+        }
+        else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionDismissWarningMessage])
+        {
+            if ([self.currentlyDisplayedWarningMessage isEqualToString:message[SPMWatchObjectWarningMessage]])
             {
                 [self dismissController];
-            }
-            else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionGetParkingSpot])
-            {
-                [self updateInterface];
+                self.currentlyDisplayedWarningMessage = nil;
             }
         }
     });
@@ -302,65 +307,65 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 {
     [self setLoadingIndicatorHidden:NO
                            animated:YES];
-
+    
     WatchConnectivityOperation *localOperation = [[WatchConnectivityOperation alloc] init];
     self.currentOperation = localOperation;
-
+    
     self.title = nil;
-
+    
     self.buttonCancel.alpha = 0;
-
+    
     self.labelLoading.text = NSLocalizedString(@"Removing\nParking Spot", nil);
-
-    [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionRemoveParkingSpot}
-                               replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-
-                                           if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                           {
-                                               [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
-                                               self.extensionDelegate.currentSpot = nil;
-                                           }
-
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
-                                                                                               object:nil
-                                                                                             userInfo:replyMessage];
-
-                                           return;
-                                       }
-
-                                       //                           NSLog(@"Watch received reply: %@", replyMessage);
-
-                                       if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
-                                           self.extensionDelegate.currentSpot = nil;
-                                           [self dismissController];
-                                       }
-                                       else
-                                       {
-                                           [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Parking Point", nil)];
-                                       }
-                                       self.buttonCancel.alpha = 1;
-                                       self.currentOperation = nil;
-                                   });
-                               }
-                               errorHandler:^(NSError * _Nonnull error) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
-
-                                       [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Parking Point", nil)];
-                                       self.currentOperation = nil;
-                                       self.buttonCancel.alpha = 1;
-                                   });
-                               }];
+    
+    [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:@{SPMWatchAction: SPMWatchActionRemoveParkingSpot}
+                                replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if (localOperation.cancelled)
+                                        {
+                                            //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                            
+                                            if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                            {
+                                                [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                                self.extensionDelegate.currentSpot = nil;
+                                            }
+                                            
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
+                                                                                                object:nil
+                                                                                              userInfo:replyMessage];
+                                            
+                                            return;
+                                        }
+                                        
+                                        //                           NSLog(@"Watch received reply: %@", replyMessage);
+                                        
+                                        if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                        {
+                                            [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                            self.extensionDelegate.currentSpot = nil;
+                                            [self dismissController];
+                                        }
+                                        else
+                                        {
+                                            [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Parking Spot", nil)];
+                                        }
+                                        self.buttonCancel.alpha = 1;
+                                        self.currentOperation = nil;
+                                    });
+                                }
+                                errorHandler:^(NSError * _Nonnull error) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if (localOperation.cancelled)
+                                        {
+                                            //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                            return;
+                                        }
+                                        
+                                        [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Parking Spot", nil)];
+                                        self.currentOperation = nil;
+                                        self.buttonCancel.alpha = 1;
+                                    });
+                                }];
 }
 
 - (IBAction)touchedTimeLimit
@@ -382,7 +387,7 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
                                                                  // Because we can't do the animations properly otherwise!
                                                                  self.needsTimeLimitRemovalOnAppearance = YES;
                                                              }];
-
+        
         [self presentAlertControllerWithTitle:NSLocalizedString(@"Time Limit Expired", nil)
                                       message:message
                                preferredStyle:WKAlertControllerStyleAlert
@@ -397,7 +402,7 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
                                                                  // Because we can't do the animations properly otherwise!
                                                                  self.needsTimeLimitRemovalOnAppearance = YES;
                                                              }];
-
+        
         [self presentAlertControllerWithTitle:NSLocalizedString(@"Remove Time Limit", nil)
                                       message:message
                                preferredStyle:WKAlertControllerStyleActionSheet
@@ -409,62 +414,62 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 {
     [self setLoadingIndicatorHidden:NO
                            animated:YES];
-
+    
     WatchConnectivityOperation *localOperation = [[WatchConnectivityOperation alloc] init];
     self.currentOperation = localOperation;
-
+    
     self.labelLoading.text = NSLocalizedString(@"Removing\nTime Limit", nil);
-
-    [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionRemoveParkingTimeLimit}
-                               replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-
-                                           if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                           {
-                                               [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
-                                               self.extensionDelegate.currentSpot.timeLimit = nil;
-                                           }
-
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
-                                                                                               object:nil
-                                                                                             userInfo:replyMessage];
-
-                                           return;
-                                       }
-
-                                       //                           NSLog(@"Watch received reply: %@", replyMessage);
-
-                                       if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
-                                           self.extensionDelegate.currentSpot.timeLimit = nil;
-
-                                           [self updateParkingTimeLimit];
-                                           [self setLoadingIndicatorHidden:YES
-                                                                  animated:YES];
-                                       }
-                                       else
-                                       {
-                                           [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Time Limit", nil)];
-                                       }
-                                       self.currentOperation = nil;
-                                   });
-                               }
-                               errorHandler:^(NSError * _Nonnull error) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
-                                       
-                                       [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Time Limit", nil)];
-                                       self.currentOperation = nil;
-                                   });
-                               }];
+    
+    [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:@{SPMWatchAction: SPMWatchActionRemoveParkingTimeLimit}
+                                replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if (localOperation.cancelled)
+                                        {
+                                            //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                            
+                                            if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                            {
+                                                [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                                self.extensionDelegate.currentSpot.timeLimit = nil;
+                                            }
+                                            
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
+                                                                                                object:nil
+                                                                                              userInfo:replyMessage];
+                                            
+                                            return;
+                                        }
+                                        
+                                        //                           NSLog(@"Watch received reply: %@", replyMessage);
+                                        
+                                        if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                        {
+                                            [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                            self.extensionDelegate.currentSpot.timeLimit = nil;
+                                            
+                                            [self updateParkingTimeLimit];
+                                            [self setLoadingIndicatorHidden:YES
+                                                                   animated:YES];
+                                        }
+                                        else
+                                        {
+                                            [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Time Limit", nil)];
+                                        }
+                                        self.currentOperation = nil;
+                                    });
+                                }
+                                errorHandler:^(NSError * _Nonnull error) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if (localOperation.cancelled)
+                                        {
+                                            //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                            return;
+                                        }
+                                        
+                                        [self displayErrorMessage:NSLocalizedString(@"Could Not Remove Time Limit", nil)];
+                                        self.currentOperation = nil;
+                                    });
+                                }];
 }
 
 @end

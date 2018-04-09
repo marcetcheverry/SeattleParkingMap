@@ -33,9 +33,14 @@
 - (void)awakeWithContext:(id)context
 {
     [super awakeWithContext:context];
-
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveSessionMessage:)
+                                                 name:SPMWatchSessionNotificationReceivedMessage
+                                               object:nil];
+    
     self.context = context;
-
+    
     NSMutableArray *itemsHours = [[NSMutableArray alloc] initWithCapacity:24];
     for (NSUInteger i = 0; i < 24; i++)
     {
@@ -43,9 +48,9 @@
         item.title = [NSString stringWithFormat:@"%lu", (unsigned long)i];
         [itemsHours addObject:item];
     }
-
+    
     [self.pickerHours setItems:itemsHours];
-
+    
     NSMutableArray *itemsMinutes = [[NSMutableArray alloc] initWithCapacity:6];
     //    for (NSUInteger i = 0; i < 55; i += 5)
     //    {
@@ -53,7 +58,7 @@
     //        {
     //            continue;
     //        }
-
+    
     for (NSUInteger i = 0; i < 60; i += SPMDefaultsParkingTimeLimitMinuteInterval)
     {
         WKPickerItem *item = [[WKPickerItem alloc] init];
@@ -64,11 +69,11 @@
             self.pickerMinutesItemZero = item;
         }
     }
-
+    
     self.pickerMinutesItems = itemsMinutes;
-
+    
     [self.pickerMinutes setItems:itemsMinutes];
-
+    
     if (self.extensionDelegate.userDefinedParkingTimeLimit)
     {
         NSTimeInterval duration = [self.extensionDelegate.userDefinedParkingTimeLimit doubleValue];
@@ -88,18 +93,48 @@
         [self.pickerMinutes setSelectedItemIndex:0];
         self.pickerTimeLimitMinutesSelectedIndex = 0;
     }
-
+    
     [self constrainMinutesPickerIfNeeded];
-
+    
     [self.pickerHours focus];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:SPMWatchSessionNotificationReceivedMessage
+                                                  object:nil];
 }
 
 - (void)willDisappear
 {
     [super willDisappear];
-
+    
     [self.pickerHours resignFocus];
     [self.pickerMinutes resignFocus];
+}
+
+#pragma mark - Notifications
+
+- (void)didReceiveSessionMessage:(NSNotification *)notification
+{
+    NSDictionary *message = [notification userInfo];
+    
+    //    NSLog(@"Watch (Time Limit) Received Message from App %@", message);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([message[SPMWatchAction] isEqualToString:SPMWatchActionDismissWarningMessage])
+        {
+            if ([self.currentlyDisplayedWarningMessage isEqualToString:message[SPMWatchObjectWarningMessage]])
+            {
+                self.currentlyDisplayedWarningMessage = nil;
+                // Dismiss the alert
+                [self dismissController];
+                // Then dismiss ourselves, which is what the alert OK button would have done
+                [self dismissController];
+            }
+        }
+    });
 }
 
 - (void)setLoadingIndicatorHidden:(BOOL)hidden
@@ -113,21 +148,21 @@
     {
         [self.pickerHours focus];
     }
-
+    
     [super setLoadingIndicatorHidden:hidden];
 }
 
 - (IBAction)pickerHoursSelectedIndex:(NSInteger)selectedIndex
 {
     self.pickerTimeLimitHoursSelectedIndex = selectedIndex;
-
+    
     [self constrainMinutesPickerIfNeeded];
 }
 
 - (IBAction)pickerMinutesSelectedIndex:(NSInteger)selectedIndex
 {
     self.pickerTimeLimitMinutesSelectedIndex = selectedIndex;
-
+    
     [self updateReminderLabel];
 }
 
@@ -139,7 +174,7 @@
         {
             [self.pickerMinutesItems removeObject:self.pickerMinutesItemZero];
             [self.pickerMinutes setItems:self.pickerMinutesItems];
-
+            
             if (self.pickerTimeLimitMinutesSelectedIndex > 0)
             {
                 self.pickerTimeLimitMinutesSelectedIndex -= 1;
@@ -159,7 +194,7 @@
             [self.pickerMinutes setSelectedItemIndex:self.pickerTimeLimitMinutesSelectedIndex];
         }
     }
-
+    
     [self updateReminderLabel];
 }
 
@@ -187,32 +222,32 @@
 - (nonnull NSNumber *)currentTimePickerIntervalNumber
 {
     NSInteger minutesSelectedIndex = self.pickerTimeLimitMinutesSelectedIndex;
-
+    
     if (self.pickerTimeLimitHoursSelectedIndex == 0)
     {
         minutesSelectedIndex += 1;
     }
-
+    
     return @((self.pickerTimeLimitHoursSelectedIndex * 60 * 60) + (minutesSelectedIndex * SPMDefaultsParkingTimeLimitMinuteInterval * 60));
 }
 
 - (IBAction)touchedSetTimeLimit
 {
     NSNumber *length = [self currentTimePickerIntervalNumber];
-
+    
     self.title = nil;
-
+    
     self.labelLoading.text = NSLocalizedString(@"Setting\nTime Limit", nil);
     [self setLoadingIndicatorHidden:NO
                            animated:YES];
-
+    
     if ([self.context isEqualToString:SPMWatchContextUserDefinedParkingTimeLimit])
     {
         [self setParkingTimeLimitWithLength:length
                              limitStartDate:[NSDate date]];
         return;
     }
-
+    
     [ParkingTimeLimit creationActionPathForParkDate:self.extensionDelegate.currentSpot.date
                                     timeLimitLength:length
                                             handler:^(SPMParkingTimeLimitSetActionPath actionPath, NSString * _Nullable alertTitle, NSString * _Nullable alertMessage) {
@@ -236,7 +271,7 @@
                                                                                       message:alertMessage
                                                                                preferredStyle:WKAlertControllerStyleAlert
                                                                                       actions:actions];
-
+                                                        
                                                     }
                                                     else if (actionPath == SPMParkingTimeLimitSetActionPathAsk)
                                                     {
@@ -266,92 +301,112 @@
 {
     NSParameterAssert(length);
     NSParameterAssert(limitStartDate);
-
+    
     if (!length || !limitStartDate)
     {
         return;
     }
-
+    
     self.extensionDelegate.userDefinedParkingTimeLimit = length;
-
+    
     if ([self.context isEqualToString:SPMWatchContextUserDefinedParkingTimeLimit])
     {
         [self dismissController];
         return;
     }
-
-
+    
     WatchConnectivityOperation *localOperation = [[WatchConnectivityOperation alloc] init];
     self.currentOperation = localOperation;
-
+    
     ParkingTimeLimit *timeLimit = [[ParkingTimeLimit alloc] initWithStartDate:limitStartDate
                                                                        length:length
                                                             reminderThreshold:nil];
-
-    [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionSetParkingTimeLimit,
-                                              SPMWatchObjectParkingTimeLimit: [timeLimit watchConnectivityDictionaryRepresentation]}
-                               replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
-                                           self.extensionDelegate.currentSpot.timeLimit = timeLimit;
-                                       }
-
-                                       if (localOperation.cancelled)
-                                       {
-                                           // NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-
-                                           [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
-                                                                                               object:nil
-                                                                                             userInfo:replyMessage];
-
-                                           return;
-                                       }
-
-                                       // NSLog(@"Watch received reply: %@", replyMessage);
-
-                                       if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
-                                       {
-                                           dispatch_block_t dismissBlock = ^{
-                                               [self dismissController];
-                                           };
-
-                                           if (replyMessage[SPMWatchObjectWarningMessage])
-                                           {
-                                               [self presentAlertControllerWithTitle:nil
-                                                                             message:replyMessage[SPMWatchObjectWarningMessage]
-                                                                      preferredStyle:WKAlertControllerStyleAlert
-                                                                             actions:@[[WKAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                                                                                style:WKAlertActionStyleCancel
-                                                                                                              handler:^{
-                                                                                                                  dismissBlock();
-                                                                                                              }]]];
-                                           }
-                                           else
-                                           {
-                                               dismissBlock();
-                                           }
-                                       }
-                                       else
-                                       {
-                                           [self displayErrorMessage:NSLocalizedString(@"Could Not Set Time Limit", nil)];
-                                       }
-                                       self.currentOperation = nil;
-                                   });
-                               }
-                               errorHandler:^(NSError * _Nonnull error) {
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       if (localOperation.cancelled)
-                                       {
-                                           //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
-                                           return;
-                                       }
-                                       
-                                       [self displayErrorMessage:NSLocalizedString(@"Could Not Set Time Limit", nil)];
-                                       self.currentOperation = nil;
-                                   });
-                               }];
+    
+    [((ExtensionDelegate *)WKExtension.sharedExtension.delegate) sendMessageToPhone:@{SPMWatchAction: SPMWatchActionSetParkingTimeLimit,
+                                                                                      SPMWatchObjectParkingTimeLimit: [timeLimit watchConnectivityDictionaryRepresentation]}
+                                                                       replyHandler:^(NSDictionary<NSString *,id> * _Nonnull replyMessage) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                                                               {
+                                                                                   [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                                                                   self.extensionDelegate.currentSpot.timeLimit = timeLimit;
+                                                                               }
+                                                                               
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   // NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   
+                                                                                   [[NSNotificationCenter defaultCenter] postNotificationName:SPMWatchSessionNotificationReceivedMessage
+                                                                                                                                       object:nil
+                                                                                                                                     userInfo:replyMessage];
+                                                                                   
+                                                                                   return;
+                                                                               }
+                                                                               
+                                                                               // NSLog(@"Watch received reply: %@", replyMessage);
+                                                                               
+                                                                               dispatch_block_t dismissBlock = ^{
+                                                                                   [self dismissController];
+                                                                               };
+                                                                               
+                                                                               if ([replyMessage[SPMWatchResponseStatus] isEqualToString:SPMWatchResponseSuccess])
+                                                                               {
+                                                                                   if (replyMessage[SPMWatchObjectWarningMessage])
+                                                                                   {
+                                                                                       self.currentlyDisplayedWarningMessage = replyMessage[SPMWatchObjectWarningMessage];
+                                                                                       
+                                                                                       [self presentAlertControllerWithTitle:nil
+                                                                                                                     message:replyMessage[SPMWatchObjectWarningMessage]
+                                                                                                              preferredStyle:WKAlertControllerStyleAlert
+                                                                                                                     actions:@[[WKAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                                                                                                                        style:WKAlertActionStyleCancel
+                                                                                                                                                      handler:^{
+                                                                                                                                                          self.currentlyDisplayedWarningMessage = nil;
+                                                                                                                                                          // This is not redundant, it dismisses the WKInterfaceController, not the alert!
+                                                                                                                                                          dismissBlock();
+                                                                                                                                                      }]]];
+                                                                                   }
+                                                                                   else
+                                                                                   {
+                                                                                       dismissBlock();
+                                                                                   }
+                                                                               }
+                                                                               else
+                                                                               {
+                                                                                   BOOL hideLoadingIndicator = YES;
+                                                                                   if ([replyMessage[SPMErrorCode] integerValue] == SPMErrorCodeDataDiscrepancy)
+                                                                                   {
+                                                                                       hideLoadingIndicator = NO;
+                                                                                   }
+                                                                                   
+                                                                                   [self displayErrorMessage:replyMessage[NSLocalizedFailureReasonErrorKey] ?: NSLocalizedString(@"Could Not Set\nTime Limit", nil)
+                                                                                        hideLoadingIndicator:hideLoadingIndicator
+                                                                                            dismissalHandler:^{
+                                                                                                if ([replyMessage[SPMErrorCode] integerValue] == SPMErrorCodeDataDiscrepancy)
+                                                                                                {
+                                                                                                    self.labelLoading.text = NSLocalizedString(@"Loading", nil);
+                                                                                                    self.extensionDelegate.currentSpot.timeLimit = [[ParkingTimeLimit alloc] initWithWatchConnectivityDictionary:replyMessage[SPMWatchObjectParkingTimeLimit]];
+                                                                                                    [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeClick];
+                                                                                                    dismissBlock();
+                                                                                                }
+                                                                                            }];
+                                                                                   
+                                                                               }
+                                                                               self.currentOperation = nil;
+                                                                           });
+                                                                       }
+                                                                       errorHandler:^(NSError * _Nonnull error) {
+                                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                                               if (localOperation.cancelled)
+                                                                               {
+                                                                                   //                               NSLog(@"Operation cancelled %p, self.current %p", localOperation, self.currentOperation);
+                                                                                   return;
+                                                                               }
+                                                                               
+                                                                               [self displayErrorMessage:NSLocalizedString(@"Could Not Set Time Limit", nil)];
+                                                                               self.currentOperation = nil;
+                                                                           });
+                                                                       }];
 }
 
 @end

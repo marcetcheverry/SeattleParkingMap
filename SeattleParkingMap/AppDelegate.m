@@ -13,10 +13,12 @@
 #import "ParkingManager.h"
 #import "ParkingSpot.h"
 #import "ParkingTimeLimit.h"
+#import "Analytics.h"
+#import "WCSession+SPM.h"
 
-@import AudioToolbox;
+@import UserNotifications;
 
-@interface AppDelegate () <CLLocationManagerDelegate, WCSessionDelegate>
+@interface AppDelegate () <CLLocationManagerDelegate, WCSessionDelegate, UNUserNotificationCenterDelegate>
 
 @property (nonatomic) BOOL applicationConfiguredForForegroundOperation;
 @property (nonatomic, strong) UIAlertController *lastTimeLimitNotificationAlertController;
@@ -38,63 +40,80 @@
     {
         return;
     }
-
+    
     NSError *error;
-    [AGSRuntimeEnvironment setClientID:SPM_API_KEY_ARCGIS_CLIENT_ID error:&error];
+    [AGSArcGISRuntimeEnvironment setLicenseKey:SPMExternalAPIArcGISLicenseKey error:&error];
     if (error)
     {
         NSLog(@"Error using client ID: %@", [error localizedDescription]);
-        [Flurry logError:@"ArcGIS_setClientID" message:@"Could not setClientID on startup" error:error];
+        [Analytics logError:@"ArcGIS_setClientID" message:@"Could not setClientID on startup" error:error];
     }
-
+    
     self.applicationConfiguredForForegroundOperation = YES;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Code for screenshots
+    //    CLLocation *location = [[CLLocation alloc] initWithLatitude:47.613584
+    //                                                      longitude:-122.339480];
+    //    NSDate *parkDate = [NSDate date];
+    //    ParkingSpot *spot = [[ParkingSpot alloc] initWithLocation:location
+    //                                                         date:parkDate];
+    //
+    //    ParkingTimeLimit *timeLimit = [[ParkingTimeLimit alloc] initWithStartDate:parkDate
+    //                                                                       length:@(20 * 60)
+    //                                                            reminderThreshold:nil];
+    //    spot.timeLimit = timeLimit;
+    //    [ParkingManager sharedManager].currentSpot = spot;
+    //
+
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(notificationAuthorizationDenied)
+                                               name:SPMNotificationAuthorizationDeniedNotification
+                                             object:nil];
+
     if ([WCSession isSupported])
     {
         WCSession *session = [WCSession defaultSession];
         session.delegate = self;
         [session activateSession];
     }
-
-    [Flurry setCrashReportingEnabled:YES];
-
-#ifdef DEBUG
-    //    [Flurry setLogLevel:FlurryLogLevelDebug];
-    [Flurry startSession:SPM_API_KEY_FLURRY_DEV];
-#else
-    [Flurry setLogLevel:FlurryLogLevelNone];
-    [Flurry startSession:SPM_API_KEY_FLURRY_PROD];
-#endif
-
+    
     // Search
     //    [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-
+    
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
     {
         [self configureApplicationForForegroundOperation];
     }
-
-    BOOL renderMapsAtNativeResolution = NO;
-
-    if ([[UIScreen mainScreen] scale] > 1)
-    {
-        renderMapsAtNativeResolution = YES;
-    }
-
+    
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{SPMDefaultsShownInitialWarning: @(NO),
                                                               SPMDefaultsNeedsBackgroundLocationWarning: @(NO),
                                                               SPMDefaultsLegendOpacity: @(.75),
                                                               SPMDefaultsLegendHidden: @(NO),
                                                               SPMDefaultsSelectedMapType: @(SPMMapTypeStreet),
                                                               SPMDefaultsSelectedMapProvider: @(SPMMapProviderSDOT),
-                                                              //                                                              SPMDefaultsRenderLabelsAtNativeResolution: @(NO),
-                                                              SPMDefaultsRenderMapsAtNativeResolution: @(renderMapsAtNativeResolution),
                                                               SPMDefaultsLastParkingTimeLimitReminderThreshold: @(SPMDefaultsParkingTimeLimitReminderThreshold)}
      ];
+
+    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+
+    UNNotificationAction *viewAction = [UNNotificationAction actionWithIdentifier:SPMNotificationActionViewSpot
+                                                                            title:NSLocalizedString(@"View Parking Spot", nil)
+                                                                          options:UNNotificationActionOptionForeground];
+
+    UNNotificationAction *removeAction = [UNNotificationAction actionWithIdentifier:SPMNotificationActionRemoveSpot
+                                                                              title:NSLocalizedString(@"Remove Spot", nil)
+                                                                            options:UNNotificationActionOptionDestructive];
+
+    UNNotificationCategory *timeLimit = [UNNotificationCategory categoryWithIdentifier:SPMNotificationCategoryTimeLimit
+                                                                               actions:@[viewAction, removeAction]
+                                                                     intentIdentifiers:@[]
+                                                                               options:UNNotificationCategoryOptionAllowInCarPlay];
+
+    [UNUserNotificationCenter.currentNotificationCenter setNotificationCategories:[NSSet setWithObjects:timeLimit, nil]];
 
     return YES;
 }
@@ -108,7 +127,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     [UIApplication sharedApplication].idleTimerDisabled = NO;
-
+    
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -116,16 +135,16 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-
+    
     [self configureApplicationForForegroundOperation];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-
+    
     // Clear old notifications
-    [UIApplication sharedApplication].scheduledLocalNotifications = [UIApplication sharedApplication].scheduledLocalNotifications;
+    [UNUserNotificationCenter.currentNotificationCenter removeAllDeliveredNotifications];
 
     if (self.lastTimeLimitNotificationAlertController)
     {
@@ -138,49 +157,86 @@
     }
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
+#pragma mark - Notification Permissions
+
+- (void)notificationAuthorizationDenied
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_block_t presentAlertController = ^{
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Warning", nil)
+                                                                                     message:NSLocalizedString(@"Please allow notifications to be reminded about time limit expiration.", nil)
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+
+            UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open Settings", nil)
+                                                                     style:UIAlertActionStyleDefault
+                                                                   handler:^(UIAlertAction * _Nonnull action) {
+                                                                       // I don't see the need for canOpenURL here and dependent UIAlertActions
+                                                                       NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                                                                       [UIApplication.sharedApplication openURL:settingsURL
+                                                                                                        options:@{}
+                                                                                              completionHandler:nil];
+                                                                   }];
+
+            UIAlertAction *laterAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Later", nil)
+                                                                  style:UIAlertActionStyleCancel
+                                                                handler:nil];
+
+            [alertController addAction:settingsAction];
+            [alertController addAction:laterAction];
+
+            self.lastTimeLimitNotificationAlertController = alertController;
+
+            // Chain them (test case, other alert controllers present, or information panel is up
+            UIViewController *presentingViewController = self.window.rootViewController;
+
+            while ([presentingViewController presentedViewController] != nil)
+            {
+                presentingViewController = [presentingViewController presentedViewController];
+            }
+
+
+            [presentingViewController presentViewController:self.lastTimeLimitNotificationAlertController
+                                                   animated:YES
+                                                 completion:nil];
+        };
+
+        if (self.lastTimeLimitNotificationAlertController)
+        {
+            [self.lastTimeLimitNotificationAlertController dismissViewControllerAnimated:YES
+                                                                              completion:^{
+                                                                                  self.lastTimeLimitNotificationAlertController = nil;
+                                                                                  presentAlertController();
+                                                                              }];
+            return;
+        }
+
+        presentAlertController();
+    });
 }
 
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
-{
-    [[NSUserDefaults standardUserDefaults] setBool:YES
-                                            forKey:SPMDefaultsRegisteredForLocalNotifications];
+#pragma mark - User Notifications
 
-    if (notificationSettings.types != UIUserNotificationTypeNone)
-    {
-        [[ParkingManager sharedManager] scheduleTimeLimitNotifications];
-    }
-}
-
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
     if (self.lastTimeLimitNotificationAlertController)
     {
         [self.lastTimeLimitNotificationAlertController dismissViewControllerAnimated:YES
                                                                           completion:^{
                                                                               self.lastTimeLimitNotificationAlertController = nil;
-                                                                              [self application:application
-                                                                    didReceiveLocalNotification:notification];
+                                                                              [self userNotificationCenter:center
+                                                                                   willPresentNotification:notification
+                                                                                     withCompletionHandler:completionHandler];
                                                                           }];
         return;
     }
 
-    if ([notification.category isEqualToString:SPMNotificationCategoryTimeLimit])
+    if ([notification.request.content.categoryIdentifier isEqualToString:SPMNotificationCategoryTimeLimit])
     {
-        if ([WCSession isSupported] && [WCSession defaultSession].isReachable)
-        {
-            [[WCSession defaultSession] sendMessage:@{SPMWatchAction: SPMWatchActionUpdateComplications}
-                                       replyHandler:nil
-                                       errorHandler:^(NSError * _Nonnull error) {
-                                           NSLog(@"Could not send watch message %@", error);
-                                       }];
-        }
+        [WCSession.defaultSession SPMTransferCurrentComplicationUserInfo:@{SPMWatchNeedsComplicationUpdate: @YES}];
     }
 
-    self.lastTimeLimitNotificationAlertController = [UIAlertController alertControllerWithTitle:notification.alertTitle
-                                                                                        message:notification.alertBody
+    self.lastTimeLimitNotificationAlertController = [UIAlertController alertControllerWithTitle:notification.request.content.title
+                                                                                        message:notification.request.content.body
                                                                                  preferredStyle:UIAlertControllerStyleAlert];
     [self.lastTimeLimitNotificationAlertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", nil)
                                                                                       style:UIAlertActionStyleCancel
@@ -188,66 +244,68 @@
                                                                                         self.lastTimeLimitNotificationAlertController = nil;
                                                                                     }]];
 
-    UIUserNotificationSettings *settings = [UIApplication sharedApplication].currentUserNotificationSettings;
-
-    for (UIUserNotificationCategory *category in settings.categories)
-    {
-        if ([category.identifier isEqualToString:notification.category])
-        {
-            for (UIUserNotificationAction *action in [category actionsForContext:UIUserNotificationActionContextDefault])
+    [UNUserNotificationCenter.currentNotificationCenter getNotificationCategoriesWithCompletionHandler:^(NSSet<UNNotificationCategory *> * _Nonnull categories) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for (UNNotificationCategory *category in categories)
             {
-                UIAlertActionStyle style = UIAlertActionStyleDefault;
-                if (action.isDestructive)
+                if ([category.identifier isEqualToString:notification.request.content.categoryIdentifier])
                 {
-                    style = UIAlertActionStyleDestructive;
+                    for (UNNotificationAction *action in category.actions)
+                    {
+                        UIAlertActionStyle style = UIAlertActionStyleDefault;
+                        if (action.options & UNNotificationActionOptionDestructive)
+                        {
+                            style = UIAlertActionStyleDestructive;
+                        }
+                        [self.lastTimeLimitNotificationAlertController addAction:[UIAlertAction actionWithTitle:action.title
+                                                                                                          style:style
+                                                                                                        handler:^(UIAlertAction * _Nonnull alertAction) {
+                                                                                                            [self handleReceivedNotificationActionIdentifier:action.identifier
+                                                                                                                                                    userInfo:notification.request.content.userInfo
+                                                                                                                                           completionHandler:^{
+                                                                                                                                               self.lastTimeLimitNotificationAlertController = nil;
+                                                                                                                                           }];
+                                                                                                        }]];
+                    }
+
+                    break;
                 }
-                [self.lastTimeLimitNotificationAlertController addAction:[UIAlertAction actionWithTitle:action.title
-                                                                                                  style:style
-                                                                                                handler:^(UIAlertAction * _Nonnull alertAction) {
-                                                                                                    [self application:application
-                                                                                           handleActionWithIdentifier:action.identifier
-                                                                                                 forLocalNotification:notification
-                                                                                                    completionHandler:^{
-                                                                                                        self.lastTimeLimitNotificationAlertController = nil;
-                                                                                                    }];
-                                                                                                }]];
             }
 
-            break;
-        }
-    }
+            // Chain them (test case, other alert controllers present, or information panel is up
+            UIViewController *presentingViewController = self.window.rootViewController;
 
-    // Chain them (test case, other alert controllers present, or information panel is up
-    UIViewController *presentingViewController = self.window.rootViewController;
+            while ([presentingViewController presentedViewController] != nil)
+            {
+                presentingViewController = [presentingViewController presentedViewController];
+            }
 
-    while ([presentingViewController presentedViewController] != nil)
-    {
-        presentingViewController = [presentingViewController presentedViewController];
-    }
-
-    [presentingViewController presentViewController:self.lastTimeLimitNotificationAlertController
-                                           animated:YES
-                                         completion:^{
-                                             NSArray *resource = [notification.soundName componentsSeparatedByString:@"."];
-                                             NSAssert([resource count] == 2, @"Can not separate soundName");
-                                             if ([resource count] == 2)
-                                             {
-                                                 NSString *notificationSound = [[NSBundle mainBundle] pathForResource:[resource firstObject]
-                                                                                                               ofType:[resource lastObject]];
-                                                 NSURL *notificationURL = [NSURL fileURLWithPath:notificationSound];
-                                                 SystemSoundID notificationSoundID;
-                                                 AudioServicesCreateSystemSoundID((__bridge CFURLRef)notificationURL, &notificationSoundID);
-                                                 AudioServicesPlaySystemSound(notificationSoundID);
-                                             }
-                                         }];
+            
+            [presentingViewController presentViewController:self.lastTimeLimitNotificationAlertController
+                                                   animated:YES
+                                                 completion:^{
+                                                     completionHandler(UNNotificationPresentationOptionSound);
+                                                 }];
+        });
+    }];
 }
 
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler
+// The method will be called on the delegate when the user responded to the notification by opening the application, dismissing the notification or choosing a UNNotificationAction. The delegate must be set before the application returns from application:didFinishLaunchingWithOptions:.
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler
 {
-    if ([identifier isEqualToString:SPMNotificationActionRemoveSpot])
+    [self handleReceivedNotificationActionIdentifier:response.actionIdentifier
+                                            userInfo:response.notification.request.content.userInfo
+                                   completionHandler:completionHandler];
+}
+
+- (void)handleReceivedNotificationActionIdentifier:(NSString *)actionIdentifier
+                                          userInfo:(NSDictionary *)userInfo
+                                 completionHandler:(void(^)(void))completionHandler
+{
+    if ([actionIdentifier isEqualToString:SPMNotificationActionRemoveSpot])
     {
         NSDictionary *currentParkingSpot = [[NSUserDefaults standardUserDefaults] objectForKey:SPMDefaultsLastParkingPoint];
-        NSDictionary *notificationParkingSpot = notification.userInfo[SPMNotificationUserInfoKeyParkingSpot];
+        NSDictionary *notificationParkingSpot = userInfo[SPMNotificationUserInfoKeyParkingSpot];
         NSAssert([currentParkingSpot isEqualToDictionary:notificationParkingSpot], @"Current parking spot and notification parking spot don't match!");
         if ([currentParkingSpot isEqualToDictionary:notificationParkingSpot])
         {
@@ -293,7 +351,7 @@
         RootViewController *rootViewController = (RootViewController *)self.window.rootViewController;
         [rootViewController removeParkingSpotFromSource:SPMParkingSpotActionSourceQuickAction];
     }
-
+    
     completionHandler(YES);
 }
 
@@ -303,7 +361,7 @@
      didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
     //    NSLog(@"%@: %@", NSStringFromSelector(_cmd), locations);
-
+    
     if (self.setParkingSpotReplyHandler)
     {
         NSAssert([locations count] > 0, @"Must have at least one location");
@@ -312,24 +370,26 @@
             NSError *error = [NSError errorWithDomain:SPMErrorDomain
                                                  code:SPMErrorCodeLocationUnknown
                                              userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Could Not Find Your Current Location", nil)}];
-
+            
             self.setParkingSpotReplyHandler(@{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                               SPMWatchResponseStatus: SPMWatchResponseFailure,
+                                              SPMWatchNeedsComplicationUpdate: @YES,
+                                              SPMErrorCode: @(error.code),
                                               NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
-
-            [Flurry logError:@"ParkingSpot_SetFromWatch_Failure"
-                     message:@"Could Not Find Your Current Location"
-                       error:error];
-
+            
+            [Analytics logError:@"ParkingSpot_SetFromWatch_Failure"
+                        message:@"Could Not Find Your Current Location"
+                          error:error];
+            
             self.setParkingSpotTimeLimit = nil;
             self.setParkingSpotReplyHandler = nil;
             return;
         }
-
+        
         CLLocation *location = [locations firstObject];
-
+        
         NSDate *parkDate;
-
+        
         // Make sure that we use the date a watch passes to us, for example
         if (self.setParkingSpotTimeLimit.startDate)
         {
@@ -341,28 +401,29 @@
         }
         
         ParkingSpot *parkingSpot = [[ParkingSpot alloc] initWithLocation:location
-                                                                          date:parkDate];
-
+                                                                    date:parkDate];
+        
         if (self.setParkingSpotTimeLimit)
         {
             parkingSpot.timeLimit = self.setParkingSpotTimeLimit;
         }
-
+        
         [ParkingManager sharedManager].currentSpot = parkingSpot;
-
+        
         NSDictionary *replyDictionary;
-
+        
         if ([ParkingManager sharedManager].currentSpot)
         {
             replyDictionary = @{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                 SPMWatchResponseStatus: SPMWatchResponseSuccess,
+                                SPMWatchNeedsComplicationUpdate: @YES,
                                 SPMWatchObjectParkingSpot: [[ParkingManager sharedManager].currentSpot watchConnectivityDictionaryRepresentation]};
-
+            
             if (parkingSpot.timeLimit &&
                 [self shouldWarnWatchAboutRespondingToNotificationPrompt])
             {
                 NSMutableDictionary *mutableReplyDictionary = [replyDictionary mutableCopy];
-                mutableReplyDictionary[SPMWatchObjectWarningMessage] = [self watchWarningMessageEnableNotifications];
+                mutableReplyDictionary[SPMWatchObjectWarningMessage] = WCSession.defaultSession.SPMWatchWarningMessageEnableNotifications;
                 replyDictionary = mutableReplyDictionary;
             }
         }
@@ -370,16 +431,17 @@
         {
             NSLog(@"%@: Failed to set parking spot %@", NSStringFromSelector(_cmd), [ParkingManager sharedManager]);
             replyDictionary = @{SPMWatchAction: SPMWatchActionSetParkingSpot,
+                                SPMWatchNeedsComplicationUpdate: @YES,
                                 SPMWatchResponseStatus: SPMWatchResponseFailure};
         }
-
+        
         self.setParkingSpotReplyHandler(replyDictionary);
-
+        
         self.setParkingSpotTimeLimit = nil;
         self.setParkingSpotReplyHandler = nil;
-
-        [Flurry logEvent:@"ParkingSpot_SetFromWatch_Success"];
-
+        
+        [Analytics logEvent:@"ParkingSpot_SetFromWatch_Success"];
+        
         // Edge case if we do it in the background and we launch entirely before as the spot is set.
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
         {
@@ -389,7 +451,7 @@
             });
         }
     }
-
+    
     self.locationManager.delegate = nil;
     self.locationManager = nil;
 }
@@ -398,26 +460,28 @@
        didFailWithError:(NSError *)error
 {
     NSLog(@"%@: %@", NSStringFromSelector(_cmd), error);
-
+    
     if (self.setParkingSpotReplyHandler)
     {
         NSError *watchError = [NSError errorWithDomain:SPMErrorDomain
                                                   code:SPMErrorCodeLocationUnknown
                                               userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Could Not Find Your Current Location", nil),
                                                          NSUnderlyingErrorKey: error}];
-
+        
         self.setParkingSpotReplyHandler(@{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                           SPMWatchResponseStatus: SPMWatchResponseFailure,
+                                          SPMWatchNeedsComplicationUpdate: @YES,
+                                          SPMErrorCode: @(error.code),
                                           NSLocalizedFailureReasonErrorKey: watchError.userInfo[NSLocalizedFailureReasonErrorKey]});
-
-        [Flurry logError:@"ParkingSpot_SetFromWatch_Failure"
-                 message:@"Could Not Find Your Current Location"
-                   error:error];
-
+        
+        [Analytics logError:@"ParkingSpot_SetFromWatch_Failure"
+                    message:@"Could Not Find Your Current Location"
+                      error:error];
+        
         self.setParkingSpotTimeLimit = nil;
         self.setParkingSpotReplyHandler = nil;
     }
-
+    
     self.locationManager.delegate = nil;
     self.locationManager = nil;
 }
@@ -430,13 +494,8 @@
     {
         return NO;
     }
-
+    
     return YES;
-}
-
-- (nonnull NSString *)watchWarningMessageEnableNotifications
-{
-    return NSLocalizedString(@"Please enable notifications on your iPhone to be reminded when your time limit is about to expire.", nil);
 }
 
 - (void)session:(WCSession *)session didReceiveApplicationContext:(NSDictionary<NSString *, id> *)applicationContext
@@ -449,24 +508,50 @@
     }
 }
 
+- (void)session:(WCSession *)session didFinishUserInfoTransfer:(WCSessionUserInfoTransfer *)userInfoTransfer error:(NSError *)error
+{
+    if (error)
+    {
+        NSLog(@"Could not transfer user info: %@, error %@", userInfoTransfer, error);
+    }
+    else
+    {
+        SPMLog(@"Transfered user info %@", userInfoTransfer);
+    }
+}
+
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message replyHandler:(void(^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
 {
     //    NSLog(@"App Received Message from Watch %@", message);
-
+    
     if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingSpot])
     {
+        // No need to warn the user and follow a failure path
+        //        if ([ParkingManager sharedManager].currentSpot == nil)
+        //        {
+        //            NSError *error = [NSError errorWithDomain:SPMErrorDomain
+        //                                                 code:SPMErrorCodeDataDiscrepancy
+        //                                             userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The Parking Spot Was Already Removed", nil)}];
+        //
+        //            replyHandler(@{SPMWatchAction: message[SPMWatchAction],
+        //                           SPMWatchResponseStatus: SPMWatchResponseFailure,
+        //                           SPMErrorCode: @(error.code),
+        //                           NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
+        //            return;
+        //        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive)
             {
                 [ParkingManager sharedManager].currentSpot = nil;
-
+                
                 replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                                SPMWatchResponseStatus: SPMWatchResponseSuccess});
-
+                
                 // Edge case if we do it in the background and we launch entirely before as the spot is removed.
                 if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive)
                 {
-                    [Flurry logEvent:@"ParkingSpot_RemoveFromWatch"];
+                    [Analytics logEvent:@"ParkingSpot_RemoveFromWatch"];
                     RootViewController *rootViewController = (RootViewController *)self.window.rootViewController;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [rootViewController synchronizeParkingSpotDisplayFromDataStore];
@@ -480,7 +565,7 @@
                     [self.lastTimeLimitNotificationAlertController dismissViewControllerAnimated:YES
                                                                                       completion:nil];
                 }
-
+                
                 // dispatch_after for testing cancellation
                 RootViewController *rootViewController = (RootViewController *)self.window.rootViewController;
                 [rootViewController removeParkingSpotFromSource:SPMParkingSpotActionSourceWatch];
@@ -491,12 +576,26 @@
     }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingSpot])
     {
+        if ([ParkingManager sharedManager].currentSpot != nil)
+        {
+            NSError *error = [NSError errorWithDomain:SPMErrorDomain
+                                                 code:SPMErrorCodeDataDiscrepancy
+                                             userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"A Parking Spot is\nAlready Set", nil)}];
+            
+            replyHandler(@{SPMWatchAction: message[SPMWatchAction],
+                           SPMWatchResponseStatus: SPMWatchResponseFailure,
+                           SPMErrorCode: @(error.code),
+                           SPMWatchObjectParkingSpot: [[ParkingManager sharedManager].currentSpot watchConnectivityDictionaryRepresentation],
+                           NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
+            return;
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             // OpenGL will crash on the background!
             if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive)
             {
                 NSError *error;
-
+                
                 CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
                 if (authorizationStatus != kCLAuthorizationStatusAuthorizedAlways &&
                     authorizationStatus != kCLAuthorizationStatusAuthorizedWhenInUse)
@@ -509,20 +608,21 @@
                 {
                     [[NSUserDefaults standardUserDefaults] setBool:YES
                                                             forKey:SPMDefaultsNeedsBackgroundLocationWarning];
-
+                    
                     error = [NSError errorWithDomain:SPMErrorDomain
                                                 code:SPMErrorCodeLocationBackgroundAuthorization
                                             userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Open the App on iPhone to Enable Watch Location Support", nil)}];
                 }
-
+                
                 if (error)
                 {
                     replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                                    SPMWatchResponseStatus: SPMWatchResponseFailure,
+                                   SPMErrorCode: @(error.code),
                                    NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
                     return;
                 }
-
+                
                 if (!self.locationManager)
                 {
                     self.locationManager = [[CLLocationManager alloc] init];
@@ -530,9 +630,9 @@
                     self.locationManager.allowsBackgroundLocationUpdates = YES;
                     self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
                 }
-
+                
                 [self.locationManager requestLocation];
-
+                
                 self.setParkingSpotTimeLimit = [[ParkingTimeLimit alloc] initWithWatchConnectivityDictionary:message[SPMWatchObjectParkingTimeLimit]];
                 self.setParkingSpotReplyHandler = replyHandler;
             }
@@ -541,7 +641,7 @@
                 // dispatch_after for testing cancellation
                 RootViewController *rootViewController = (RootViewController *)self.window.rootViewController;
                 NSError *error;
-
+                
                 NSDictionary *timeLimit = message[SPMWatchObjectParkingTimeLimit];
                 ParkingTimeLimit *parkingTimeLimit;
                 if (timeLimit)
@@ -555,17 +655,18 @@
                     NSDictionary *parkingObject = [[ParkingManager sharedManager].currentSpot watchConnectivityDictionaryRepresentation];
                     if (parkingObject)
                     {
-                        NSMutableDictionary *replyDictionary = [[NSMutableDictionary alloc] initWithCapacity:3];
+                        NSMutableDictionary *replyDictionary = [[NSMutableDictionary alloc] initWithCapacity:4];
                         replyDictionary[SPMWatchAction] = message[SPMWatchAction];
                         replyDictionary[SPMWatchResponseStatus] = SPMWatchResponseSuccess;
+                        replyDictionary[SPMWatchNeedsComplicationUpdate] = @YES;
                         replyDictionary[SPMWatchObjectParkingSpot] = parkingObject;
-
+                        
                         if (parkingTimeLimit &&
                             [self shouldWarnWatchAboutRespondingToNotificationPrompt])
                         {
-                            replyDictionary[SPMWatchObjectWarningMessage] = [self watchWarningMessageEnableNotifications];
+                            replyDictionary[SPMWatchObjectWarningMessage] = WCSession.defaultSession.SPMWatchWarningMessageEnableNotifications;
                         }
-
+                        
                         replyHandler(replyDictionary);
                     }
                     else
@@ -573,9 +674,10 @@
                         error = [NSError errorWithDomain:SPMErrorDomain
                                                     code:SPMErrorCodeLocationUnknown
                                                 userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"Could Not Find Your Current Location", nil)}];
-
+                        
                         replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                                        SPMWatchResponseStatus: SPMWatchResponseFailure,
+                                       SPMErrorCode: @(error.code),
                                        NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
                     }
                 }
@@ -583,6 +685,7 @@
                 {
                     replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                                    SPMWatchResponseStatus: SPMWatchResponseFailure,
+                                   SPMErrorCode: @(error.code),
                                    NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
                 }
             }
@@ -590,8 +693,8 @@
     }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionGetParkingSpot])
     {
-        [Flurry logEvent:@"ParkingSpot_GetFromWatch"];
-
+        [Analytics logEvent:@"ParkingSpot_GetFromWatch"];
+        
         NSMutableDictionary *replyDictionary = [[NSMutableDictionary alloc] initWithCapacity:3];
         replyDictionary[SPMWatchAction] = message[SPMWatchAction];
         replyDictionary[SPMWatchResponseStatus] = SPMWatchResponseSuccess;
@@ -600,52 +703,80 @@
         {
             replyDictionary[SPMWatchObjectUserDefinedParkingTimeLimit] = userDefinedTimeLimit;
         }
-
+        
         NSDictionary *parkingObject = [[ParkingManager sharedManager].currentSpot watchConnectivityDictionaryRepresentation];
         if (parkingObject)
         {
             replyDictionary[SPMWatchObjectParkingSpot] = parkingObject;
         }
-
+        
         replyHandler(replyDictionary);
     }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionRemoveParkingTimeLimit])
     {
-        [Flurry logEvent:@"ParkingTimeLimit_RemoveFromWatch_Success"];
+        // No need to warn the user and follow a failure path
+        //        if ([ParkingManager sharedManager].currentSpot.timeLimit == nil)
+        //        {
+        //            NSError *error = [NSError errorWithDomain:SPMErrorDomain
+        //                                                 code:SPMErrorCodeDataDiscrepancy
+        //                                             userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"The Time Limit Was Already Removed", nil)}];
+        //
+        //            replyHandler(@{SPMWatchAction: message[SPMWatchAction],
+        //                           SPMWatchResponseStatus: SPMWatchResponseFailure,
+        //                           SPMErrorCode: @(error.code),
+        //                           NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
+        //            return;
+        //        }
+        
+        [Analytics logEvent:@"ParkingTimeLimit_RemoveFromWatch_Success"];
         [ParkingManager sharedManager].currentSpot.timeLimit = nil;
         replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                        SPMWatchResponseStatus: SPMWatchResponseSuccess});
     }
     else if ([message[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingTimeLimit])
     {
+        if ([ParkingManager sharedManager].currentSpot.timeLimit != nil)
+        {
+            NSError *error = [NSError errorWithDomain:SPMErrorDomain
+                                                 code:SPMErrorCodeDataDiscrepancy
+                                             userInfo:@{NSLocalizedFailureReasonErrorKey: NSLocalizedString(@"A Time Limit is\nAlready Set", nil)}];
+            
+            replyHandler(@{SPMWatchAction: message[SPMWatchAction],
+                           SPMWatchResponseStatus: SPMWatchResponseFailure,
+                           SPMErrorCode: @(error.code),
+                           SPMWatchObjectParkingTimeLimit: [[ParkingManager sharedManager].currentSpot.timeLimit watchConnectivityDictionaryRepresentation],
+                           NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
+            return;
+        }
+        
         ParkingTimeLimit *timeLimit = [[ParkingTimeLimit alloc] initWithWatchConnectivityDictionary:message[SPMWatchObjectParkingTimeLimit]];
-
+        
         if (!timeLimit || ![ParkingManager sharedManager].currentSpot)
         {
-            [Flurry logError:@"ParkingTimeLimit_SetFromWatch_Failure"
-                     message:@"Missing limit or current spot"
-                       error:nil];
+            [Analytics logError:@"ParkingTimeLimit_SetFromWatch_Failure"
+                        message:@"Missing limit or current spot"
+                          error:nil];
             NSLog(@"Missing length or parking spot");
             replyHandler(@{SPMWatchAction: message[SPMWatchAction],
                            SPMWatchResponseStatus: SPMWatchResponseFailure});
         }
         else
         {
-            [Flurry logEvent:@"ParkingTimeLimit_SetFromWatch_Success"
-              withParameters:@{@"length": timeLimit.length,
-                               @"reminderThreshold": timeLimit.reminderThreshold}];
+            [Analytics logEvent:@"ParkingTimeLimit_SetFromWatch_Success"
+                 withParameters:@{@"length": timeLimit.length,
+                                  @"reminderThreshold": timeLimit.reminderThreshold}];
             [ParkingManager sharedManager].currentSpot.timeLimit = timeLimit;
-
+            
             NSDictionary *replyDictionary = @{SPMWatchAction: message[SPMWatchAction],
                                               SPMWatchResponseStatus: SPMWatchResponseSuccess,
                                               SPMWatchObjectParkingTimeLimit: [timeLimit watchConnectivityDictionaryRepresentation]};
             if ([self shouldWarnWatchAboutRespondingToNotificationPrompt])
             {
                 NSMutableDictionary *mutableReplyDictionary = [replyDictionary mutableCopy];
-                mutableReplyDictionary[SPMWatchObjectWarningMessage] = [self watchWarningMessageEnableNotifications];
+                mutableReplyDictionary[SPMWatchObjectWarningMessage] = WCSession.defaultSession.SPMWatchWarningMessageEnableNotifications;
                 replyDictionary = mutableReplyDictionary;
             }
-
+            
             replyHandler(replyDictionary);
         }
     }
@@ -655,6 +786,20 @@
         NSLog(@"Watch Message not handled");
         replyHandler(nil);
     }
+}
+
+- (void)session:(nonnull WCSession *)session activationDidCompleteWithState:(WCSessionActivationState)activationState error:(nullable NSError *)error
+{
+}
+
+- (void)sessionDidBecomeInactive:(nonnull WCSession *)session
+{
+}
+
+- (void)sessionDidDeactivate:(nonnull WCSession *)session
+{
+    // Begin the activation process for the new Apple Watch.
+    [[WCSession defaultSession] activateSession];
 }
 
 @end

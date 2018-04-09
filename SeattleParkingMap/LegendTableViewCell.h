@@ -11,5 +11,6 @@
 @interface LegendTableViewCell : UITableViewCell
 
 @property (nonatomic, weak) Legend *legend;
+@property (weak, nonatomic) IBOutlet UILabel *legendLabel;
 
 @end

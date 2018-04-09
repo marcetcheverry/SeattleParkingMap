@@ -52,15 +52,22 @@ typedef NS_ENUM(NSUInteger, SPMParkingTimeLimitSetActionPath)
 // Shared with the watch, perhaps could be moved to the ParkingManager
 + (nonnull NSMutableOrderedSet *)defaultLengthTimeIntervals;
 + (void)creationActionPathForParkDate:(nonnull NSDate *)parkDate
-                          timeLimitLength:(nonnull NSNumber *)length
-                                  handler:(void (^ __nonnull)(SPMParkingTimeLimitSetActionPath actionPath,
-                                                              NSString * __nullable alertTitle,
-                                                              NSString * __nullable alertMessage))handler;
+                      timeLimitLength:(nonnull NSNumber *)length
+                              handler:(void (^ __nonnull)(SPMParkingTimeLimitSetActionPath actionPath,
+                                                          NSString * __nullable alertTitle,
+                                                          NSString * __nullable alertMessage))handler;
 @end
 
 @interface NSDate (SPMParkingTimeLimit)
 
+/**
+ *  Includes 'at' prefix.
+ *
+ *  @return A localized string.
+ */
+- (nonnull NSString *)SPMLocalizedString;
+
 /// Includes 'at' prefix for curent day times, otherwise just the output of NSDateFormatter
-- (nullable NSString *)SPMLocalizedRelativeString;
+- (nonnull NSString *)SPMLocalizedRelativeString;
 
 @end

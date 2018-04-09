@@ -13,7 +13,6 @@
 @interface LegendTableViewCell ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *legendImageView;
-@property (weak, nonatomic) IBOutlet UILabel *legendLabel;
 @property (nonatomic) CGRect lastLegendImageViewBounds;
 
 @end
@@ -35,36 +34,6 @@
         else
         {
             self.legendImageView.layer.mask = nil;
-        }
-    }
-}
-
-- (void)traitCollectionDidChange:(nullable UITraitCollection *)previousTraitCollection
-{
-    [super traitCollectionDidChange:previousTraitCollection];
-
-    if ((self.traitCollection.verticalSizeClass != previousTraitCollection.verticalSizeClass) ||
-        (self.traitCollection.horizontalSizeClass != previousTraitCollection.horizontalSizeClass))
-    {
-        UIFontDescriptor *descriptor = self.legendLabel.font.fontDescriptor;
-        if (self.legend.isBold)
-        {
-            if (!(self.legendLabel.font.fontDescriptor.symbolicTraits & UIFontDescriptorTraitBold))
-            {
-                UIFontDescriptor *newDescriptor = [descriptor fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
-
-                self.legendLabel.font = [UIFont fontWithDescriptor:newDescriptor
-                                                              size:self.legendLabel.font.pointSize];
-            }
-        }
-        else
-        {
-            if (self.legendLabel.font.fontDescriptor.symbolicTraits & UIFontDescriptorTraitBold)
-            {
-                UIFontDescriptor *newDescriptor = [descriptor fontDescriptorWithSymbolicTraits:descriptor.symbolicTraits & ~UIFontDescriptorTraitBold];
-                self.legendLabel.font = [UIFont fontWithDescriptor:newDescriptor
-                                                              size:self.legendLabel.font.pointSize];
-            }
         }
     }
 }

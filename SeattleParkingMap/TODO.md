@@ -1,14 +1,12 @@
 # Features
-* Search
+* Search for streets
 * Current parking spot widget
-* Neighborhood list
 * Parking prices on tap
 * Sharing location
 * Break-in events
 * Navigation mode (AGSLocationDisplayAutoPanModeCompassNavigation) (compass icon)
 
 ## Watch
-* 10 minute time intervals circular timer does not look OK
 * Move App side Watch Connectivity to ParkingManager
 * Use NSUserDefaults app group for communication?
 * Custom Transit.app inspired loading indicator
@@ -23,6 +21,8 @@
 * Restrict App Transport Security based on ArcGIS OSM/Bing instructions
 
 ## Minor
-* Flurry Watch Analytics
+* Scroll to neighborhood that is selected on appearance
+* Custom loading screen while map loads
+* Change basemap and don't reload entire map when changing map sources. The legend must not be reset either
 * See if we can cache street parking layer
 * Fix issue with native labels in SDOT

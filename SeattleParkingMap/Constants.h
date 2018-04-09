@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, SPMMapType)
 typedef NS_ENUM(NSInteger, SPMMapProvider)
 {
     SPMMapProviderSDOT,
-    SPMMapProviderOpenStreetMap,
+    SPMMapProviderARCGISVector,
     SPMMapProviderBing
 };
 
@@ -32,14 +32,21 @@ static NSUInteger SPMSpatialReferenceWKIDSDOT = 2926;
 
 #pragma mark - Notification Keys
 
-// UIUserNotification
+// User Notifications
+static NSString * const SPMNotificationTimeLimitExpiring = @"SPMNotificationTimeLimitExpiring";
 static NSString * const SPMNotificationCategoryTimeLimit = @"SPMNotificationCategoryTimeLimit";
+static NSString * const SPMNotificationActionViewSpot = @"SPMNotificationActionViewSpot";
 static NSString * const SPMNotificationActionRemoveSpot = @"SPMNotificationActionRemoveSpot";
-// Goes in userInfo
+
+// User Info Keys
+/// Because you can't get UNNotificationSound's file name when handling the notification the foreground.
+static NSString * const SPMNotificationUserInfoKeySoundName = @"SPMNotificationUserInfoKeySoundName";
 static NSString * const SPMNotificationUserInfoKeyParkingSpot = @"SPMNotificationUserInfoKeyParkingSpot";
 static NSString * const SPMNotificationUserInfoKeyIdentifier = @"SPMNotificationUserInfoKeyIdentifier";
 static NSString * const SPMNotificationIdentifierTimeLimitExpiring = @"SPMNotificationIdentifierTimeLimitExpiring";
 static NSString * const SPMNotificationIdentifierTimeLimitExpired = @"SPMNotificationIdentifierTimeLimitExpired";
+
+static NSString * const SPMNotificationAuthorizationDeniedNotification = @"SPMNotificationAuthorizationDeniedNotification";
 
 #pragma mark - Defaults
 
@@ -59,8 +66,6 @@ static NSString * const SPMDefaultsLegendHidden = @"SPMLegendHidden"; // BOOL, d
 static NSString * const SPMDefaultsLegendOpacity = @"SPMLegendOpacity"; // NSNumber float, default .75
 static NSString * const SPMDefaultsSelectedMapType = @"SPMSelecteddMapType"; // NSNumber SPMMapType, default SPMMapTypeStreet
 static NSString * const SPMDefaultsSelectedMapProvider = @"SPMDefaultsSelectedMapProvider"; // NSNumber SPMMapProvider, default SPMMapProviderSDOT
-static NSString * const SPMDefaultsRenderMapsAtNativeResolution = @"SPMDefaultsRenderMapsAtNativeResolution"; // NSNumber BOOL, default YES for retina devices otherwise NO
-//static NSString * const SPMDefaultsRenderLabelsAtNativeResolution = @"SPMDefaultsRenderLabelsAtNativeResolution"; // NSNumber BOOL, default NO (only applies to SDOT)
 
 // Time Limit
 static NSTimeInterval const SPMDefaultsParkingTimeLimitReminderThreshold = 10 * 60;
@@ -69,10 +74,12 @@ static NSInteger const SPMDefaultsParkingTimeLimitMinuteInterval = 10;
 #pragma mark - Errors
 
 static NSString * const SPMErrorDomain = @"SPMErrorDomain";
+static NSString * const SPMErrorCode = @"SPMErrorCode";
 static NSInteger SPMErrorCodeLocationAuthorization = 0;
 static NSInteger SPMErrorCodeLocationBackgroundAuthorization = 1;
 static NSInteger SPMErrorCodeLocationServiceArea = 2;
 static NSInteger SPMErrorCodeLocationUnknown = 3;
+static NSInteger SPMErrorCodeDataDiscrepancy = 4;
 
 #pragma mark - Watch Connectivity
 
@@ -84,8 +91,10 @@ static NSString * const SPMWatchActionSetParkingSpot = @"SPMWatchActionSetParkin
 static NSString * const SPMWatchActionRemoveParkingTimeLimit = @"SPMWatchActionRemoveParkingTimeLimit";
 static NSString * const SPMWatchActionSetParkingTimeLimit = @"SPMWatchActionSetParkingTimeLimit"; // Sends a SPMWatchObjectParkingTimeLimit responds with success or failure. May return a SPMWatchObjectWarningMessage for notification permissions
 
-static NSString * const SPMWatchActionUpdateComplications = @"SPMWatchActionUpdateComplications";
-static NSString * const SPMWatchActionUpdateGeocoding = @"SPMWatchActionUpdateGeocoding"; // Sends a SPMWatchObjectParkingSpotAddress
+static NSString * const SPMWatchActionDismissWarningMessage = @"SPMWatchActionDismissWarningMessage"; // Sends a SPMWatchObjectWarningMessage
+static NSString * const SPMWatchActionUpdateGeocoding = @"SPMWatchActionUpdateGeocoding";
+
+static NSString * const SPMWatchNeedsComplicationUpdate = @"SPMWatchNeedsComplicationUpdate"; // Key for a BOOL
 
 static NSString * const SPMWatchContextUserDefinedParkingTimeLimit = @"SPMWatchContextUserDefinedParkingTimeLimit";
 
@@ -97,7 +106,6 @@ static NSString * const SPMWatchObjectUserDefinedParkingTimeLimit = @"SPMWatchOb
 
 static NSString * const SPMWatchObjectParkingSpot = @"SPMWatchObjectParkingSpot"; // ParkingSpot (serialized)
 static NSString * const SPMWatchObjectParkingTimeLimit = @"SPMWatchObjectParkingTimeLimit"; // ParkingTimeLimit (serialized)
-static NSString * const SPMWatchObjectParkingSpotAddress = @"SPMWatchObjectParkingSpotAddress"; // NSString
 static NSString * const SPMWatchObjectWarningMessage = @"SPMWatchObjectWarningMessage"; // NSString
 
 #pragma mark - Watch Handoff
@@ -107,6 +115,7 @@ static NSString * const SPMWatchHandoffUserInfoKeyCurrentScreen = @"SPMWatchHand
 
 #pragma mark - Functions
 
+/// Use SPMLog for debugging messages. NSLog for errors.
 #ifdef DEBUG
 #   define SPMLog(...) NSLog(__VA_ARGS__)
 #else

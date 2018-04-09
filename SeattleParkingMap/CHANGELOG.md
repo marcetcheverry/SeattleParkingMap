@@ -1,3 +1,18 @@
+# 1.4
+* Browse a list of Seattle's neighboorhoods and zoom into them
+* Improved street labels for SDOT map
+* Added a new 'Fast' vector map type that replaces OpenStreetMap
+* Support for iOS 11, iPad Pro 10.5, iPad Pro 12.9, and iPhone X
+* Siri reminders: open the app and set a parking spot, activate Siri, and say something like "remind me about this when I leave from work". You'll get a reminder that includes your parking information
+* Dismiss the enable notifications warning on the watch from the phone
+* Don't enable the guide button if the guide and all map layers have not loaded yet
+* Fix an issue in which the guide labels would not be set to bold
+* Warn if setting a parking spot or time limit that is already set
+* Bug fixes for the watch
+* Requires iOS 11 and watchOS 4
+* Full HTTPS and ATS support
+* Bitcode enabled
+
 # 1.3
 * Set time limits on the parking spot
 * Get notifications on your device and Apple Watch before the time limit is up

@@ -10,4 +10,7 @@
 
 @interface ParkInterfaceController : BaseInterfaceController
 
+- (void)presentMapInterfaceWithContext:(id)context;
+- (void)parkWithNoTimeLimit;
+
 @end

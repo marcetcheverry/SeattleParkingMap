@@ -46,7 +46,7 @@
     {
         self.currentOperation.cancelled = YES;
     }
-
+    
     [self setLoadingIndicatorHidden:YES
                            animated:YES];
 }
@@ -64,7 +64,7 @@
 {
     self.groupMain.hidden = !hidden;
     self.groupLoading.hidden = hidden;
-
+    
     if (hidden)
     {
         [self stopLoadingIndicator];
@@ -79,7 +79,7 @@
                          animated:(BOOL)animated
 {
     [self setLoadingIndicatorHidden:hidden];
-
+    
     [self animateWithDuration:0.3
                    animations:^{
                        self.groupMain.alpha = hidden ? 1 : 0;
@@ -89,8 +89,30 @@
 
 - (void)displayErrorMessage:(nonnull NSString *)errorMessage
 {
-    [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeFailure];
+    [self displayErrorMessage:errorMessage
+         hideLoadingIndicator:NO
+             dismissalHandler:^{}];
+}
 
+- (void)displayErrorMessage:(nonnull NSString *)errorMessage
+       hideLoadingIndicator:(BOOL)hideLoadingIndicator
+           dismissalHandler:(nonnull WKAlertActionHandler)dismissalHandler
+{
+    NSParameterAssert(errorMessage);
+    if (!errorMessage)
+    {
+        errorMessage = NSLocalizedString(@"Please Try Again", nil);
+    }
+    
+    NSParameterAssert(dismissalHandler);
+    
+    if (!dismissalHandler)
+    {
+        dismissalHandler = ^{};
+    }
+    
+    [[WKInterfaceDevice currentDevice] playHaptic:WKHapticTypeFailure];
+    
     //    [self presentAlertControllerWithTitle:@"Error"
     //                                  message:errorMessage
     //                           preferredStyle:WKAlertControllerStyleAlert
@@ -99,17 +121,20 @@
     //                                                                   handler:^{
     //                                                                   }]
     //                                            ]];
-
-    [self setLoadingIndicatorHidden:YES
-                           animated:YES];
-    self.buttonCancel.hidden = YES;
-
+    
+    if (hideLoadingIndicator)
+    {
+        [self setLoadingIndicatorHidden:YES
+                               animated:YES];
+        self.buttonCancel.hidden = YES;
+    }
+    
     [self presentAlertControllerWithTitle:nil
                                   message:errorMessage
                            preferredStyle:WKAlertControllerStyleAlert
                                   actions:@[[WKAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                                   style:WKAlertActionStyleCancel
-                                                                 handler:^{}]]];
+                                                                     style:WKAlertActionStyleCancel
+                                                                   handler:dismissalHandler]]];
 }
 
 - (NSTimeInterval)loadingIndicatorDelay
@@ -121,11 +146,11 @@
 {
     self.loadingIndicatorCancelled = NO;
     [self.timerLoadingLabel invalidate];
-
+    
     dispatch_block_t delayedBlock = ^{
         [self startLoadingIndicatorTimer];
     };
-
+    
     NSTimeInterval delay = [self loadingIndicatorDelay];
     if (delay > 0)
     {
@@ -143,24 +168,24 @@
     {
         return;
     }
-
+    
     self.ellipsisCounter = 0;
     self.loadingIndicator.text = @"•\n";
-
+    
     NSTimeInterval animationInterval = 1/3.;
-
+    
     [self animateWithDuration:animationInterval / 2.
                    animations:^{
                        self.loadingIndicator.alpha = 1;
                    }];
-
+    
     [self.timerLoadingLabel invalidate];
-
+    
     if (self.loadingIndicatorCancelled)
     {
         return;
     }
-
+    
     self.timerLoadingLabel = [NSTimer timerWithTimeInterval:animationInterval
                                                      target:self
                                                    selector:@selector(updateLoadingLabelTimerFired)
@@ -175,7 +200,7 @@
     {
         return;
     }
-
+    
     self.loadingIndicatorCancelled = YES;
     self.loadingIndicator.text = @"\n";
     [self.timerLoadingLabel invalidate];
@@ -185,7 +210,7 @@
 - (void)updateLoadingLabelTimerFired
 {
     NSString *loadingIndicatorString;
-
+    
     switch (self.ellipsisCounter)
     {
         case 0:
@@ -205,7 +230,7 @@
             // Stop the timer and animate
             [self.timerLoadingLabel invalidate];
             self.timerLoadingLabel = nil;
-
+            
             [self SPMAnimateWithDuration:1/6.
                               animations:^{
                                   self.loadingIndicator.alpha = 0;
@@ -216,7 +241,7 @@
             return;
         }
             break;
-
+            
         default:
             loadingIndicatorString = @"\n";
             break;

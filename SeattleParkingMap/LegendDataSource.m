@@ -186,11 +186,11 @@ typedef NS_ENUM(NSUInteger, SPMLegendDisplayIndex)
     }
     else if ([name isEqualToString:SPMLegendSDOTNameNoParking])
     {
-        return NSLocalizedString(@"No Parking", nil);
+        return NSLocalizedString(@"Forbidden", nil);
     }
     else if ([name isEqualToString:SPMLegendSDOTNameTemporary])
     {
-        return NSLocalizedString(@"Temporary Restriction", nil);
+        return NSLocalizedString(@"Restricted", nil);
     }
 
     return name;

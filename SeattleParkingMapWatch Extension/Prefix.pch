@@ -6,8 +6,8 @@
 
 #import <Availability.h>
 
-#ifndef __WATCHOS_2_0
-    #warning "This project uses features only available in watchOS 2.0 and later."
+#ifndef __WATCHOS_4_0
+    #warning "This project uses features only available in watchOS 4.0 and later."
 #endif
 
 #ifdef __OBJC__

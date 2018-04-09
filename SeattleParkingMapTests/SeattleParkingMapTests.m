@@ -8,15 +8,18 @@
 
 #import <XCTest/XCTest.h>
 
+@import CoreLocation;
+
 #import "NSDate+SPM.h"
 #import "UIImage+SPM.h"
 #import "ParkingTimeLimit.h"
 
-@import CoreLocation;
 #import "ParkingSpot.h"
 
 #import "Legend.h"
 #import "LegendDataSource.h"
+
+#import "NeighborhoodDataSource.h"
 
 #import "ParkingManager.h"
 
@@ -101,6 +104,36 @@
     ParkingSpot *reconstructed = [[ParkingSpot alloc] initWithWatchConnectivityDictionary:serialized];
     XCTAssertNotNil(reconstructed);
     XCTAssertEqualObjects(spot, reconstructed);
+}
+
+- (void)testNeighborhoodsDataSource
+{
+    XCTestExpectation *expectation = [self expectationWithDescription:@"loadNeighboorhoodsWithCompletionHandler"];
+
+    NeighborhoodDataSource *dataSource = [[NeighborhoodDataSource alloc] init];
+    XCTAssert(dataSource.state == SPMStateUnknown);
+    [dataSource loadNeighboorhoodsWithCompletionHandler:^(BOOL success) {
+        NSUInteger count = dataSource.neighborhoods.count;
+        XCTAssertNil(dataSource.selectedNeighborhood);
+        if (success)
+        {
+            XCTAssert(count > 0);
+            XCTAssert(dataSource.state == SPMStateLoaded);
+            XCTAssertNotNil(dataSource.alphabeticallySectionedNeighborhoods);
+        }
+        else
+        {
+            XCTAssert(count == 0);
+            XCTAssert(dataSource.state == SPMStateFailedToLoad);
+        }
+        XCTAssert(success == YES);
+        [expectation fulfill];
+    }];
+
+    XCTAssert(dataSource.state == SPMStateLoading);
+
+    [self waitForExpectations:@[expectation]
+                      timeout:25];
 }
 
 - (void)testParkingTimeLimit

@@ -10,4 +10,13 @@
 
 @implementation WatchConnectivityOperation
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@\nIdentifier: %@\nCancelled: %@\nFinished: %@",
+            [super description],
+            self.identifier,
+            @(self.cancelled),
+            @(self.finished)];
+}
+
 @end

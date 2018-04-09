@@ -38,50 +38,50 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         NSParameterAssert(startDate);
         NSParameterAssert(length);
-
+        
         if (!startDate || !length)
         {
             return nil;
         }
-
+        
         NSAssert([length doubleValue] > 0, @"The length must be bigger than 0");
         NSAssert([length doubleValue] >= (SPMDefaultsParkingTimeLimitMinuteInterval * 60), @"Time Interval must be at least 10 minutes");
-
+        
         if (!reminderThreshold)
         {
             NSTimeInterval defaultThreshold = SPMDefaultsParkingTimeLimitReminderThreshold;
-
+            
             NSTimeInterval timeInterval = [length doubleValue];
             NSAssert(timeInterval >= (SPMDefaultsParkingTimeLimitMinuteInterval * 60), @"Time Interval must be at least 10 minutes");
             while (timeInterval <= defaultThreshold)
             {
                 defaultThreshold /= 2;
             }
-
+            
             NSAssert(defaultThreshold >= (5 * 60), @"Reminder threshold must be at least 5 minutes");
-
+            
             if (defaultThreshold < (5 * 60))
             {
                 defaultThreshold = 5 * 60;
             }
-
+            
             reminderThreshold = @(defaultThreshold);
         }
-
+        
         NSAssert([reminderThreshold doubleValue] < [length doubleValue], @"The reminder threshold must be lower than the length");
-
+        
         if (!([length doubleValue] > 0) ||
             !([reminderThreshold doubleValue] < [length doubleValue]))
         {
             NSLog(@"Error, attempting to init time limit with length %@ and threshold %@", length, reminderThreshold);
             return nil;
         }
-
+        
         self.startDate = startDate;
         self.reminderThreshold = reminderThreshold;
         self.length = length;
     }
-
+    
     return self;
 }
 
@@ -120,7 +120,7 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return nil;
     }
-
+    
     NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
     formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
     formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropAll;
@@ -141,7 +141,7 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return YES;
     }
-
+    
     return NO;
 }
 
@@ -151,7 +151,7 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return YES;
     }
-
+    
     return  NO;
 }
 
@@ -170,13 +170,13 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
         {
             warning = length * 0.5;
         }
-
+        
         NSAssert(warning < length, @"Warning must less than length");
         if (warning >= length)
         {
             warning = SPMDefaultsParkingTimeLimitThresholdWarning;
         }
-
+        
         return warning;
     }
     else if (threshold == SPMParkingTimeLimitThresholdUrgent)
@@ -187,7 +187,7 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
         {
             urgent = length * 0.25;
         }
-
+        
         NSAssert(urgent < length, @"Urgent must less than length");
         if (urgent >= length)
         {
@@ -204,7 +204,7 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return SPMDefaultsParkingTimeLimitThresholdExpired;
     }
-
+    
     return 0;
 }
 
@@ -216,11 +216,11 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return NO;
     }
-
+    
     BOOL haveEqualStartDate = (!self.startDate && !timeLimit.startDate) || [self.startDate isEqualToDate:timeLimit.startDate];
     BOOL haveEqualLength = (!self.length && !timeLimit.length) || [self.length isEqualToNumber:timeLimit.length];
     BOOL haveEqualReminderThreshold = (!self.reminderThreshold && !timeLimit.reminderThreshold) || [self.reminderThreshold isEqualToNumber:timeLimit.reminderThreshold];
-
+    
     return haveEqualStartDate && haveEqualLength && haveEqualReminderThreshold;
 }
 
@@ -230,12 +230,12 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
     {
         return YES;
     }
-
+    
     if (![object isKindOfClass:[self class]])
     {
         return NO;
     }
-
+    
     return [self isEqualToParkingTimeLimit:(ParkingTimeLimit *)object];
 }
 
@@ -249,12 +249,12 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
 - (nullable instancetype)initWithWatchConnectivityDictionary:(nonnull NSDictionary *)dictionary
 {
     //    NSParameterAssert(dictionary);
-
+    
     if (!dictionary)
     {
         return nil;
     }
-
+    
     return [self initWithStartDate:dictionary[SPMWatchObjectParkingTimeLimitStartDate]
                             length:dictionary[SPMWatchObjectParkingTimeLimitLength]
                  reminderThreshold:dictionary[SPMWatchObjectParkingTimeLimitReminderThreshold]];
@@ -275,44 +275,44 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
 }
 
 + (void)creationActionPathForParkDate:(nonnull NSDate *)parkDate
-                          timeLimitLength:(nonnull NSNumber *)length
-                                  handler:(void (^ __nonnull)(SPMParkingTimeLimitSetActionPath actionPath,
-                                                              NSString * __nullable alertTitle,
-                                                              NSString * __nullable alertMessage))handler
+                      timeLimitLength:(nonnull NSNumber *)length
+                              handler:(void (^ __nonnull)(SPMParkingTimeLimitSetActionPath actionPath,
+                                                          NSString * __nullable alertTitle,
+                                                          NSString * __nullable alertMessage))handler
 {
     NSParameterAssert(parkDate);
     if (!parkDate)
     {
         return;
     }
-
+    
     NSParameterAssert(length);
     if (!length)
     {
         return;
     }
-
+    
     NSParameterAssert(handler);
     if (!handler)
     {
         return;
     }
-
+    
     // Are we beyond our original park date?
     NSTimeInterval timeIntervalSinceParkDate = [[NSDate date] timeIntervalSinceDate:parkDate];
     if (timeIntervalSinceParkDate > (5 * 60))
     {
         NSTimeInterval timeInterval = [length doubleValue];
-
+        
         // If we are trying to set a parking date for a time limit that can't be achived, warn the user.
         if (timeIntervalSinceParkDate >= timeInterval)
         {
             NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
             formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
             formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropAll;
-
+            
             NSString *timeString = [formatter stringFromTimeInterval:timeInterval];
-
+            
             if (timeInterval == (60 * 60))
             {
                 timeString = [NSString stringWithFormat:NSLocalizedString(@"%@ has", nil), timeString];
@@ -321,10 +321,10 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
             {
                 timeString = [NSString stringWithFormat:NSLocalizedString(@"%@ have", nil), timeString];
             }
-
+            
             NSString *title = NSLocalizedString(@"Warning", nil);
             NSString *message = [NSString stringWithFormat:NSLocalizedString(@"More than %@ passed since you parked. The time limit will be started from now.", nil), timeString];
-
+            
             handler(SPMParkingTimeLimitSetActionPathWarn, title, message);
         }
         else
@@ -344,15 +344,25 @@ static NSString * const SPMWatchObjectParkingTimeLimitReminderThreshold = @"SPMW
 
 @implementation NSDate (SPMParkingTimeLimit)
 
-- (nullable NSString *)SPMLocalizedRelativeString
+- (nonnull NSString *)SPMLocalizedString
 {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"MMM d, hh:mm a"
+                                                               options:0
+                                                                locale:[NSLocale currentLocale]];
+    return [dateFormatter stringFromDate:self];
+}
+
+- (nonnull NSString *)SPMLocalizedRelativeString
+{
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.doesRelativeDateFormatting = YES;
     dateFormatter.locale = [NSLocale currentLocale];
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
-
+    
     NSString *expireDateString;
-
+    
     if (![[NSCalendar currentCalendar] isDate:self
                               inSameDayAsDate:[NSDate date]])
     {
