@@ -8,6 +8,7 @@
 
 @interface UIColor (SPM)
 
++ (nonnull UIColor *)SPMLocationButtonColor;
 + (nonnull UIColor *)SPMWatchTintColor;
 + (nonnull UIColor *)SPMButtonParkColor;
 + (nonnull UIColor *)SPMParkedColor;

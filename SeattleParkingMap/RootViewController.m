@@ -29,6 +29,7 @@
 #import "Analytics.h"
 
 #import "WCSession+SPM.h"
+#import "UIColor+SPM.h"
 
 //#import "SPMMapActivityProvider.h"
 
@@ -90,9 +91,15 @@ static void *ARCGISContext = &ARCGISContext;
 @property (nonatomic) BOOL needsCenteringOnCurentLocation;
 @property (nonatomic) BOOL loadedAllMapLayers;
 @property (nonatomic) BOOL loadedGuide;
+@property (nonatomic) BOOL requestedAutoPanModeChange;
 
 @property (strong, nonatomic) IBOutlet LegendDataSource *legendDataSource;
-@property (strong, nonatomic) NeighborhoodDataSource *neighborhoodDataSource;
+@property (nonatomic) NeighborhoodDataSource *neighborhoodDataSource;
+
+@property (nonatomic) dispatch_queue_t queueAnimations;
+@property (nonatomic) dispatch_group_t groupAnimations;
+@property (nonatomic) dispatch_queue_t queueArcGISAnimations;
+@property (nonatomic) dispatch_group_t groupArcGISAnimations;
 
 @end
 
@@ -107,11 +114,7 @@ static void *ARCGISContext = &ARCGISContext;
     [[ParkingManager sharedManager] removeObserver:self
                                         forKeyPath:@"currentSpot"
                                            context:RootViewControllerContext];
-    
-    [self.mapView removeObserver:self
-                      forKeyPath:@"locationDisplay.autoPanMode"
-                         context:RootViewControllerContext];
-    
+
     [self stopObservingLocationUpdates];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -140,9 +143,7 @@ static void *ARCGISContext = &ARCGISContext;
     
     self.legendTableView.estimatedRowHeight = 17;
     self.legendTableView.rowHeight = UITableViewAutomaticDimension;
-    
-    self.mapView.interactionOptions.magnifierEnabled = YES;
-    
+
     [self.legendSlider setThumbImage:[UIImage imageNamed:@"SliderThumbEye"]
                             forState:UIControlStateNormal];
     
@@ -173,11 +174,8 @@ static void *ARCGISContext = &ARCGISContext;
                                         options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
                                         context:RootViewControllerContext];
 
-    [self.mapView addObserver:self
-                   forKeyPath:@"locationDisplay.autoPanMode"
-                      options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-                      context:RootViewControllerContext];
-    
+    self.mapView.interactionOptions.magnifierEnabled = YES;
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -414,12 +412,13 @@ static void *ARCGISContext = &ARCGISContext;
         }
         else if ([ParkingManager sharedManager].currentSpot)
         {
-            [self centerOnParkingSpot];
+            [self centerOnParkingSpotWithCompletion:nil];
         }
         else
         {
             [self centerOnBestSpotWithLocationAuthorizationWarning:NO
-                                                          animated:YES];
+                                                          animated:YES
+                                                        completion:nil];
         }
         
         // For the background location alert
@@ -493,45 +492,6 @@ static void *ARCGISContext = &ARCGISContext;
                 });
             }
         }
-        else if ([keyPath isEqualToString:@"locationDisplay.autoPanMode"])
-        {
-            if (![change[NSKeyValueChangeOldKey] isEqual:change[NSKeyValueChangeNewKey]])
-            {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [UIView transitionWithView:self.locationButton
-                                      duration:.3
-                                       options:UIViewAnimationOptionCurveEaseInOut
-                                    animations:^{
-                                        if (self.mapView.locationDisplay.autoPanMode == AGSLocationDisplayAutoPanModeOff)
-                                        {
-                                            self.locationButton.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.65];
-                                            self.locationButton.layer.shadowColor = nil;
-                                            self.locationButton.layer.shadowRadius = 0;
-                                            self.locationButton.layer.shadowOpacity = 0;
-                                            self.locationButton.layer.masksToBounds = YES;
-                                            self.locationButton.clipsToBounds = YES;
-                                        }
-                                        else
-                                        {
-                                            // Based on the ArcGIS current location dot color.
-                                            UIColor *color = [UIColor colorWithRed:0 green:0.47 blue:0.771 alpha:1];
-                                            self.locationButton.backgroundColor = color;
-                                            self.locationButton.layer.shadowColor = color.CGColor;
-                                            self.locationButton.layer.shadowRadius = 10;
-                                            self.locationButton.layer.shadowOpacity = .7;
-                                            self.locationButton.layer.shadowOffset = CGSizeZero;
-                                            self.locationButton.layer.masksToBounds = NO;
-                                            self.locationButton.clipsToBounds = NO;
-                                            
-                                            UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.locationButton.bounds
-                                                                                            cornerRadius:self.parkingButton.layer.cornerRadius];
-                                            self.locationButton.layer.shadowPath = path.CGPath;
-                                        }
-                                    }
-                                    completion:nil];
-                });
-            }
-        }
         else
         {
             if ([keyPath isEqualToString:@"locationDisplay.location"])
@@ -549,9 +509,10 @@ static void *ARCGISContext = &ARCGISContext;
                     }
                     else if (self.needsCenteringOnCurentLocation)
                     {
-                        self.needsCenteringOnCurentLocation = nil;
+                        self.needsCenteringOnCurentLocation = NO;
                         [self centerOnBestSpotWithLocationAuthorizationWarning:NO
-                                                                      animated:YES];
+                                                                      animated:YES
+                                                                    completion:nil];
                     }
                     
                     [self stopObservingLocationUpdates];
@@ -652,8 +613,8 @@ static void *ARCGISContext = &ARCGISContext;
         if (self.currentMapProvider == SPMMapProviderSDOT)
         {
             // SDOT Street Labels (they have terrible resolution)
-//            self.SDOTStreetLabelsLayer = [[AGSArcGISMapImageLayer alloc] initWithURL:[NSURL URLWithString:SPMMapTiledLabelsURL]];
-//            self.SDOTStreetLabelsLayer.name = NSLocalizedString(@"Labels SDOT", nil);
+            //            self.SDOTStreetLabelsLayer = [[AGSArcGISMapImageLayer alloc] initWithURL:[NSURL URLWithString:SPMMapTiledLabelsURL]];
+            //            self.SDOTStreetLabelsLayer.name = NSLocalizedString(@"Labels SDOT", nil);
 
 
             // Here Maps Street Labels (much better resolution, but still raster)
@@ -683,45 +644,45 @@ static void *ARCGISContext = &ARCGISContext;
              ]
              */
 
-//            NSString *base;
-//            NSString *scheme;
-//
-//            if (self.currentMapType == SPMMapTypeStreet)
-//            {
-//                base = @"https://{subDomain}.base.maps.cit.api.here.com";
-//                scheme = @"normal.day.mobile";
-//            }
-//            else
-//            {
-//                base = @"https://{subDomain}.aerial.maps.cit.api.here.com";
-//                scheme = @"hybrid.day.mobile";
-//            }
-//
-//            NSString *template = [NSString stringWithFormat:@"%@/maptile/2.1/labeltile/newest/%@/{level}/{col}/{row}/256/png?app_id=%@&app_code=%@&ppi=250&lg=eng", base, scheme, SPMExternalAPIHereAppID, SPMExternalAPIHereAppCode];
-//
-//            AGSSpatialReference *spatialReference = [AGSSpatialReference webMercator];
-//            AGSPoint *origin = [AGSPoint pointWithX:-20037508.342789
-//                                                  y:20037508.368847
-//                                   spatialReference:spatialReference];
-//            AGSTileInfo *tileInfo = [AGSTileInfo tileInfoWithDPI:250
-//                                                          format:AGSTileImageFormatPNG
-//                                                  levelsOfDetail:[[((AGSWebTiledLayer *)[[[AGSBasemap openStreetMapBasemap] baseLayers] firstObject]) tileInfo] levelsOfDetail]
-//                                                          origin:origin
-//                                                spatialReference:spatialReference
-//                                                      tileHeight:256
-//                                                       tileWidth:256];
-//
-//            AGSEnvelope *fullExtent = [AGSEnvelope envelopeWithXMin:-20037508.342789
-//                                                             yMin:-20037471.205137
-//                                                             xMax:20037285.703808
-//                                                             yMax:20037471.205137
-//                                                 spatialReference:spatialReference];
-//
-//            self.SDOTStreetLabelsLayer = [[AGSWebTiledLayer alloc] initWithURLTemplate:template
-//                                                                            subDomains:@[@"1", @"2", @"3", @"4"]
-//                                                                              tileInfo:tileInfo
-//                                                                            fullExtent:fullExtent];
-//            self.SDOTStreetLabelsLayer.name = NSLocalizedString(@"Street Labels (HERE Maps)", nil);
+            //            NSString *base;
+            //            NSString *scheme;
+            //
+            //            if (self.currentMapType == SPMMapTypeStreet)
+            //            {
+            //                base = @"https://{subDomain}.base.maps.cit.api.here.com";
+            //                scheme = @"normal.day.mobile";
+            //            }
+            //            else
+            //            {
+            //                base = @"https://{subDomain}.aerial.maps.cit.api.here.com";
+            //                scheme = @"hybrid.day.mobile";
+            //            }
+            //
+            //            NSString *template = [NSString stringWithFormat:@"%@/maptile/2.1/labeltile/newest/%@/{level}/{col}/{row}/256/png?app_id=%@&app_code=%@&ppi=250&lg=eng", base, scheme, SPMExternalAPIHereAppID, SPMExternalAPIHereAppCode];
+            //
+            //            AGSSpatialReference *spatialReference = [AGSSpatialReference webMercator];
+            //            AGSPoint *origin = [AGSPoint pointWithX:-20037508.342789
+            //                                                  y:20037508.368847
+            //                                   spatialReference:spatialReference];
+            //            AGSTileInfo *tileInfo = [AGSTileInfo tileInfoWithDPI:250
+            //                                                          format:AGSTileImageFormatPNG
+            //                                                  levelsOfDetail:[[((AGSWebTiledLayer *)[[[AGSBasemap openStreetMapBasemap] baseLayers] firstObject]) tileInfo] levelsOfDetail]
+            //                                                          origin:origin
+            //                                                spatialReference:spatialReference
+            //                                                      tileHeight:256
+            //                                                       tileWidth:256];
+            //
+            //            AGSEnvelope *fullExtent = [AGSEnvelope envelopeWithXMin:-20037508.342789
+            //                                                             yMin:-20037471.205137
+            //                                                             xMax:20037285.703808
+            //                                                             yMax:20037471.205137
+            //                                                 spatialReference:spatialReference];
+            //
+            //            self.SDOTStreetLabelsLayer = [[AGSWebTiledLayer alloc] initWithURLTemplate:template
+            //                                                                            subDomains:@[@"1", @"2", @"3", @"4"]
+            //                                                                              tileInfo:tileInfo
+            //                                                                            fullExtent:fullExtent];
+            //            self.SDOTStreetLabelsLayer.name = NSLocalizedString(@"Street Labels (HERE Maps)", nil);
 
 
             // ArcGIS vector road labels. Style can be customized online
@@ -820,9 +781,11 @@ static void *ARCGISContext = &ARCGISContext;
     AGSBasemap *basemap = [self basemap];
     [self addBasemapObservers:basemap];
 
-    self.mapView.map = [[AGSMap alloc] initWithSpatialReference:[AGSSpatialReference webMercator]];
+    AGSMap *map = [[AGSMap alloc] initWithSpatialReference:[AGSSpatialReference webMercator]];
+    map.initialViewpoint = [AGSViewpoint viewpointWithTargetExtent:[self SDOTEnvelope]];
+    self.mapView.map = map;
     self.mapView.map.basemap = basemap;
-
+    
     NSUInteger graphicsOverlayCount = self.mapView.graphicsOverlays.count;
     
     NSAssert(graphicsOverlayCount <= 1, @"Too many graphic overlays");
@@ -926,7 +889,7 @@ static void *ARCGISContext = &ARCGISContext;
 - (IBAction)unwindFromNeighborhoodsViewController:(UIStoryboardSegue *)segue
 {
     self.cachedHoodEnvelope = nil;
-    [self centerOnSelectedNeighborhood];
+    [self centerOnSelectedNeighborhoodWithCompletion:nil];
 }
 
 - (AGSEnvelope *)cachedHoodEnvelope
@@ -947,11 +910,16 @@ static void *ARCGISContext = &ARCGISContext;
     return _cachedHoodEnvelope;
 }
 
-- (void)centerOnSelectedNeighborhood
+- (void)centerOnSelectedNeighborhoodWithCompletion:(nullable dispatch_block_t)completion
 {
     if (!self.neighborhoodDataSource.selectedNeighborhood)
     {
         self.cachedHoodEnvelope = nil;
+
+        if (completion)
+        {
+            completion();
+        }
         return;
     }
 
@@ -960,41 +928,44 @@ static void *ARCGISContext = &ARCGISContext;
 
     self.mapView.viewpointChangedHandler = nil;
 
-    [self.mapView setViewpointRotation:0
-                            completion:^(BOOL isFfinished) {
-                                [self.mapView setViewpointGeometry:self.cachedHoodEnvelope
-                                                        completion:^(BOOL finished) {
-                                                            self.mapView.viewpointChangedHandler = ^{
-                                                                if (self.neighborhoodDataSource.selectedNeighborhood)
-                                                                {
-                                                                    NSAssert(self.cachedHoodEnvelope != nil, @"We must have a cached hood envelope");
-                                                                    if (![AGSGeometryEngine geometry:self.mapView.visibleArea containsGeometry:self.cachedHoodEnvelope])
-                                                                    {
-                                                                        self.neighborhoodDataSource.selectedNeighborhood = nil;
-                                                                        self.cachedHoodEnvelope = nil;
-                                                                        [self updateNeighborhoodsButtonAnimated:YES
-                                                                                                     completion:nil];
-                                                                        self.mapView.viewpointChangedHandler = nil;
-                                                                    }
-                                                                }
-                                                            };
-                                                        }];
-                            }];
+    [self setLocationPanMode:AGSLocationDisplayAutoPanModeOff
+                  completion:nil];
+
+    [self animateArcGISWithPrecondition:nil
+                             animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                 self.requestedAutoPanModeChange = YES;
+                                 [self.mapView setViewpointRotation:0
+                                                         completion:^(BOOL isFinished) {
+                                                             self.requestedAutoPanModeChange = NO;
+                                                             [self.mapView setViewpointGeometry:self.cachedHoodEnvelope
+                                                                                     completion:^(BOOL finished) {
+                                                                                         self.mapView.viewpointChangedHandler = ^{
+                                                                                             if (self.neighborhoodDataSource.selectedNeighborhood)
+                                                                                             {
+                                                                                                 NSAssert(self.cachedHoodEnvelope != nil, @"We must have a cached hood envelope");
+                                                                                                 if (![AGSGeometryEngine geometry:self.mapView.visibleArea containsGeometry:self.cachedHoodEnvelope])
+                                                                                                 {
+                                                                                                     self.neighborhoodDataSource.selectedNeighborhood = nil;
+                                                                                                     self.cachedHoodEnvelope = nil;
+                                                                                                     [self updateNeighborhoodsButtonAnimated:YES
+                                                                                                                                  completion:nil];
+                                                                                                     self.mapView.viewpointChangedHandler = nil;
+                                                                                                 }
+                                                                                             }
+                                                                                         };
+
+                                                                                         animationsCompleted();
+                                                                                     }];
+                                                         }];
+
+                             }
+                             completion:completion];
 }
 
 - (IBAction)legendsTouched:(UIButton *)sender
 {
     [self setLegendHidden:NO
                  animated:YES];
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-        if (version.majorVersion == 8)
-        {
-            [self reloadLegendTableView];
-        }
-    });
 }
 
 - (IBAction)neighborhoodsTouched:(UIButton *)sender
@@ -1120,7 +1091,7 @@ static void *ARCGISContext = &ARCGISContext;
     {
         if ([ParkingManager sharedManager].currentSpot)
         {
-            [self centerOnParkingSpot];
+            [self centerOnParkingSpotWithCompletion:nil];
             return;
         }
         else
@@ -1150,31 +1121,36 @@ static void *ARCGISContext = &ARCGISContext;
     self.legendSlider.alpha = adjustedValue;
 }
 
-- (IBAction)updateLocationTouched:(UIBarButtonItem *)sender
+- (IBAction)touchedLocationButton:(UIButton *)sender
 {
-    [self centerOnBestSpotWithLocationAuthorizationWarning:YES
-                                                  animated:YES];
+    [self centerOnCurrentLocationWithCompletion:nil];
 }
 
 #pragma mark - Focus Actions
 
-- (void)centerOnParkingSpot
+- (void)centerOnParkingSpotWithCompletion:(nullable dispatch_block_t)completion
 {
     AGSGraphic *parkingGraphic = [self.parkingSpotGraphicsLayer.graphics firstObject];
     
     [self centerOnParkingGraphic:parkingGraphic
             attemptEnvelopeUnion:YES
-                        animated:YES];
+                        animated:YES
+                      completion:completion];
 }
 
 // attemptEnvelopeUnion is because we don't have proper heuristics when the current location is next to the parking spot, we will zoom too much.
 - (void)centerOnParkingGraphic:(nonnull AGSGraphic *)parkingGraphic
           attemptEnvelopeUnion:(BOOL)attemptEnvelopeUnion
                       animated:(BOOL)animated
+                    completion:(nullable dispatch_block_t)completion
 {
     NSAssert(parkingGraphic != nil, @"Must have graphic");
     if (!parkingGraphic)
     {
+        if (completion)
+        {
+            completion();
+        }
         return;
     }
     //    if ([self.mapView.callout.representedFeature isEqual:parkingGraphic])
@@ -1225,18 +1201,39 @@ static void *ARCGISContext = &ARCGISContext;
                 wideEnvelope = (AGSEnvelope *)[AGSGeometryEngine projectGeometry:wideEnvelope
                                                               toSpatialReference:self.mapView.spatialReference];
             }
-            
+
+
+            [self setLocationPanMode:AGSLocationDisplayAutoPanModeOff
+                          completion:nil];
+
             if (![AGSGeometryEngine geometry:self.mapView.visibleArea.extent containsGeometry:wideEnvelope])
             {
                 // Use this API instead of expanding the envelope, otherwise if you are very near the parking spot it will zoom in too much
-                [self.mapView setViewpointGeometry:wideEnvelope
-                                           padding:400
-                                        completion:nil];
+
+                [self animateArcGISWithPrecondition:nil
+                                         animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                             self.requestedAutoPanModeChange = YES;
+                                             [self.mapView setViewpointGeometry:wideEnvelope
+                                                                        padding:400
+                                                                     completion:^(BOOL finished) {
+                                                                         self.requestedAutoPanModeChange = NO;
+                                                                         animationsCompleted();
+                                                                     }];
+                                         }
+                                         completion:completion];
             }
             else
             {
-                [self.mapView setViewpointCenter:wideEnvelope.center
-                                      completion:nil];
+                [self animateArcGISWithPrecondition:nil
+                                         animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                             self.requestedAutoPanModeChange = YES;
+                                             [self.mapView setViewpointCenter:wideEnvelope.center
+                                                                   completion:^(BOOL finished) {
+                                                                       self.requestedAutoPanModeChange = NO;
+                                                                       animationsCompleted();
+                                                                   }];
+                                         }
+                                         completion:completion];
             }
             
             // Expand the envelope so that both points are not at the edges.
@@ -1245,10 +1242,22 @@ static void *ARCGISContext = &ARCGISContext;
         }
         else
         {
+            [self setLocationPanMode:AGSLocationDisplayAutoPanModeOff
+                          completion:nil];
+
             // Otherwise just center at the point if we don't have the current location
-            [self.mapView setViewpointCenter:parkingPoint
-                                       scale:10000
-                                  completion:nil];
+
+            [self animateArcGISWithPrecondition:nil
+                                     animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                         self.requestedAutoPanModeChange = YES;
+                                         [self.mapView setViewpointCenter:parkingPoint
+                                                                    scale:10000
+                                                               completion:^(BOOL finished) {
+                                                                   self.requestedAutoPanModeChange = NO;
+                                                                   animationsCompleted();
+                                                               }];
+                                     }
+                                     completion:completion];
         }
         
         if (self.mapView.callout.isHidden)
@@ -1262,19 +1271,156 @@ static void *ARCGISContext = &ARCGISContext;
     }
 }
 
-//- (void)mapView:(AGSMapView *)mapView AGSMapView:(CGPoint)screen mapPoint:(AGSPoint *)mappoint features:(NSDictionary *)features;
-//{
-//    NSLog(@"Clicked features: %@", features);
-//}
-
-- (void)centerOnSDOTEnvelopeAnimated:(BOOL)animated
+- (AGSEnvelope *)currentLocationEnvelope
 {
-    [self.mapView setViewpointGeometry:[self SDOTEnvelope]
-                            completion:nil];
+    AGSPoint *currentLocation = self.mapView.locationDisplay.mapLocation;
+
+    if (![currentLocation.spatialReference isEqualToSpatialReference:[self availableMapDataEnvelope].spatialReference])
+    {
+        currentLocation = (AGSPoint *)[AGSGeometryEngine projectGeometry:currentLocation
+                                                      toSpatialReference:[self availableMapDataEnvelope].spatialReference];
+    }
+
+    return [AGSEnvelope envelopeWithCenter:currentLocation
+                                     width:400
+                                    height:400];
+
 }
 
+- (void)setLocationPanMode:(AGSLocationDisplayAutoPanMode)mode
+                completion:(nullable dispatch_block_t)completion
+{
+    dispatch_block_t actionBlock = ^{
+        [self animateArcGISWithPrecondition:nil
+                                 animations:^(dispatch_block_t  _Nonnull gisAnimationsCompleted) {
+                                     self.requestedAutoPanModeChange = YES;
+                                     self.mapView.locationDisplay.autoPanMode = mode;
+                                     gisAnimationsCompleted();
+                                 }
+                                 completion:^{
+                                     [self animateInterfaceWithPrecondition:nil
+                                                                 animations:^(dispatch_block_t _Nonnull interfaceAnimationsCompleted) {
+                                                                     [self updateLocationButtonStateForMode:mode
+                                                                                                 completion:^{
+                                                                                                     self.requestedAutoPanModeChange = NO;
+                                                                                                     interfaceAnimationsCompleted();
+                                                                                                 }];
+                                                                 }
+                                                                 completion:completion];
+                                 }];
+    };
+
+    if (mode != AGSLocationDisplayAutoPanModeOff)
+    {
+        if (!self.mapView.locationDisplay.autoPanModeChangedHandler)
+        {
+            self.mapView.locationDisplay.autoPanModeChangedHandler = ^(AGSLocationDisplayAutoPanMode autoPanMode) {
+                if (!self.requestedAutoPanModeChange && autoPanMode == AGSLocationDisplayAutoPanModeOff)
+                {
+                    [self updateLocationButtonStateForMode:autoPanMode
+                                                completion:nil];
+                }
+            };
+        }
+    }
+    else
+    {
+        self.mapView.locationDisplay.autoPanModeChangedHandler = nil;
+    }
+
+    // Restore rotation and center on current location
+    if (mode != AGSLocationDisplayAutoPanModeCompassNavigation && self.mapView.rotation != 0)
+    {
+        [self animateArcGISWithPrecondition:nil
+                                 animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                     self.requestedAutoPanModeChange = YES;
+                                     [self.mapView setViewpointRotation:0
+                                                             completion:^(BOOL isFinished) {
+                                                                 self.requestedAutoPanModeChange = NO;
+                                                                 animationsCompleted();
+                                                             }];
+                                 }
+                                 completion:actionBlock];
+    }
+    else
+    {
+        actionBlock();
+    }
+}
+
+- (void)updateLocationButtonStateForMode:(AGSLocationDisplayAutoPanMode)mode
+                              completion:(nullable dispatch_block_t)completion
+{
+    if (self.locationButton.tag == mode)
+    {
+        if (completion)
+        {
+            completion();
+        }
+        return;
+    }
+
+    [UIView transitionWithView:self.locationButton
+                      duration:.3
+                       options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionCurveEaseInOut
+                    animations:^{
+                        if (mode == AGSLocationDisplayAutoPanModeOff)
+                        {
+                            self.locationButton.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:.65];
+                            self.locationButton.layer.shadowColor = nil;
+                            self.locationButton.layer.shadowRadius = 0;
+                            self.locationButton.layer.shadowOpacity = 0;
+                            self.locationButton.layer.masksToBounds = YES;
+                            self.locationButton.clipsToBounds = YES;
+
+                            [self.locationButton setImage:[UIImage imageNamed:@"Location"]
+                                                 forState:UIControlStateNormal];
+                        }
+                        else
+                        {
+                            if (self.locationButton.tag == AGSLocationDisplayAutoPanModeOff)
+                            {
+                                // Based on the ArcGIS current location dot color.
+                                UIColor *color = [UIColor SPMLocationButtonColor];
+                                self.locationButton.backgroundColor = color;
+                                self.locationButton.layer.shadowColor = color.CGColor;
+                                self.locationButton.layer.shadowRadius = 10;
+                                self.locationButton.layer.shadowOpacity = .7;
+                                self.locationButton.layer.shadowOffset = CGSizeZero;
+                                self.locationButton.layer.masksToBounds = NO;
+                                self.locationButton.clipsToBounds = NO;
+
+                                UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.locationButton.bounds
+                                                                                cornerRadius:self.parkingButton.layer.cornerRadius];
+                                self.locationButton.layer.shadowPath = path.CGPath;
+                            }
+
+                            if (mode == AGSLocationDisplayAutoPanModeRecenter)
+                            {
+                                [self.locationButton setImage:[UIImage imageNamed:@"Location"]
+                                                     forState:UIControlStateNormal];
+                            }
+                            else if (mode == AGSLocationDisplayAutoPanModeCompassNavigation)
+                            {
+                                [self.locationButton setImage:[UIImage imageNamed:@"Navigation"]
+                                                     forState:UIControlStateNormal];
+                            }
+                        }
+
+                        self.locationButton.tag = mode;
+                    }
+                    completion:^(BOOL finished) {
+                        if (completion)
+                        {
+                            completion();
+                        }
+                    }];
+}
+
+/// If a neighborhood is selected, it will center on that, if not it will try current location and then SDOT envelope
 - (void)centerOnBestSpotWithLocationAuthorizationWarning:(BOOL)authorizationWarning
                                                 animated:(BOOL)animated
+                                              completion:(nullable dispatch_block_t)completion
 {
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
     if (authorizationWarning == YES &&
@@ -1283,86 +1429,242 @@ static void *ARCGISContext = &ARCGISContext;
         authorizationStatus != kCLAuthorizationStatusNotDetermined)
     {
         [self presentLocationSettingsAlertForAlwaysAuthorization:NO
-                                                      completion:nil];
+                                                      completion:^(UIAlertAction *action) {
+                                                          if (completion)
+                                                          {
+                                                              completion();
+                                                          }
+                                                      }];
     }
     else
     {
         if (self.neighborhoodDataSource.selectedNeighborhood)
         {
-            [self centerOnSelectedNeighborhood];
+            [self centerOnSelectedNeighborhoodWithCompletion:completion];
             return;
         }
-        
-        if (self.mapView.locationDisplay.started)
-        {
-            AGSPoint *currentLocation = self.mapView.locationDisplay.mapLocation;
-            AGSEnvelope *currentEnvelope = [self availableMapDataEnvelope];
-            
-            if (currentLocation && currentEnvelope && ![currentLocation.spatialReference isEqualToSpatialReference:[self availableMapDataEnvelope].spatialReference])
+
+        [self centerOnCurrentLocationWithCompletion:^{
+            // Attempt to center on something if we are waiting
+            if (self.needsCenteringOnCurentLocation)
             {
-                currentLocation = (AGSPoint *)[AGSGeometryEngine projectGeometry:currentLocation
-                                                              toSpatialReference:currentEnvelope.spatialReference];
-            }
-            
-            if (currentLocation && currentEnvelope &&[AGSGeometryEngine geometry:currentEnvelope
-                                                                containsGeometry:currentLocation])
-            {
-                //    NSLog(@"Current location %@, point %@", self.mapView.locationDisplay.mapLocation, self.mapView.locationDisplay.location.point);
-                [self.mapView setViewpointCenter:currentLocation
-                                           scale:4500
-                                      completion:nil];
-                
-                //    [self.mapView centerAtPoint:self.mapView.locationDisplay.mapLocation animated:YES];
-                
-                // If they had panned, it is automatically off, reset it!
-                self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeRecenter;
-                
-                // Restore rotation
-                if (self.mapView.rotation != 0)
+                if ([ParkingManager sharedManager].currentSpot)
                 {
-                    [self.mapView setViewpointRotation:0
-                                            completion:nil];
+                    [self centerOnParkingSpotWithCompletion:completion];
                 }
-                return;
+                else
+                {
+                    [self animateArcGISWithPrecondition:nil
+                                             animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
+                                                 self.requestedAutoPanModeChange = YES;
+                                                 [self.mapView setViewpointGeometry:[self SDOTEnvelope]
+                                                                         completion:^(BOOL finished) {
+                                                                             self.requestedAutoPanModeChange = NO;
+                                                                             animationsCompleted();
+                                                                         }];
+                                             }
+                                             completion:completion];
+                }
+            }
+
+            if (completion)
+            {
+                completion();
+            }
+        }];
+    }
+}
+
+- (void)centerOnCurrentLocationWithCompletion:(nullable dispatch_block_t)completion
+{
+    // Center on current location
+    if (self.mapView.locationDisplay.started)
+    {
+        // If we are already centered in our current location
+        if (self.locationButton.tag == AGSLocationDisplayAutoPanModeRecenter)
+        {
+            [self setLocationPanMode:AGSLocationDisplayAutoPanModeCompassNavigation
+                          completion:nil];
+
+            if (completion)
+            {
+                completion();
+            }
+
+            return;
+        }
+        else if (self.locationButton.tag == AGSLocationDisplayAutoPanModeRecenter)
+        {
+            [self setLocationPanMode:AGSLocationDisplayAutoPanModeRecenter
+                          completion:nil];
+
+            if (completion)
+            {
+                completion();
+            }
+
+            return;
+        }
+
+        // Check for location outside of envelope
+        AGSPoint *currentLocation = self.mapView.locationDisplay.mapLocation;
+        AGSEnvelope *currentEnvelope = [self availableMapDataEnvelope];
+
+        if (currentLocation && currentEnvelope && ![currentLocation.spatialReference isEqualToSpatialReference:[self availableMapDataEnvelope].spatialReference])
+        {
+            currentLocation = (AGSPoint *)[AGSGeometryEngine projectGeometry:currentLocation
+                                                          toSpatialReference:currentEnvelope.spatialReference];
+        }
+
+        if (currentLocation && currentEnvelope && ![AGSGeometryEngine geometry:currentEnvelope
+                                                              containsGeometry:currentLocation])
+        {
+            // Don't warn them if there is a modal
+            if (![self presentedViewController])
+            {
+                [Analytics logError:@"Location_OutOfArea"
+                            message:@"User has tried to center on a location outside the service area"
+                              error:nil];
+
+                UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Parking Data Available For Your Location", nil)
+                                                                                    message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil]];
+
+                [self SPMPresentAlertController:controller
+                                       animated:YES
+                                     completion:completion];
             }
             else
             {
-                // Don't warn them if there is a modal
-                if (![self presentedViewController])
+                if (completion)
                 {
-                    [Analytics logError:@"Location_OutOfArea"
-                                message:@"User has tried to center on a location outside the service area"
-                                  error:nil];
-                    
-                    UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"No Parking Data Available For Your Location", nil)
-                                                                                        message:NSLocalizedString(@"Your current location is outside the Seattle Department of Transportation's service area.", nil)
-                                                                                 preferredStyle:UIAlertControllerStyleAlert];
-                    [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                                   style:UIAlertActionStyleCancel
-                                                                 handler:nil]];
-                    
-                    [self SPMPresentAlertController:controller
-                                           animated:YES
-                                         completion:nil];
+                    completion();
                 }
             }
+
+            return;
         }
-        else
+
+        [self setLocationPanMode:AGSLocationDisplayAutoPanModeRecenter
+                      completion:completion];
+        return;
+    }
+    else
+    {
+        self.needsCenteringOnCurentLocation = YES;
+        [self beginObservingLocationUpdates];
+        if (completion)
         {
-            self.needsCenteringOnCurentLocation = YES;
-            [self beginObservingLocationUpdates];
-        }
-        
-        // Attempt to center on something
-        if ([ParkingManager sharedManager].currentSpot)
-        {
-            [self centerOnParkingSpot];
-        }
-        else
-        {
-            [self centerOnSDOTEnvelopeAnimated:animated];
+            completion();
         }
     }
+}
+
+#pragma mark - Animation Sequencing
+
+- (void)animateArcGISWithPrecondition:(nullable BOOL (^)(void))precondition
+                           animations:(nonnull void (^)(dispatch_block_t _Nonnull animationsCompleted))animations
+                           completion:(nullable dispatch_block_t)completion
+{
+    if (!self.queueArcGISAnimations)
+    {
+        NSString *queueName = [NSString stringWithFormat:@"%@.animations.ArcGIS.%@", NSBundle.mainBundle.bundleIdentifier, self.class];
+        self.queueArcGISAnimations = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
+    }
+
+    // It is possible to create one group per dispatch_async if needed
+    if (!self.groupArcGISAnimations)
+    {
+        self.groupArcGISAnimations = dispatch_group_create();
+    }
+
+    [self animateWithPrecondition:precondition
+                            queue:self.queueArcGISAnimations
+                            group:self.groupArcGISAnimations
+                       animations:animations
+                       completion:completion];
+}
+
+- (void)animateInterfaceWithPrecondition:(nullable BOOL (^)(void))precondition
+                              animations:(nonnull void (^)(dispatch_block_t _Nonnull animationsCompleted))animations
+                              completion:(nullable dispatch_block_t)completion
+{
+    if (!self.queueAnimations)
+    {
+        NSString *queueName = [NSString stringWithFormat:@"%@.animations.%@", NSBundle.mainBundle.bundleIdentifier, self.class];
+        self.queueAnimations = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
+    }
+
+    // It is possible to create one group per dispatch_async if needed
+    if (!self.groupAnimations)
+    {
+        self.groupAnimations = dispatch_group_create();
+    }
+
+    [self animateWithPrecondition:precondition
+                            queue:self.queueAnimations
+                            group:self.groupAnimations
+                       animations:animations
+                       completion:completion];
+}
+
+/// An unanimated precondition block of code which must return YES for the animation to be executed. Then execute the user's animation block so that it is synchronized in a serial animation queue. Every block will be executed on the main queue. This is used so that can be used in a highly asynchronous way and always get a good visual result.
+/// You must call the completion block in the animations block that you pass
+- (void)animateWithPrecondition:(nullable BOOL (^)(void))precondition
+                          queue:(nonnull dispatch_queue_t)queue
+                          group:(nonnull dispatch_group_t)group
+                     animations:(nonnull void (^)(dispatch_block_t _Nonnull animationsCompleted))animations
+                     completion:(nullable dispatch_block_t)completion
+{
+    NSParameterAssert(animations);
+    NSParameterAssert(group);
+    NSParameterAssert(queue);
+    if (!animations || !queue || !group)
+    {
+        if (completion)
+        {
+            completion();
+        }
+        return;
+    }
+
+    // Enter our background serial queue
+    dispatch_async(queue, ^{
+        // Make this block of code wait until the UIView animation APIs are done
+        dispatch_group_enter(group);
+
+        // Always execute UIKit on the main thread
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Check the precondition now that all previous blocks have stopped executing. The state should be sane for this check now
+            // We could check the precondition before entering this group, but let us do it here so we can assure that it is executed on the main queue. This block can be used for setting up views before animations or adding a precondition to stop the animation
+            if (precondition)
+            {
+                if (!precondition())
+                {
+                    // Tell our queue's block that we are done
+                    dispatch_group_leave(group);
+                    return;
+                }
+            }
+
+            animations(^{
+                // Tell our queue's block that we are done
+                dispatch_group_leave(group);
+            });
+        });
+
+        // Make sure we block until the dispatch_group_leave in the animation completion
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+        // Execute our animation completion block
+        if (completion)
+        {
+            dispatch_async(dispatch_get_main_queue(), completion);
+        }
+    });
 }
 
 #pragma mark - Parking Spot
@@ -1448,7 +1750,7 @@ static void *ARCGISContext = &ARCGISContext;
         //        }
     }
     
-    if (!self.loadedAllMapLayers || !self.mapView.locationDisplay.started || !self.isObservingLocationUpdates)
+    if (!self.loadedAllMapLayers || !self.mapView.locationDisplay.started)
     {
         // We need to attempt to set it
         if (source == SPMParkingSpotActionSourceQuickAction)
@@ -1499,9 +1801,11 @@ static void *ARCGISContext = &ARCGISContext;
         parkingSpot.timeLimit = timeLimit;
         
         [ParkingManager sharedManager].currentSpot = parkingSpot;
-        
+
         [self addAndShowParkingSpotMarkerWithPoint:parkingPoint
-                                              date:parkDate];
+                                              date:parkDate
+                             tapticFeedbackEnabled:(source != SPMParkingSpotActionSourceWatch)
+                                        completion:nil];
         
         // Notify the watch
         if (source != SPMParkingSpotActionSourceWatch)
@@ -1602,7 +1906,9 @@ static void *ARCGISContext = &ARCGISContext;
     if ([AGSGeometryEngine geometry:[self availableMapDataEnvelope] containsGeometry:parkingPoint])
     {
         [self addAndShowParkingSpotMarkerWithPoint:parkingPoint
-                                              date:[ParkingManager sharedManager].currentSpot.date];
+                                              date:ParkingManager.sharedManager.currentSpot.date
+                             tapticFeedbackEnabled:NO
+                                        completion:nil];
     }
     else
     {
@@ -1631,10 +1937,16 @@ static void *ARCGISContext = &ARCGISContext;
 
 - (void)addAndShowParkingSpotMarkerWithPoint:(nonnull AGSPoint *)parkingPoint
                                         date:(nullable NSDate *)date
+                       tapticFeedbackEnabled:(BOOL)provideTapticFeedback
+                                  completion:(nullable dispatch_block_t)completion
 {
     NSAssert(parkingPoint != nil, @"Must have a parking spot");
     if (!parkingPoint)
     {
+        if (completion)
+        {
+            completion();
+        }
         return;
     }
     
@@ -1708,7 +2020,8 @@ static void *ARCGISContext = &ARCGISContext;
     
     [self centerOnParkingGraphic:parkingGraphic
             attemptEnvelopeUnion:NO
-                        animated:YES];
+                        animated:YES
+                      completion:nil];
     
     [UIView transitionWithView:self.parkingButton
                       duration:.3
@@ -1724,7 +2037,19 @@ static void *ARCGISContext = &ARCGISContext;
                         self.parkingButton.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.parkingButton.bounds
                                                                                          cornerRadius:self.parkingButton.layer.cornerRadius].CGPath;
                     }
-                    completion:nil];
+                    completion:^(BOOL finished) {
+                        if (provideTapticFeedback)
+                        {
+                            UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+                            [generator prepare];
+                            [generator impactOccurred];
+                        }
+
+                        if (completion)
+                        {
+                            completion();
+                        }
+                    }];
 }
 
 #pragma mark - Parking Reminder
@@ -1813,16 +2138,6 @@ static void *ARCGISContext = &ARCGISContext;
 
 - (void)beginLocationUpdates
 {
-    // Don't automatically pan if we have a parking spot. This will be reset when the user taps the current location update, or dismisses the parking spot.
-    // Test case: launch with a parking spot away from your current location.
-    if (![ParkingManager sharedManager].currentSpot)
-    {
-        self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeRecenter;
-    }
-    
-    //    self.mapView.locationDisplay.wanderExtentFactor = 1;
-    
-    //    self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeCompassNavigation;
     BOOL showsPing = YES;
 
 #ifdef DEBUG
@@ -1968,9 +2283,10 @@ static void *ARCGISContext = &ARCGISContext;
             else
             {
                 [self centerOnBestSpotWithLocationAuthorizationWarning:NO
-                                                              animated:NO];
+                                                              animated:NO
+                                                            completion:nil];
             }
-            
+
             if (self.needsToSetParkingSpotOnLoad)
             {
                 [self beginObservingLocationUpdates];
@@ -2414,7 +2730,8 @@ static void *ARCGISContext = &ARCGISContext;
                         self.parkingButton.layer.shadowOpacity = 0;
                     }
                     completion:^(BOOL finished) {
-                        self.mapView.locationDisplay.autoPanMode = AGSLocationDisplayAutoPanModeRecenter;
+                        [self setLocationPanMode:AGSLocationDisplayAutoPanModeRecenter
+                                      completion:nil];
                     }];
 }
 
@@ -2430,14 +2747,14 @@ static void *ARCGISContext = &ARCGISContext;
                                                      yMax:238886
                                          spatialReference:reference];
 
-// Full Extent from the site
-//    "xmin": 1202147,
-//    "ymin": 180886,
-//    "xmax": 1329214,
-//    "ymax": 274486,
-//    "spatialReference": {
-//        "wkid": 2926
-//    }
+    // Full Extent from the site
+    //    "xmin": 1202147,
+    //    "ymin": 180886,
+    //    "xmax": 1329214,
+    //    "ymax": 274486,
+    //    "spatialReference": {
+    //        "wkid": 2926
+    //    }
     return envelope;
 }
 
@@ -2468,7 +2785,7 @@ static void *ARCGISContext = &ARCGISContext;
 }
 
 // Handles the chaining of initial alerts to avoid conflicts with location prompt alerts we may not control and UIAlertController's lack of multiple display logic
-- (void)presentInitialAlertsIfNeededWithCompletion:(dispatch_block_t)completion
+- (void)presentInitialAlertsIfNeededWithCompletion:(nullable dispatch_block_t)completion
 {
     if ([self needsToPresentInitialWarningAlert])
     {

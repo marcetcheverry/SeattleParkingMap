@@ -1,3 +1,11 @@
+# 1.5
+* The location dot is now followed automatically as it moves around
+* New navigation mode, double tap the location button to align the map along with your heading
+* Taptic feedback when setting parking spot
+* Fix setting a parking spot from home screen quick actions
+* Use same scale for centering on current location and parking spot
+* Set initialViewPoint on SDOT envelope for the map
+
 # 1.4
 * Browse a list of Seattle's neighboorhoods and zoom into them
 * Improved street labels for SDOT map

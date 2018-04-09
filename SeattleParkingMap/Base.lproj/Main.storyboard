@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7a-Xc-KVx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7a-Xc-KVx">
     <device id="ipad10_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment version="4352" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -44,7 +44,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="updateLocationTouched:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="hOW-DU-YLB"/>
+                                    <action selector="touchedLocationButton:" destination="n7a-Xc-KVx" eventType="touchUpInside" id="RPH-fl-xgI"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12K-UM-I0H" userLabel="Neighborhoods Button">
@@ -106,7 +106,7 @@
                                                 <rect key="frame" x="0.0" y="10" width="120" height="17"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D3Y-FA-XkO" id="XiU-e2-pT8">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="17"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="16.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fpq-tO-4jf">
@@ -146,7 +146,7 @@
                                                             </variation>
                                                         </imageView>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7q-NO-tiF">
-                                                            <rect key="frame" x="27" y="0.0" width="93" height="17"/>
+                                                            <rect key="frame" x="27" y="0.0" width="93" height="16.5"/>
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" priority="999" constant="170" id="H8O-8k-vlE"/>
@@ -935,11 +935,11 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="665.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bEN-zF-7xT" id="brX-KO-eIO">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="63w-gS-Unq">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="100"/>
+                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">Try zooming in deeper to see them. It is always a good idea to be zoomed in as deeply as possible around your current location while looking for parking. These temporary parking restrictions can be recognized because the lines have rounded corners.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -959,11 +959,11 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="813.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9MI-mb-QbQ" id="cNk-MT-EVm">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fgM-k3-VNW">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="100"/>
+                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">First, try zooming in as not everything shows at a small scale. Or, the map may need time to redraw. It is displaying a large amount of data so there are some slow times. Please be patient. In addition, the map is down overnight from 12 midnight to 3 am for data maintenance.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -983,11 +983,11 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="961.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="o5n-x2-CWa" id="VqQ-1e-pGp">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fd2-rN-qB9">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="100"/>
+                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">The map pulls parking info from the City’s asset management system. The parking signs and garage and lot locations are updated nightly. The rates and hours for garages and lots are updated monthly. There may be a time lag between sign installation and record data entry; consequently, the map may not reflect on-the-ground reality. Always comply with city parking rules and regulations.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>

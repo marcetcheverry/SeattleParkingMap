@@ -49,6 +49,7 @@
 		499096991BF9254F004EDCC3 /* ExtensionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 499096981BF9254F004EDCC3 /* ExtensionDelegate.m */; };
 		499096A51BF9254F004EDCC3 /* SeattleParkingMapWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */; };
 		499A2F041C1FC1BE00F5AEE4 /* BaseInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */; };
+		499B46C220787C63009420F9 /* UIColor+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD85F31C31081B002040B7 /* UIColor+SPM.m */; };
 		49AD85F41C31081B002040B7 /* UIColor+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD85F31C31081B002040B7 /* UIColor+SPM.m */; };
 		49AD864C1C311D41002040B7 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD864B1C311D41002040B7 /* ComplicationController.m */; };
 		49AD864E1C31326E002040B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49AD864D1C31326E002040B7 /* Assets.xcassets */; };
@@ -168,7 +169,7 @@
 		496646382063BA06005AB972 /* NeighborhoodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeighborhoodTableViewCell.h; sourceTree = "<group>"; };
 		4966463A2063BAAB005AB972 /* Neighborhood.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Neighborhood.h; sourceTree = "<group>"; };
 		4966463B2063BAAB005AB972 /* Neighborhood.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Neighborhood.m; sourceTree = "<group>"; };
-		49774CB2205C924B00E23341 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = ../../../../Library/SDKs/ArcGIS/iOS/Frameworks/Static/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = "<group>"; };
+		49774CB2205C924B00E23341 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = ../../../../../../../SDKs/ArcGIS/iOS/Frameworks/Static/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		49774CB4205C997F00E23341 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = ../../../../Library/SDKs/ArcGIS/iOS/Frameworks/Static/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = "<group>"; };
 		49774CB5205CA1A100E23341 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		49774CB6205CA1A100E23341 /* Analytics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Analytics.m; sourceTree = "<group>"; };
@@ -755,6 +756,7 @@
 				498F20991C2680D9001DD2BA /* ParkingSpotCalloutView.m in Sources */,
 				4966463C2063BAAB005AB972 /* Neighborhood.m in Sources */,
 				49CFE13D1C3C060000D29A89 /* NSDate+SPM.m in Sources */,
+				499B46C220787C63009420F9 /* UIColor+SPM.m in Sources */,
 				49774CB7205CA1A100E23341 /* Analytics.m in Sources */,
 				494631A41C2CEB43003B4A91 /* LegendDataSource.m in Sources */,
 				492482342063471800371853 /* NeighborhoodDataSource.m in Sources */,
