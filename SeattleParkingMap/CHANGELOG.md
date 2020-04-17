@@ -1,3 +1,10 @@
+# 1.5.2
+* Support for iOS 13
+* Removed support for watch face complications
+
+# 1.5.1
+* Support for latest iPhone, iPad, and Apple Watch screen sizes
+
 # 1.5
 * The location dot is now followed automatically as it moves around
 * New navigation mode, double tap the location button to align the map along with your heading

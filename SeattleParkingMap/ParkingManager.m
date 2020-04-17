@@ -466,7 +466,6 @@ static void *ParkingManagerContext = &ParkingManagerContext;
                                     
                                     NSMutableDictionary *replyDictionary = [[NSMutableDictionary alloc] initWithCapacity:4];
                                     replyDictionary[SPMWatchAction] = SPMWatchActionUpdateGeocoding;
-                                    replyDictionary[SPMWatchNeedsComplicationUpdate] = @YES;
                                     NSNumber *userDefinedTimeLimit = [NSUserDefaults.standardUserDefaults objectForKey:SPMDefaultsUserDefinedParkingTimeLimit];
                                     if (userDefinedTimeLimit)
                                     {

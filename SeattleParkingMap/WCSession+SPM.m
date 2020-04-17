@@ -50,59 +50,7 @@
                                      {
                                          errorHandler(sessionError);
                                      }
-
-                                     if ([message[SPMWatchNeedsComplicationUpdate] boolValue])
-                                     {
-                                         NSLog(@"Device->Watch attempting fallback SPMTransferCurrentComplicationUserInfo to update complication");
-                                         [self SPMTransferCurrentComplicationUserInfo:message];
-                                     }
                                  }];
-    }
-    else
-    {
-        if ([message[SPMWatchNeedsComplicationUpdate] boolValue])
-        {
-            SPMLog(@"Device->Watch attempting fallback SPMTransferCurrentComplicationUserInfo to update complication");
-            [self SPMTransferCurrentComplicationUserInfo:message];
-        }
-    }
-}
-
-- (void)SPMTransferCurrentComplicationUserInfo:(nonnull NSDictionary *)userInfo
-{
-    NSParameterAssert(userInfo);
-    if (!userInfo)
-    {
-        return;
-    }
-    
-    SPMLog(@"Device->Watch transferCurrentComplicationUserInfo: %@", userInfo);
-    
-    if (WCSession.defaultSession.isComplicationEnabled && WCSession.defaultSession.activationState == WCSessionActivationStateActivated)
-    {
-        NSUInteger remaining = WCSession.defaultSession.remainingComplicationUserInfoTransfers;
-        
-        SPMLog(@"Device->Watch remainingComplicationUserInfoTransfers %lu", (unsigned long)remaining);
-        
-        NSArray *outstandingTransfers = WCSession.defaultSession.outstandingUserInfoTransfers;
-        if (outstandingTransfers.count > 0)
-        {
-            SPMLog(@"Device->Watch outstanding user info transfers: %@", outstandingTransfers);
-        }
-        
-        if (remaining > 0)
-        {
-            [WCSession.defaultSession transferCurrentComplicationUserInfo:userInfo];
-        }
-        else
-        {
-            SPMLog(@"Device->Watch warning, using transferUserInfo instead!");
-            [WCSession.defaultSession transferUserInfo:userInfo];
-        }
-    }
-    else
-    {
-        SPMLog(@"Watch is not activated (state: %lu) or complications are not enabled (%@)", (unsigned long)WCSession.defaultSession.activationState, @(WCSession.defaultSession.isComplicationEnabled));
     }
 }
 

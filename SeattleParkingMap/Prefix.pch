@@ -15,6 +15,7 @@
     @import UIKit;
 
     @import ArcGIS;
+    @import CoreLocation;
 
     @import WatchConnectivity;
 

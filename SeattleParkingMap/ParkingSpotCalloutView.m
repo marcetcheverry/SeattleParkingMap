@@ -134,15 +134,6 @@ static void *ParkingSpotCalloutViewContext = &ParkingSpotCalloutViewContext;
     // Non monospace actually looks better in our tight space
     //    self.buttonTime.titleLabel.font = [UIFont monospacedDigitSystemFontOfSize:self.buttonTime.titleLabel.font.pointSize weight:UIFontWeightBold];
 
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.buttonTime.bounds
-                                                   byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerTopLeft)
-                                                         cornerRadii:CGSizeMake(5, 5)];
-
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.buttonTime.bounds;
-    maskLayer.path = maskPath.CGPath;
-    self.buttonTime.layer.mask = maskLayer;
-
     [[ParkingManager sharedManager] addObserver:self
                                      forKeyPath:@"currentSpot.timeLimit"
                                         options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)

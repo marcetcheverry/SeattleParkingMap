@@ -94,8 +94,6 @@ static NSString * const SPMWatchActionSetParkingTimeLimit = @"SPMWatchActionSetP
 static NSString * const SPMWatchActionDismissWarningMessage = @"SPMWatchActionDismissWarningMessage"; // Sends a SPMWatchObjectWarningMessage
 static NSString * const SPMWatchActionUpdateGeocoding = @"SPMWatchActionUpdateGeocoding";
 
-static NSString * const SPMWatchNeedsComplicationUpdate = @"SPMWatchNeedsComplicationUpdate"; // Key for a BOOL
-
 static NSString * const SPMWatchContextUserDefinedParkingTimeLimit = @"SPMWatchContextUserDefinedParkingTimeLimit";
 
 static NSString * const SPMWatchResponseStatus = @"SPMWatchResponseStatus";

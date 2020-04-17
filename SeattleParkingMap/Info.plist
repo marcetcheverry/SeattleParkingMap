@@ -17,17 +17,21 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.5.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.5</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>To display your location and remember your parking spot within the city of Seattle. Your location will not be shared. Background access is required for Apple Watch.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>To display your location and remember your parking spot within the city of Seattle. Your location will not be shared. Background access is required for Apple Watch.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To display your location and remember your parking spot within the city of Seattle. Your location will not be shared.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To attach photos</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).currentScreen</string>

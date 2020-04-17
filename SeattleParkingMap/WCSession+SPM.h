@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
           replyHandler:(nullable void (^)(NSDictionary<NSString *, id> *replyMessage))replyHandler
           errorHandler:(nullable void (^)(NSError *error))errorHandler;
 
-- (void)SPMTransferCurrentComplicationUserInfo:(NSDictionary *)userInfo;
-
 @end
 
 NS_ASSUME_NONNULL_END

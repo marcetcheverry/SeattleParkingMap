@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7a-Xc-KVx">
-    <device id="ipad10_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n7a-Xc-KVx">
+    <device id="ipad10_5" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment version="4352" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,7 +21,7 @@
                                 <color key="backgroundColor" red="0.27810055017471313" green="0.27809220552444458" blue="0.27809694409370422" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="21V-Zl-i4E" userLabel="Location Button" colorLabel="IBBuiltInLabel-Blue">
-                                <rect key="frame" x="10" y="25" width="37" height="37"/>
+                                <rect key="frame" x="10" y="5" width="37" height="37"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration" hint="Centers and zooms to the current location on the map" label="Current Location"/>
                                 <constraints>
@@ -48,7 +44,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12K-UM-I0H" userLabel="Neighborhoods Button">
-                                <rect key="frame" x="364.5" y="25" width="105" height="37"/>
+                                <rect key="frame" x="364" y="5" width="106" height="37"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration" hint="Marks the current location as your parking spot" label="Park"/>
                                 <constraints>
@@ -98,15 +94,15 @@
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" priority="750" constant="150" id="MWs-SB-9PW"/>
+                                            <constraint firstAttribute="height" priority="750" constant="165" id="MWs-SB-9PW"/>
                                             <constraint firstAttribute="height" priority="750" constant="125" id="caW-c7-Qmv"/>
                                         </constraints>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="LegendTableViewCell" id="D3Y-FA-XkO" customClass="LegendTableViewCell">
-                                                <rect key="frame" x="0.0" y="10" width="120" height="17"/>
+                                                <rect key="frame" x="0.0" y="28" width="120" height="17"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D3Y-FA-XkO" id="XiU-e2-pT8">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="16.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="17"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fpq-tO-4jf">
@@ -145,7 +141,7 @@
                                                                 </mask>
                                                             </variation>
                                                         </imageView>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7q-NO-tiF">
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Loading" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7q-NO-tiF">
                                                             <rect key="frame" x="27" y="0.0" width="93" height="16.5"/>
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
@@ -272,10 +268,10 @@
                                 </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5vq-oh-bYS" userLabel="Sidebar Container View">
-                                <rect key="frame" x="787" y="25" width="37" height="1077"/>
+                                <rect key="frame" x="787" y="5" width="37" height="1097"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psu-st-SJI" userLabel="Info Button">
-                                        <rect key="frame" x="0.0" y="1040" width="37" height="37"/>
+                                        <rect key="frame" x="0.0" y="1060" width="37" height="37"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                                         <accessibility key="accessibilityConfiguration" hint="Opens the settings screen" label="Settings"/>
                                         <constraints>
@@ -409,7 +405,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7oj-ob-kne">
-                                            <rect key="frame" x="772" y="30" width="42" height="33"/>
+                                            <rect key="frame" x="772" y="10" width="42" height="33"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                             <state key="normal" title="Done">
@@ -420,7 +416,7 @@
                                             </connections>
                                         </button>
                                         <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="prototypes" style="grouped" rowHeight="44" estimatedRowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="tkF-Rg-ICQ">
-                                            <rect key="frame" x="0.0" y="63" width="834" height="1049"/>
+                                            <rect key="frame" x="0.0" y="43" width="834" height="1069"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="separatorColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <inset key="separatorInset" minX="10" minY="0.0" maxX="20" maxY="0.0"/>
@@ -430,11 +426,11 @@
                                                     <rect key="frame" x="0.0" y="55.5" width="834" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KXQ-zv-Y14" id="8gS-aM-AoE">
-                                                        <rect key="frame" x="0.0" y="0.0" width="834" height="43.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="834" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Neighboorhood" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e6N-LC-Fmj">
-                                                                <rect key="frame" x="20" y="0.0" width="804" height="43.5"/>
+                                                                <rect key="frame" x="20" y="0.0" width="804" height="44"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -497,46 +493,42 @@
             <objects>
                 <viewController modalPresentationStyle="formSheet" id="SUa-Hg-MXa" customClass="TimeLimitViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yuJ-9a-gmC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="302"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="314"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" countDownDuration="7200" minuteInterval="10" translatesAutoresizingMaskIntoConstraints="NO" id="x9u-dV-HEO">
-                                <rect key="frame" x="0.0" y="44" width="375" height="216"/>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" countDownDuration="7200" minuteInterval="10" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x9u-dV-HEO">
+                                <rect key="frame" x="0.0" y="56" width="375" height="216"/>
                                 <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="216" id="DuG-2o-oKX"/>
                                 </constraints>
-                                <date key="date" timeIntervalSinceReferenceDate="472289780.06014901">
-                                    <!--2015-12-20 07:36:20 +0000-->
-                                </date>
                                 <connections>
                                     <action selector="datePickerValueChanged:" destination="SUa-Hg-MXa" eventType="valueChanged" id="Jjo-Z4-TSR"/>
                                 </connections>
                             </datePicker>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CnG-Ou-bxR">
-                                <rect key="frame" x="0.0" y="260" width="375" height="42"/>
+                                <rect key="frame" x="0.0" y="272" width="375" height="42"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KRV-w7-aPk">
                                         <rect key="frame" x="10" y="0.0" width="75" height="42"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 minutes before" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMY-gJ-iAI">
                                         <rect key="frame" x="126" y="0.0" width="137" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5" minimumValue="5" maximumValue="100" stepValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="Mbw-oC-Qgh">
-                                        <rect key="frame" x="271" y="7" width="94" height="29"/>
+                                        <rect key="frame" x="271" y="5" width="94" height="32"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <action selector="stepperValueChanged:" destination="SUa-Hg-MXa" eventType="valueChanged" id="N4z-uh-z4t"/>
                                         </connections>
                                     </stepper>
                                 </subviews>
-                                <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="QMY-gJ-iAI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="KRV-w7-aPk" secondAttribute="trailing" constant="20" id="CST-CI-nug"/>
                                     <constraint firstAttribute="bottom" secondItem="KRV-w7-aPk" secondAttribute="bottom" id="Ioj-Qx-ryY"/>
@@ -553,7 +545,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="CnG-Ou-bxR" firstAttribute="top" secondItem="x9u-dV-HEO" secondAttribute="bottom" id="4zh-4I-1yP"/>
                             <constraint firstItem="CnG-Ou-bxR" firstAttribute="leading" secondItem="Moz-4m-Cob" secondAttribute="leading" id="Lwp-F6-Ncu"/>
@@ -593,8 +585,8 @@
             <objects>
                 <navigationController id="96d-dC-2Ob" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZqA-QY-sDN">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ZqA-QY-sDN">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -612,8 +604,7 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" id="0rB-hM-O7v">
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="separatorColor" red="0.52387516172874515" green="0.52387516172874515" blue="0.52387516172874515" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="MAP SOURCE" id="zj9-pg-SaL">
                                 <cells>
@@ -621,7 +612,7 @@
                                         <rect key="frame" x="0.0" y="55.5" width="540" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jUr-L8-Kvu" id="Bd4-yA-wAT">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="48.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ZLP-xK-oGk">
@@ -636,7 +627,6 @@
                                                     </connections>
                                                 </segmentedControl>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="ZLP-xK-oGk" firstAttribute="top" secondItem="Bd4-yA-wAT" secondAttribute="top" constant="10" id="M4S-O0-0KD"/>
                                                 <constraint firstAttribute="trailing" secondItem="ZLP-xK-oGk" secondAttribute="trailing" constant="-4" id="MdN-IV-VES"/>
@@ -644,26 +634,25 @@
                                                 <constraint firstItem="ZLP-xK-oGk" firstAttribute="leading" secondItem="Bd4-yA-wAT" secondAttribute="leading" constant="-4" id="jaV-tH-UbS"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="vu2-tE-xiC" rowHeight="49" style="IBUITableViewCellStyleDefault" id="2Ca-59-kuP">
                                         <rect key="frame" x="0.0" y="104.5" width="540" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2Ca-59-kuP" id="13n-68-0yV">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="48.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Colored parking lines may not be overlayed properly over streets in non-SDOT maps." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vu2-tE-xiC">
-                                                    <rect key="frame" x="20" y="0.0" width="500" height="48.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="500" height="49"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
-                                                    <color key="textColor" red="0.89999997620000005" green="0.89999997620000005" blue="0.89999997620000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999399999998" green="0.34999999399999998" blue="0.34999999399999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999399999998" green="0.34999999399999998" blue="0.34999999399999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -673,7 +662,7 @@
                                         <rect key="frame" x="0.0" y="201.5" width="540" height="49"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VVv-ta-sPl" id="1Tu-2l-p2s">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="48.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="YTV-gX-Gxd">
@@ -687,7 +676,6 @@
                                                     </connections>
                                                 </segmentedControl>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999399999998" green="0.34999999399999998" blue="0.34999999399999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="YTV-gX-Gxd" secondAttribute="trailing" constant="-4" id="0IF-WZ-5JD"/>
                                                 <constraint firstItem="YTV-gX-Gxd" firstAttribute="leading" secondItem="1Tu-2l-p2s" secondAttribute="leading" constant="-4" id="9Pq-Yr-7kb"/>
@@ -695,7 +683,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="YTV-gX-Gxd" secondAttribute="bottom" constant="10" id="k4T-Dh-o2C"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999399999998" green="0.34999999399999998" blue="0.34999999399999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -705,19 +693,19 @@
                                         <rect key="frame" x="0.0" y="298.5" width="540" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l7P-Q5-Fp5" id="QSK-fr-rdl">
-                                            <rect key="frame" x="0.0" y="0.0" width="502" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="509" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Frequently Asked Questions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fj9-aR-saP">
-                                                    <rect key="frame" x="20" y="0.0" width="482" height="43.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="481" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                         <connections>
                                             <segue destination="NBN-3M-1YC" kind="show" id="wzt-tT-Os9"/>
                                         </connections>
@@ -726,19 +714,19 @@
                                         <rect key="frame" x="0.0" y="342.5" width="540" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xOh-ay-QyH" id="pWd-XF-8AU">
-                                            <rect key="frame" x="0.0" y="0.0" width="502" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="509" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Acknowledgements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fD7-I8-4cV">
-                                                    <rect key="frame" x="20" y="0.0" width="482" height="43.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="481" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                         <connections>
                                             <segue destination="TBT-d3-gMu" kind="show" id="6HP-52-7it"/>
                                         </connections>
@@ -751,11 +739,11 @@
                                         <rect key="frame" x="0.0" y="434.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ytc-R6-Pd2" id="hKs-73-vw5">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Foy-nN-ki1">
-                                                    <rect key="frame" x="195" y="10" width="150" height="79.5"/>
+                                                    <rect key="frame" x="195" y="10" width="150" height="80"/>
                                                     <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Open Website">
                                                         <accessibilityTraits key="traits" button="YES" link="YES"/>
@@ -778,14 +766,13 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="Foy-nN-ki1" secondAttribute="bottom" constant="10" id="TqM-3r-mPg"/>
                                                 <constraint firstItem="Foy-nN-ki1" firstAttribute="top" secondItem="hKs-73-vw5" secondAttribute="top" constant="10" id="gRl-FW-u0x"/>
                                                 <constraint firstAttribute="centerX" secondItem="Foy-nN-ki1" secondAttribute="centerX" id="yfG-3h-lxN"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -807,8 +794,6 @@
                     <connections>
                         <outlet property="mapProviderSegmentedControl" destination="ZLP-xK-oGk" id="4z3-sm-EF2"/>
                         <outlet property="mapStyleSegmentedControl" destination="YTV-gX-Gxd" id="38f-3L-TFK"/>
-                        <outletCollection property="segmentedControls" destination="ZLP-xK-oGk" id="Uan-RZ-RBn"/>
-                        <outletCollection property="segmentedControls" destination="YTV-gX-Gxd" id="jfh-r4-EGQ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="32z-2x-kp8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -823,7 +808,7 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" separatorStyle="none" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" id="284-56-MtX">
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="WARNING" id="bGB-Oa-eM6">
                                 <cells>
@@ -839,13 +824,12 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">This map is provided as a public service and intended for informational purposes only. You may find that construction projects, traffic, or other events have caused conditions to differ from the map. Drivers should always comply with city parking rules and regulations.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -871,13 +855,12 @@ Once you have found a parking spot, as you walk away from your parked car you ma
 
 If you have navigated far away from your marked parking spot, you can press the red Ⓟ button to center it on the map again. Your current location is always marked by a blue circle.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -895,13 +878,12 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">We do not collect or store any information regarding your location, parking spots, or any sort of personal information. Such information lives only on your device while using the app. The only types of information collected by this application are for anonymous diagnostic reports (usage measurement, crash reports, etc). Furthermore, we do not sell or share any information collected.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -919,13 +901,12 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">The parking map in this application is obtained from the official data, maps and drawings provided by the Seattle Department of Transportation.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -935,21 +916,20 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="665.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bEN-zF-7xT" id="brX-KO-eIO">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="63w-gS-Unq">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="500" height="100"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">Try zooming in deeper to see them. It is always a good idea to be zoomed in as deeply as possible around your current location while looking for parking. These temporary parking restrictions can be recognized because the lines have rounded corners.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -959,21 +939,20 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="813.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9MI-mb-QbQ" id="cNk-MT-EVm">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fgM-k3-VNW">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="500" height="100"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">First, try zooming in as not everything shows at a small scale. Or, the map may need time to redraw. It is displaying a large amount of data so there are some slow times. Please be patient. In addition, the map is down overnight from 12 midnight to 3 am for data maintenance.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -983,21 +962,20 @@ If you have navigated far away from your marked parking spot, you can press the 
                                         <rect key="frame" x="0.0" y="961.5" width="540" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="o5n-x2-CWa" id="VqQ-1e-pGp">
-                                            <rect key="frame" x="0.0" y="0.0" width="540" height="99.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fd2-rN-qB9">
-                                                    <rect key="frame" x="15" y="0.0" width="510" height="99.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="500" height="100"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <string key="text">The map pulls parking info from the City’s asset management system. The parking signs and garage and lot locations are updated nightly. The rates and hours for garages and lots are updated monthly. There may be a time lag between sign installation and record data entry; consequently, the map may not reflect on-the-ground reality. Always comply with city parking rules and regulations.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1021,8 +999,8 @@ If you have navigated far away from your marked parking spot, you can press the 
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="t2a-9h-LOe" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="cNC-7f-X4S">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cNC-7f-X4S">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1041,7 +1019,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="static" style="grouped" separatorStyle="none" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" id="fZz-3E-G6X">
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="Parking Data Provided By SDOT" id="IJc-X6-Vz1">
                                 <cells>
@@ -1052,9 +1030,9 @@ If you have navigated far away from your marked parking spot, you can press the 
                                             <rect key="frame" x="0.0" y="0.0" width="540" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wYb-aV-iVa" userLabel="SDOT Image Button">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wYb-aV-iVa" userLabel="SDOT Image Button">
                                                     <rect key="frame" x="121.5" y="10" width="297" height="118"/>
-                                                    <color key="backgroundColor" red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Seattle Department of Transportation" label="SDOT">
                                                         <accessibilityTraits key="traits" button="YES" link="YES" image="YES"/>
                                                     </accessibility>
@@ -1074,9 +1052,9 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                         <action selector="sdotTouched:" destination="TBT-d3-gMu" eventType="touchUpInside" id="9fX-XU-UVy"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ob-4Z-v6Y">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ob-4Z-v6Y">
                                                     <rect key="frame" x="160.5" y="148" width="219" height="30"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Open Website">
                                                         <accessibilityTraits key="traits" button="YES" link="YES"/>
                                                     </accessibility>
@@ -1098,7 +1076,6 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="wYb-aV-iVa" secondAttribute="centerX" id="Iwn-jn-srb"/>
                                                 <constraint firstAttribute="bottom" secondItem="3ob-4Z-v6Y" secondAttribute="bottom" constant="10" id="QqX-CJ-baE"/>
@@ -1107,7 +1084,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                 <constraint firstItem="3ob-4Z-v6Y" firstAttribute="top" secondItem="wYb-aV-iVa" secondAttribute="bottom" constant="20" id="znR-iX-gEA"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1122,7 +1099,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Se1-dl-9Dl">
                                                     <rect key="frame" x="155" y="10" width="230" height="30"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <accessibility key="accessibilityConfiguration" hint="Open Website">
                                                         <accessibilityTraits key="traits" button="YES" link="YES"/>
                                                     </accessibility>
@@ -1144,7 +1121,6 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="Se1-dl-9Dl" firstAttribute="centerY" secondItem="OPq-PI-Uu1" secondAttribute="centerY" placeholder="YES" id="YoD-tb-7hg" userLabel="Placeholder Center Y"/>
                                                 <constraint firstAttribute="bottom" secondItem="Se1-dl-9Dl" secondAttribute="bottom" constant="10" id="gE5-py-sbh"/>
@@ -1152,7 +1128,7 @@ If you have navigated far away from your marked parking spot, you can press the 
                                                 <constraint firstItem="Se1-dl-9Dl" firstAttribute="top" secondItem="OPq-PI-Uu1" secondAttribute="top" constant="10" id="rVQ-0N-0Ej"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.34999999403953552" green="0.34999999403953552" blue="0.34999999403953552" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1175,6 +1151,6 @@ If you have navigated far away from your marked parking spot, you can press the 
         <image name="Location" width="20" height="20"/>
         <image name="Search" width="15" height="15"/>
         <image name="Settings" width="16" height="16"/>
-        <image name="sdot-logo-transparent" width="286" height="108"/>
+        <image name="sdot-logo-transparent" width="286.5" height="108"/>
     </resources>
 </document>

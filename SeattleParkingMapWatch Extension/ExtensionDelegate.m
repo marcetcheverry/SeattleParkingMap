@@ -8,7 +8,7 @@
 
 #import "ExtensionDelegate.h"
 
-#import "ParkingSpot+Watch.h"
+#import "ParkingSpot.h"
 #import "ParkingTimeLimit.h"
 
 #import "ParkInterfaceController.h"
@@ -40,21 +40,6 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
 
     // Perform any final initialization of your application.
     [self establishSession];
-    
-    [self addObserver:self
-           forKeyPath:@"currentSpot"
-              options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-              context:ExtensionDelegateContext];
-    
-    [self addObserver:self
-           forKeyPath:@"currentSpot.timeLimit"
-              options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-              context:ExtensionDelegateContext];
-
-    [self addObserver:self
-           forKeyPath:@"currentSpot.address"
-              options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld)
-              context:ExtensionDelegateContext];
 
     [self addObserver:self
            forKeyPath:@"currentSpotLoaded"
@@ -80,18 +65,6 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
     
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, etc.
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
-{
-    if ([notification.request.content.categoryIdentifier isEqualToString:SPMNotificationCategoryTimeLimit])
-    {
-        [self updateComplications];
-    }
-
-    completionHandler(UNNotificationPresentationOptionAlert);
 }
 
 #pragma mark - Session
@@ -149,30 +122,6 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
     }
 }
 
-#pragma mark - Complications
-
-- (void)updateComplication:(CLKComplicationFamily)complicationFamily
-{
-    CLKComplicationServer *server = [CLKComplicationServer sharedInstance];
-    for (CLKComplication *complication in server.activeComplications)
-    {
-        if (complication.family == complicationFamily)
-        {
-            [server reloadTimelineForComplication:complication];
-        }
-    }
-}
-
-- (void)updateComplications
-{
-    CLKComplicationServer *server = [CLKComplicationServer sharedInstance];
-    SPMLog(@"Updating complications %@", server.activeComplications);
-    for (CLKComplication *complication in server.activeComplications)
-    {
-        [server reloadTimelineForComplication:complication];
-    }
-}
-
 #pragma mark - Time Limit
 
 - (void)setUserDefinedParkingTimeLimit:(NSNumber *)userDefinedParkingTimeLimit
@@ -209,34 +158,7 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
 {
     if (context == ExtensionDelegateContext)
     {
-        if ([keyPath isEqualToString:@"currentSpot.timeLimit"] ||
-            [keyPath isEqualToString:@"currentSpot.address"] ||
-            [keyPath isEqualToString:@"currentSpot"])
-        {
-            if (![change[NSKeyValueChangeOldKey] isEqual:change[NSKeyValueChangeNewKey]])
-            {
-                NSDate *nextUpdateDate = _currentSpot.nextComplicationUpdateDate;
-                if (nextUpdateDate)
-                {
-                    [WKExtension.sharedExtension scheduleBackgroundRefreshWithPreferredDate:_currentSpot.nextComplicationUpdateDate
-                                                                                   userInfo:@{SPMWatchNeedsComplicationUpdate: @YES}
-                                                                        scheduledCompletion:^(NSError * _Nullable error) {
-                                                                            if (error)
-                                                                            {
-                                                                                NSLog(@"Could not complete background refresh: %@", error);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                SPMLog(@"Completed complication refresh background task");
-                                                                            }
-                                                                        }];
-                }
-
-                SPMLog(@"Will update complications driven by KVO: %@", keyPath);
-                [self updateComplications];
-            }
-        }
-        else if ([keyPath isEqualToString:@"currentSpotLoaded"])
+        if ([keyPath isEqualToString:@"currentSpotLoaded"])
         {
             SPMLog(@"Current spot loaded: %@", @(self.currentSpotLoaded));
         }
@@ -325,12 +247,6 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
     
     SPMLog(@"Watch didReceiveUserInfo: %@", userInfo);
     [self session:session didReceiveMessage:userInfo];
-
-    if (((NSNumber *)userInfo[SPMWatchNeedsComplicationUpdate]).boolValue)
-    {
-        SPMLog(@"Updating complications in handleBackgroundTasks:");
-        [self updateComplications];
-    }
 }
 
 - (void)session:(WCSession *)session didReceiveMessage:(NSDictionary<NSString *, id> *)message
@@ -434,26 +350,6 @@ extern NSString * _Nonnull const SPMWatchObjectParkingAddress;
     else if ([userInfo[SPMWatchAction] isEqualToString:SPMWatchActionSetParkingSpot])
     {
         [controller parkWithNoTimeLimit];
-    }
-}
-
-#pragma mark - Background Tasks
-
-- (void)handleBackgroundTasks:(NSSet <WKRefreshBackgroundTask *> *)backgroundTasks
-{
-    for (WKRefreshBackgroundTask *task in backgroundTasks)
-    {
-        if ([((NSObject *)task.userInfo) isKindOfClass:[NSDictionary class]])
-        {
-            NSDictionary *userInfo = (NSDictionary *)task.userInfo;
-            if (((NSNumber *)userInfo[SPMWatchNeedsComplicationUpdate]).boolValue)
-            {
-                SPMLog(@"Updating complications in handleBackgroundTasks:");
-                [self updateComplications];
-            }
-        }
-        
-        [task setTaskCompletedWithSnapshot:YES];
     }
 }
 

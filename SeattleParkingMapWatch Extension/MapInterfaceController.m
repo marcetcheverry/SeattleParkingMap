@@ -85,11 +85,19 @@ static void *MapInterfaceControllerContext = &MapInterfaceControllerContext;
 - (void)didAppear
 {
     [super didAppear];
-    
-    [self updateUserActivity:SPMWatchHandoffActivityCurrentScreen
-                    userInfo:@{SPMWatchHandoffUserInfoKeyCurrentScreen : NSStringFromClass(self.class)}
-                  webpageURL:nil];
-    
+
+    if (@available(watchOS 5, *))
+    {
+        NSUserActivity *userActivity = [[NSUserActivity alloc] initWithActivityType:SPMWatchHandoffActivityCurrentScreen];
+        userActivity.userInfo = @{SPMWatchHandoffUserInfoKeyCurrentScreen : NSStringFromClass(self.class)};
+        [self updateUserActivity:userActivity];
+    }
+    else
+    {
+        [self updateUserActivity:SPMWatchHandoffActivityCurrentScreen
+                        userInfo:@{SPMWatchHandoffUserInfoKeyCurrentScreen : NSStringFromClass(self.class)}
+                      webpageURL:nil];
+    }
     
     [self updateParkingTimeLimit];
     

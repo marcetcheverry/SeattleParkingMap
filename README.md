@@ -7,8 +7,7 @@
 
  ## Build Instructions
 
- 1. You must install the [ArcGIS SDK](https://developers.arcgis.com/ios/ "ArcGIS SDK") version 100.2.1 on your Mac before building
- 2. Edit ConstantsExternal.h to provide the necessary API keys for ArcGIS and Bing Maps
+1. Edit ConstantsExternal.h to provide the necessary API keys for ArcGIS and Bing Maps
 
  ### Considerations
  * API keys for services & original design assets are stripped in the open source mirror

@@ -17,6 +17,7 @@
 #import "LegendDataSource.h"
 #import "Legend.h"
 #import "LegendTableViewCell.h"
+#import "LegendTableViewHeaderFooterView.h"
 #import "NeighborhoodDataSource.h"
 #import "Neighborhood.h"
 
@@ -137,6 +138,8 @@ static void *ARCGISContext = &ARCGISContext;
 
 - (void)viewDidLoad
 {
+    [self.legendTableView registerClass:[LegendTableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:@"LegendTableViewHeaderFooterView"];
+
     [super viewDidLoad];
     
     [self removeAGSLogoView];
@@ -428,21 +431,23 @@ static void *ARCGISContext = &ARCGISContext;
 
 - (void)userDefaultsChanged:(NSNotification *)notification
 {
-    // So the spatial reference gets recalculated for the viewpoint changed handler
-    SPMMapProvider newMapProvider = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapProvider];
-    if (self.currentMapProvider != newMapProvider)
-    {
-        self.cachedHoodEnvelope = nil;
-    }
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        [self refreshMapSettingsIfNeeded];
-    }
-    else
-    {
-        self.needsMapRefreshOnAppearance = YES;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // So the spatial reference gets recalculated for the viewpoint changed handler
+        SPMMapProvider newMapProvider = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapProvider];
+        if (self.currentMapProvider != newMapProvider)
+        {
+            self.cachedHoodEnvelope = nil;
+        }
+        
+        if (self.viewIfLoaded.window != nil)
+        {
+            [self refreshMapSettingsIfNeeded];
+        }
+        else
+        {
+            self.needsMapRefreshOnAppearance = YES;
+        }
+    });
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -933,32 +938,36 @@ static void *ARCGISContext = &ARCGISContext;
 
     [self animateArcGISWithPrecondition:nil
                              animations:^(dispatch_block_t  _Nonnull animationsCompleted) {
-                                 self.requestedAutoPanModeChange = YES;
-                                 [self.mapView setViewpointRotation:0
-                                                         completion:^(BOOL isFinished) {
-                                                             self.requestedAutoPanModeChange = NO;
-                                                             [self.mapView setViewpointGeometry:self.cachedHoodEnvelope
-                                                                                     completion:^(BOOL finished) {
-                                                                                         self.mapView.viewpointChangedHandler = ^{
-                                                                                             if (self.neighborhoodDataSource.selectedNeighborhood)
-                                                                                             {
-                                                                                                 NSAssert(self.cachedHoodEnvelope != nil, @"We must have a cached hood envelope");
-                                                                                                 if (![AGSGeometryEngine geometry:self.mapView.visibleArea containsGeometry:self.cachedHoodEnvelope])
-                                                                                                 {
-                                                                                                     self.neighborhoodDataSource.selectedNeighborhood = nil;
-                                                                                                     self.cachedHoodEnvelope = nil;
-                                                                                                     [self updateNeighborhoodsButtonAnimated:YES
-                                                                                                                                  completion:nil];
-                                                                                                     self.mapView.viewpointChangedHandler = nil;
-                                                                                                 }
-                                                                                             }
-                                                                                         };
+        self.requestedAutoPanModeChange = YES;
+        [self.mapView setViewpointRotation:0
+                                completion:^(BOOL isFinished) {
+            self.requestedAutoPanModeChange = NO;
+            [self.mapView setViewpointGeometry:self.cachedHoodEnvelope
+                                    completion:^(BOOL finished) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.mapView.viewpointChangedHandler = ^{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (self.neighborhoodDataSource.selectedNeighborhood)
+                            {
+                                NSAssert(self.cachedHoodEnvelope != nil, @"We must have a cached hood envelope");
+                                if (![AGSGeometryEngine geometry:self.mapView.visibleArea containsGeometry:self.cachedHoodEnvelope])
+                                {
+                                    self.neighborhoodDataSource.selectedNeighborhood = nil;
+                                    self.cachedHoodEnvelope = nil;
+                                    [self updateNeighborhoodsButtonAnimated:YES
+                                                                 completion:nil];
+                                    self.mapView.viewpointChangedHandler = nil;
+                                }
+                            }
+                        });
+                    };
 
-                                                                                         animationsCompleted();
-                                                                                     }];
-                                                         }];
+                    animationsCompleted();
+                });
+            }];
+        }];
 
-                             }
+    }
                              completion:completion];
 }
 
@@ -1060,7 +1069,9 @@ static void *ARCGISContext = &ARCGISContext;
         //                         CGRect bounds = self.legendContainerView.bounds;
         //                         bounds.size.height = self.legendsContainerHeightConstraint.constant;
         //                         self.legendContainerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:self.legendContainerView.layer.cornerRadius].CGPath;
-        [self.view layoutIfNeeded];
+        if (self.viewIfLoaded.window != nil) {
+            [self.view layoutIfNeeded];
+        }
     }
     else
     {
@@ -1087,6 +1098,10 @@ static void *ARCGISContext = &ARCGISContext;
 
 - (IBAction)parkingTouched:(id)sender
 {
+    if ([self presentLocationDeniedAlertIfNeeded]) {
+        return;
+    }
+
     if (self.parkingSpotGraphicsLayer.graphics.count)
     {
         if ([ParkingManager sharedManager].currentSpot)
@@ -1121,8 +1136,32 @@ static void *ARCGISContext = &ARCGISContext;
     self.legendSlider.alpha = adjustedValue;
 }
 
+- (BOOL)presentLocationDeniedAlertIfNeeded {
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    if (authorizationStatus == kCLAuthorizationStatusRestricted ||
+        authorizationStatus == kCLAuthorizationStatusDenied) {
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Location Services Disabled", nil)
+                                                                            message:NSLocalizedString(@"Your current location is not available. Please go to Settings and enable access.", nil)
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        [controller addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:nil]];
+
+        [self SPMPresentAlertController:controller
+                               animated:YES
+                             completion:nil];
+        return YES;
+    }
+
+    return NO;
+}
+
 - (IBAction)touchedLocationButton:(UIButton *)sender
 {
+    if ([self presentLocationDeniedAlertIfNeeded]) {
+        return;
+    }
+
     [self centerOnCurrentLocationWithCompletion:nil];
 }
 
@@ -1814,7 +1853,6 @@ static void *ARCGISContext = &ARCGISContext;
             
             NSDictionary *message = @{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                       SPMWatchResponseStatus: SPMWatchResponseSuccess,
-                                      SPMWatchNeedsComplicationUpdate: @YES,
                                       SPMWatchObjectParkingSpot: watchSpot};
             [WCSession.defaultSession SPMSendMessage:message];
         }
@@ -1929,7 +1967,6 @@ static void *ARCGISContext = &ARCGISContext;
         [ParkingManager sharedManager].currentSpot = nil;
         
         NSDictionary *message = @{SPMWatchAction: SPMWatchActionRemoveParkingSpot,
-                                  SPMWatchNeedsComplicationUpdate: @YES,
                                   SPMWatchResponseStatus: SPMWatchResponseSuccess};
         [WCSession.defaultSession SPMSendMessage:message];
     }
@@ -2085,7 +2122,6 @@ static void *ARCGISContext = &ARCGISContext;
         
         [WCSession.defaultSession SPMSendMessage:@{SPMWatchAction: SPMWatchActionSetParkingTimeLimit,
                                                    SPMWatchResponseStatus: SPMWatchResponseSuccess,
-                                                   SPMWatchNeedsComplicationUpdate: @YES,
                                                    SPMWatchObjectParkingTimeLimit: [timeLimit watchConnectivityDictionaryRepresentation]}];
     };
     
@@ -2495,15 +2531,15 @@ static void *ARCGISContext = &ARCGISContext;
                                    temporarily:YES];
                      }];
     
-    NSArray *topLevelObjects = [[UINib nibWithNibName:@"CalloutView" bundle:nil] instantiateWithOwner:nil
-                                                                                              options:nil];
+    NSArray *topLevelObjects = [[UINib nibWithNibName:@"ParkingSpotCalloutView" bundle:nil] instantiateWithOwner:nil
+                                                                                                         options:nil];
     
     NSAssert([topLevelObjects count] > 0, @"Can not load nib");
     
     if ([topLevelObjects count])
     {
         ParkingSpotCalloutView *calloutView = [topLevelObjects firstObject];
-        
+
         NSDate *parkDate = [ParkingManager sharedManager].currentSpot.date;
         NSAssert(parkDate != nil, @"We must have a park date");
         
@@ -2529,7 +2565,6 @@ static void *ARCGISContext = &ARCGISContext;
                     self.timeLimitAlertController = nil;
                     
                     NSDictionary *message = @{SPMWatchAction: SPMWatchActionRemoveParkingTimeLimit,
-                                              SPMWatchNeedsComplicationUpdate: @YES,
                                               SPMWatchResponseStatus: SPMWatchResponseSuccess};
                     [WCSession.defaultSession SPMSendMessage:message];
                 };
@@ -2641,6 +2676,11 @@ static void *ARCGISContext = &ARCGISContext;
         callout.margin = CGSizeZero;
         callout.cornerRadius = 5;
         callout.color = [UIColor colorWithWhite:0 alpha:.8];
+        calloutView.clipsToBounds = YES;
+        calloutView.layer.cornerRadius = 5;
+
+        // For a bug https://community.esri.com/thread/243652-how-to-resize-callout
+        callout.autoAdjustWidth = NO;
         callout.customView = calloutView;
     }
     
@@ -2713,7 +2753,6 @@ static void *ARCGISContext = &ARCGISContext;
     if (source != SPMParkingSpotActionSourceWatch)
     {
         NSDictionary *message = @{SPMWatchAction: SPMWatchActionRemoveParkingSpot,
-                                  SPMWatchNeedsComplicationUpdate: @YES,
                                   SPMWatchResponseStatus: SPMWatchResponseSuccess};
         [WCSession.defaultSession SPMSendMessage:message];
     }
@@ -3027,14 +3066,13 @@ static void *ARCGISContext = &ARCGISContext;
     return tableView.sectionHeaderHeight;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView == self.legendTableView)
     {
-        UITableViewHeaderFooterView *headerView = (UITableViewHeaderFooterView *)view;
-        headerView.backgroundView.opaque = NO;
-        headerView.backgroundView.backgroundColor = [UIColor clearColor];
+        return [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"LegendTableViewHeaderFooterView"];
     }
+
+    return nil;
 }
 
 - (void)reloadLegendsAndUpdateButton

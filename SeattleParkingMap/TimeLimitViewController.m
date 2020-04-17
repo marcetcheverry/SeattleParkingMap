@@ -26,8 +26,6 @@
 {
     [super viewDidLoad];
 
-    [self.datePicker setValue:UIColor.whiteColor forKey:@"textColor"];
-
     self.datePicker.minuteInterval = SPMDefaultsParkingTimeLimitMinuteInterval;
 
     self.labelRemindMe.font = [UIFont monospacedDigitSystemFontOfSize:self.labelRemindMe.font.pointSize

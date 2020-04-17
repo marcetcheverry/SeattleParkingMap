@@ -23,23 +23,12 @@
 		494631AF1C2E5028003B4A91 /* UIImage+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631AE1C2E5028003B4A91 /* UIImage+SPM.m */; };
 		495AE45C205F7728005B3FE0 /* Expiring.caf in Resources */ = {isa = PBXBuildFile; fileRef = 495AE45A205F7728005B3FE0 /* Expiring.caf */; };
 		495AE45D205F7728005B3FE0 /* Expired.caf in Resources */ = {isa = PBXBuildFile; fileRef = 495AE45B205F7728005B3FE0 /* Expired.caf */; };
-		49618CE7206A0745000A59E6 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49618CE6206A0745000A59E6 /* SnapshotHelper.swift */; };
-		49618CEA206A0816000A59E6 /* SnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 49618CE9206A0816000A59E6 /* SnapshotTests.m */; };
-		49618CEB206A08DC000A59E6 /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 49774CB2205C924B00E23341 /* ArcGIS.bundle */; };
-		49618CEC206A097F000A59E6 /* ParkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F001C28ED760080C5DB /* ParkingManager.m */; };
-		49618CED206A0984000A59E6 /* ParkingSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F031C28FF6D0080C5DB /* ParkingSpot.m */; };
-		49618CEE206A098E000A59E6 /* ParkingTimeLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */; };
-		49618CEF206A0DCE000A59E6 /* NSDate+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */; };
-		49618CF0206A0FFA000A59E6 /* WCSession+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49DF3DAD205DF0230052064D /* WCSession+SPM.m */; };
-		49618CF1206A1005000A59E6 /* UIImage+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 494631AE1C2E5028003B4A91 /* UIImage+SPM.m */; };
 		496646362063B778005AB972 /* NeighborhoodsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 496646352063B778005AB972 /* NeighborhoodsViewController.m */; };
 		496646392063BA07005AB972 /* NeighborhoodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 496646372063BA06005AB972 /* NeighborhoodTableViewCell.m */; };
 		4966463C2063BAAB005AB972 /* Neighborhood.m in Sources */ = {isa = PBXBuildFile; fileRef = 4966463B2063BAAB005AB972 /* Neighborhood.m */; };
-		49774CB3205C924B00E23341 /* ArcGIS.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 49774CB2205C924B00E23341 /* ArcGIS.bundle */; };
 		49774CB7205CA1A100E23341 /* Analytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 49774CB6205CA1A100E23341 /* Analytics.m */; };
 		4981FD371C41654B008A7F3C /* SeattleParkingMapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4981FD361C41654B008A7F3C /* SeattleParkingMapTests.m */; };
-		4981FD461C420234008A7F3C /* SeattleParkingMapUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */; };
-		498F20961C267D7A001DD2BA /* CalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 498F20951C267D7A001DD2BA /* CalloutView.xib */; };
+		498F20961C267D7A001DD2BA /* ParkingSpotCalloutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 498F20951C267D7A001DD2BA /* ParkingSpotCalloutView.xib */; };
 		498F20991C2680D9001DD2BA /* ParkingSpotCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = 498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */; };
 		498F209C1C2692CA001DD2BA /* TimeLimitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 498F209B1C2692CA001DD2BA /* TimeLimitViewController.m */; };
 		499096871BF9254F004EDCC3 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 499096851BF9254F004EDCC3 /* Interface.storyboard */; };
@@ -50,9 +39,8 @@
 		499096A51BF9254F004EDCC3 /* SeattleParkingMapWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */; };
 		499A2F041C1FC1BE00F5AEE4 /* BaseInterfaceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */; };
 		499B46C220787C63009420F9 /* UIColor+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD85F31C31081B002040B7 /* UIColor+SPM.m */; };
+		49A752B123A5E839004DA326 /* LegendTableViewHeaderFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A752B023A5E839004DA326 /* LegendTableViewHeaderFooterView.m */; };
 		49AD85F41C31081B002040B7 /* UIColor+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD85F31C31081B002040B7 /* UIColor+SPM.m */; };
-		49AD864C1C311D41002040B7 /* ComplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49AD864B1C311D41002040B7 /* ComplicationController.m */; };
-		49AD864E1C31326E002040B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49AD864D1C31326E002040B7 /* Assets.xcassets */; };
 		49B96F011C28ED760080C5DB /* ParkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F001C28ED760080C5DB /* ParkingManager.m */; };
 		49B96F041C28FF6D0080C5DB /* ParkingSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F031C28FF6D0080C5DB /* ParkingSpot.m */; };
 		49B96F071C28FF790080C5DB /* ParkingTimeLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B96F061C28FF790080C5DB /* ParkingTimeLimit.m */; };
@@ -60,7 +48,6 @@
 		49C23FF91984B12F00898148 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F78E8821941288B006B8217 /* Main.storyboard */; };
 		49CFE13D1C3C060000D29A89 /* NSDate+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */; };
 		49CFE13E1C3C060A00D29A89 /* NSDate+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */; };
-		49DF3DAB205DE6CB0052064D /* ParkingSpot+Watch.m in Sources */ = {isa = PBXBuildFile; fileRef = 49DF3DAA205DE6CB0052064D /* ParkingSpot+Watch.m */; };
 		49DF3DAE205DF0230052064D /* WCSession+SPM.m in Sources */ = {isa = PBXBuildFile; fileRef = 49DF3DAD205DF0230052064D /* WCSession+SPM.m */; };
 		49ED7EFE1C3774BA0063A82A /* ParkingTimeLimit+Watch.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ED7EFD1C3774BA0063A82A /* ParkingTimeLimit+Watch.m */; };
 		49F9E86D1C5DDD04003EDA16 /* FAQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F9E86C1C5DDD04003EDA16 /* FAQTableViewController.m */; };
@@ -70,17 +57,12 @@
 		8F78E8811941288B006B8217 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8801941288B006B8217 /* AppDelegate.m */; };
 		8F78E88C1941288B006B8217 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F78E88B1941288B006B8217 /* Assets.xcassets */; };
 		8F78E8AA19412AC9006B8217 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F78E8891941288B006B8217 /* RootViewController.m */; };
+		A5E71D6B5466F2944651E2F6 /* Pods_SeattleParkingMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9F1B0C04DD317A174CCB7AC /* Pods_SeattleParkingMap.framework */; };
+		F77C94824475DFDB011F51BF /* Pods_SeattleParkingMapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36FE05D073AF5185E6073B1F /* Pods_SeattleParkingMapTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		4981FD391C41654B008A7F3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F78E8651941288A006B8217 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8F78E86C1941288B006B8217;
-			remoteInfo = SeattleParkingMap;
-		};
-		4981FD481C420234008A7F3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8F78E8651941288A006B8217 /* Project object */;
 			proxyType = 1;
@@ -129,6 +111,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00D657A9271BAD9DBC9553D0 /* Pods_SeattleParkingMapUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SeattleParkingMapUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		106F3DA6401A86B4CCB7A950 /* Pods-SeattleParkingMapUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMapUITests.release.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMapUITests/Pods-SeattleParkingMapUITests.release.xcconfig"; sourceTree = "<group>"; };
+		2BBEFCE835E1D79052E15E77 /* Pods-SeattleParkingMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMap.debug.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMap/Pods-SeattleParkingMap.debug.xcconfig"; sourceTree = "<group>"; };
+		36FE05D073AF5185E6073B1F /* Pods_SeattleParkingMapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SeattleParkingMapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C5B7298F35D5107DCD0BAC1 /* Pods-SeattleParkingMapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMapTests.release.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMapTests/Pods-SeattleParkingMapTests.release.xcconfig"; sourceTree = "<group>"; };
 		490F0D381C13F9590086504A /* MapInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapInterfaceController.h; sourceTree = "<group>"; };
 		490F0D391C13F9590086504A /* MapInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapInterfaceController.m; sourceTree = "<group>"; };
 		49134FBE194C66EF00250042 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
@@ -159,28 +146,19 @@
 		494A2E03198237A400ADAC90 /* Outside Seattle Area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Outside Seattle Area.gpx"; sourceTree = "<group>"; };
 		495AE45A205F7728005B3FE0 /* Expiring.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Expiring.caf; sourceTree = "<group>"; };
 		495AE45B205F7728005B3FE0 /* Expired.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Expired.caf; sourceTree = "<group>"; };
-		49618CE5206A0744000A59E6 /* SeattleParkingMapUITests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SeattleParkingMapUITests-Bridging-Header.h"; sourceTree = "<group>"; };
-		49618CE6206A0745000A59E6 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
-		49618CE8206A0816000A59E6 /* SnapshotTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SnapshotTests.h; sourceTree = "<group>"; };
-		49618CE9206A0816000A59E6 /* SnapshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SnapshotTests.m; sourceTree = "<group>"; };
 		496646342063B778005AB972 /* NeighborhoodsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeighborhoodsViewController.h; sourceTree = "<group>"; };
 		496646352063B778005AB972 /* NeighborhoodsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NeighborhoodsViewController.m; sourceTree = "<group>"; };
 		496646372063BA06005AB972 /* NeighborhoodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NeighborhoodTableViewCell.m; sourceTree = "<group>"; };
 		496646382063BA06005AB972 /* NeighborhoodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NeighborhoodTableViewCell.h; sourceTree = "<group>"; };
 		4966463A2063BAAB005AB972 /* Neighborhood.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Neighborhood.h; sourceTree = "<group>"; };
 		4966463B2063BAAB005AB972 /* Neighborhood.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Neighborhood.m; sourceTree = "<group>"; };
-		49774CB2205C924B00E23341 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = ../../../../../../../SDKs/ArcGIS/iOS/Frameworks/Static/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		49774CB4205C997F00E23341 /* ArcGIS.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = ArcGIS.bundle; path = ../../../../Library/SDKs/ArcGIS/iOS/Frameworks/Static/ArcGIS.framework/Versions/Current/Resources/ArcGIS.bundle; sourceTree = "<group>"; };
 		49774CB5205CA1A100E23341 /* Analytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Analytics.h; sourceTree = "<group>"; };
 		49774CB6205CA1A100E23341 /* Analytics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Analytics.m; sourceTree = "<group>"; };
 		4981FD2F1C40BD9F008A7F3C /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeattleParkingMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4981FD361C41654B008A7F3C /* SeattleParkingMapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeattleParkingMapTests.m; sourceTree = "<group>"; };
 		4981FD381C41654B008A7F3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeattleParkingMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SeattleParkingMapUITests.m; sourceTree = "<group>"; };
-		4981FD471C420234008A7F3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		498F20951C267D7A001DD2BA /* CalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalloutView.xib; sourceTree = "<group>"; };
+		498F20951C267D7A001DD2BA /* ParkingSpotCalloutView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParkingSpotCalloutView.xib; sourceTree = "<group>"; };
 		498F20971C2680D9001DD2BA /* ParkingSpotCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingSpotCalloutView.h; sourceTree = "<group>"; };
 		498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingSpotCalloutView.m; sourceTree = "<group>"; };
 		498F209A1C2692CA001DD2BA /* TimeLimitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLimitViewController.h; sourceTree = "<group>"; };
@@ -197,12 +175,12 @@
 		499096A21BF9254F004EDCC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		499A2F021C1FC1B400F5AEE4 /* BaseInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseInterfaceController.h; sourceTree = "<group>"; };
 		499A2F031C1FC1BE00F5AEE4 /* BaseInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseInterfaceController.m; sourceTree = "<group>"; };
+		49A752AF23A5E839004DA326 /* LegendTableViewHeaderFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegendTableViewHeaderFooterView.h; sourceTree = "<group>"; };
+		49A752B023A5E839004DA326 /* LegendTableViewHeaderFooterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LegendTableViewHeaderFooterView.m; sourceTree = "<group>"; };
+		49A752B323A5ECDE004DA326 /* ArcGIS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ArcGIS.framework; path = ../../../../Library/SDKs/ArcGIS/iOS/Frameworks/Dynamic/ArcGIS.framework; sourceTree = "<group>"; };
 		49A9CE1D1986F6B300BB1196 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		49AD85F21C31081B002040B7 /* UIColor+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+SPM.h"; sourceTree = "<group>"; };
 		49AD85F31C31081B002040B7 /* UIColor+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SPM.m"; sourceTree = "<group>"; };
-		49AD864A1C311D41002040B7 /* ComplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComplicationController.h; sourceTree = "<group>"; };
-		49AD864B1C311D41002040B7 /* ComplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComplicationController.m; sourceTree = "<group>"; };
-		49AD864D1C31326E002040B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49B96EFF1C28ED760080C5DB /* ParkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingManager.h; sourceTree = "<group>"; };
 		49B96F001C28ED760080C5DB /* ParkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingManager.m; sourceTree = "<group>"; };
 		49B96F021C28FF6D0080C5DB /* ParkingSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingSpot.h; sourceTree = "<group>"; };
@@ -215,8 +193,6 @@
 		49C23FF019847DE100898148 /* Inside Seattle Screenshot Parking.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Inside Seattle Screenshot Parking.gpx"; sourceTree = "<group>"; };
 		49CFE13B1C3C060000D29A89 /* NSDate+SPM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+SPM.h"; sourceTree = "<group>"; };
 		49CFE13C1C3C060000D29A89 /* NSDate+SPM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+SPM.m"; sourceTree = "<group>"; };
-		49DF3DA9205DE6CA0052064D /* ParkingSpot+Watch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParkingSpot+Watch.h"; sourceTree = "<group>"; };
-		49DF3DAA205DE6CB0052064D /* ParkingSpot+Watch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ParkingSpot+Watch.m"; sourceTree = "<group>"; };
 		49DF3DAC205DF0230052064D /* WCSession+SPM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WCSession+SPM.h"; sourceTree = "<group>"; };
 		49DF3DAD205DF0230052064D /* WCSession+SPM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WCSession+SPM.m"; sourceTree = "<group>"; };
 		49EC94DC1C2C0FD300CDEF51 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -228,6 +204,8 @@
 		49F9E8711C5DDDAB003EDA16 /* AcknowledgementsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AcknowledgementsTableViewController.m; sourceTree = "<group>"; };
 		49F9E8731C5DDDFE003EDA16 /* BaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
 		49F9E8741C5DDDFE003EDA16 /* BaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewController.m; sourceTree = "<group>"; };
+		4ED30B11602EA7CF26C8396C /* Pods-SeattleParkingMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMap.release.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMap/Pods-SeattleParkingMap.release.xcconfig"; sourceTree = "<group>"; };
+		6F25C06D59074468E148E2FA /* Pods-SeattleParkingMapUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMapUITests.debug.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMapUITests/Pods-SeattleParkingMapUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		8F78E86D1941288B006B8217 /* SeattleParkingMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeattleParkingMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F78E8781941288B006B8217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F78E87C1941288B006B8217 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -239,6 +217,8 @@
 		8F78E8891941288B006B8217 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		8F78E88B1941288B006B8217 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F78E8AD194133F0006B8217 /* Inside Seattle Area.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Inside Seattle Area.gpx"; sourceTree = "<group>"; };
+		C96BC6FF3AD5202822EE085E /* Pods-SeattleParkingMapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SeattleParkingMapTests.debug.xcconfig"; path = "Target Support Files/Pods-SeattleParkingMapTests/Pods-SeattleParkingMapTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F9F1B0C04DD317A174CCB7AC /* Pods_SeattleParkingMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SeattleParkingMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,13 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4981FD401C420234008A7F3C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				F77C94824475DFDB011F51BF /* Pods_SeattleParkingMapTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,10 +237,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6E2D9B38B8F6B66A03FEE9CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8F78E86A1941288B006B8217 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5E71D6B5466F2944651E2F6 /* Pods_SeattleParkingMap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,19 +282,6 @@
 			path = SeattleParkingMapTests;
 			sourceTree = "<group>";
 		};
-		4981FD441C420234008A7F3C /* SeattleParkingMapUITests */ = {
-			isa = PBXGroup;
-			children = (
-				49618CE6206A0745000A59E6 /* SnapshotHelper.swift */,
-				4981FD451C420234008A7F3C /* SeattleParkingMapUITests.m */,
-				49618CE8206A0816000A59E6 /* SnapshotTests.h */,
-				49618CE9206A0816000A59E6 /* SnapshotTests.m */,
-				4981FD471C420234008A7F3C /* Info.plist */,
-				49618CE5206A0744000A59E6 /* SeattleParkingMapUITests-Bridging-Header.h */,
-			);
-			path = SeattleParkingMapUITests;
-			sourceTree = "<group>";
-		};
 		499096841BF9254F004EDCC3 /* SeattleParkingMapWatch */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,12 +305,8 @@
 				490F0D391C13F9590086504A /* MapInterfaceController.m */,
 				493DFFB31C2F6DBC00ACEA45 /* TimeLimitInterfaceController.h */,
 				493DFFB41C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m */,
-				49AD864A1C311D41002040B7 /* ComplicationController.h */,
-				49AD864B1C311D41002040B7 /* ComplicationController.m */,
 				493984C51C30F212009C38F0 /* WatchConnectivityOperation.h */,
 				493984C61C30F212009C38F0 /* WatchConnectivityOperation.m */,
-				49DF3DA9205DE6CA0052064D /* ParkingSpot+Watch.h */,
-				49DF3DAA205DE6CB0052064D /* ParkingSpot+Watch.m */,
 				49ED7EFC1C3774BA0063A82A /* ParkingTimeLimit+Watch.h */,
 				49ED7EFD1C3774BA0063A82A /* ParkingTimeLimit+Watch.m */,
 				49AD85F21C31081B002040B7 /* UIColor+SPM.h */,
@@ -350,10 +315,20 @@
 				493AE6901C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m */,
 				493AE6991C211CD400F0AD5C /* WKInterfaceController+SPM.h */,
 				493AE69A1C211CDD00F0AD5C /* WKInterfaceController+SPM.m */,
-				49AD864D1C31326E002040B7 /* Assets.xcassets */,
 				493AE6931C1FF6DF00F0AD5C /* Supporting Files */,
 			);
 			path = "SeattleParkingMapWatch Extension";
+			sourceTree = "<group>";
+		};
+		49A752B223A5ECDE004DA326 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				49A752B323A5ECDE004DA326 /* ArcGIS.framework */,
+				F9F1B0C04DD317A174CCB7AC /* Pods_SeattleParkingMap.framework */,
+				36FE05D073AF5185E6073B1F /* Pods_SeattleParkingMapTests.framework */,
+				00D657A9271BAD9DBC9553D0 /* Pods_SeattleParkingMapUITests.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		49A9CE201986F75C00BB1196 /* Location Simulation */ = {
@@ -416,15 +391,29 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		513753F79193D73486E0E5F2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2BBEFCE835E1D79052E15E77 /* Pods-SeattleParkingMap.debug.xcconfig */,
+				4ED30B11602EA7CF26C8396C /* Pods-SeattleParkingMap.release.xcconfig */,
+				C96BC6FF3AD5202822EE085E /* Pods-SeattleParkingMapTests.debug.xcconfig */,
+				3C5B7298F35D5107DCD0BAC1 /* Pods-SeattleParkingMapTests.release.xcconfig */,
+				6F25C06D59074468E148E2FA /* Pods-SeattleParkingMapUITests.debug.xcconfig */,
+				106F3DA6401A86B4CCB7A950 /* Pods-SeattleParkingMapUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		8F78E8641941288A006B8217 = {
 			isa = PBXGroup;
 			children = (
 				8F78E8761941288B006B8217 /* SeattleParkingMap */,
 				4981FD351C41654B008A7F3C /* SeattleParkingMapTests */,
-				4981FD441C420234008A7F3C /* SeattleParkingMapUITests */,
 				499096841BF9254F004EDCC3 /* SeattleParkingMapWatch */,
 				499096931BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */,
 				8F78E86E1941288B006B8217 /* Products */,
+				49A752B223A5ECDE004DA326 /* Frameworks */,
+				513753F79193D73486E0E5F2 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -435,7 +424,6 @@
 				499096831BF9254F004EDCC3 /* SeattleParkingMapWatch.app */,
 				4990968F1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension.appex */,
 				4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */,
-				4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -443,7 +431,6 @@
 		8F78E8761941288B006B8217 /* SeattleParkingMap */ = {
 			isa = PBXGroup;
 			children = (
-				49774CB2205C924B00E23341 /* ArcGIS.bundle */,
 				49EC94DC1C2C0FD300CDEF51 /* README.md */,
 				494A2DFF19822FBC00ADAC90 /* TODO.md */,
 				49A9CE1D1986F6B300BB1196 /* CHANGELOG.md */,
@@ -464,6 +451,8 @@
 				498F209B1C2692CA001DD2BA /* TimeLimitViewController.m */,
 				498F20971C2680D9001DD2BA /* ParkingSpotCalloutView.h */,
 				498F20981C2680D9001DD2BA /* ParkingSpotCalloutView.m */,
+				49A752AF23A5E839004DA326 /* LegendTableViewHeaderFooterView.h */,
+				49A752B023A5E839004DA326 /* LegendTableViewHeaderFooterView.m */,
 				494631A81C2CF804003B4A91 /* LegendTableViewCell.h */,
 				494631A91C2CF804003B4A91 /* LegendTableViewCell.m */,
 				496646382063BA06005AB972 /* NeighborhoodTableViewCell.h */,
@@ -471,7 +460,7 @@
 				49B96F081C28FF870080C5DB /* Data Model */,
 				49CFE13F1C3C061900D29A89 /* Categories */,
 				8F78E8821941288B006B8217 /* Main.storyboard */,
-				498F20951C267D7A001DD2BA /* CalloutView.xib */,
+				498F20951C267D7A001DD2BA /* ParkingSpotCalloutView.xib */,
 				49C0D7731BF85A48009057F2 /* LaunchScreen.storyboard */,
 				8F78E88B1941288B006B8217 /* Assets.xcassets */,
 				495AE459205F7728005B3FE0 /* Sounds */,
@@ -485,7 +474,6 @@
 			isa = PBXGroup;
 			children = (
 				4924823520634CE400371853 /* Neighborhoods.xml */,
-				49774CB4205C997F00E23341 /* ArcGIS.bundle */,
 				8F78E8781941288B006B8217 /* Info.plist */,
 				8F78E87C1941288B006B8217 /* main.m */,
 				8F78E87E1941288B006B8217 /* Prefix.pch */,
@@ -500,6 +488,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4981FD3B1C41654B008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapTests" */;
 			buildPhases = (
+				8B3ADC15AB454C85D81DCBEC /* [CP] Check Pods Manifest.lock */,
 				4981FD301C41654B008A7F3C /* Sources */,
 				4981FD311C41654B008A7F3C /* Frameworks */,
 				4981FD321C41654B008A7F3C /* Resources */,
@@ -514,30 +503,13 @@
 			productReference = 4981FD341C41654B008A7F3C /* SeattleParkingMapTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		4981FD421C420234008A7F3C /* SeattleParkingMapUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4981FD4A1C420234008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapUITests" */;
-			buildPhases = (
-				4981FD3F1C420234008A7F3C /* Sources */,
-				4981FD401C420234008A7F3C /* Frameworks */,
-				4981FD411C420234008A7F3C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4981FD491C420234008A7F3C /* PBXTargetDependency */,
-			);
-			name = SeattleParkingMapUITests;
-			productName = SeattleParkingMapUITests;
-			productReference = 4981FD431C420234008A7F3C /* SeattleParkingMapUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		499096821BF9254F004EDCC3 /* SeattleParkingMapWatch */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 499096AC1BF9254F004EDCC3 /* Build configuration list for PBXNativeTarget "SeattleParkingMapWatch" */;
 			buildPhases = (
 				499096811BF9254F004EDCC3 /* Resources */,
 				499096AB1BF9254F004EDCC3 /* Embed App Extensions */,
+				6E2D9B38B8F6B66A03FEE9CD /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -570,10 +542,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F78E8A21941288B006B8217 /* Build configuration list for PBXNativeTarget "SeattleParkingMap" */;
 			buildPhases = (
+				93AC426C3AA5E1CFEFB0EAC2 /* [CP] Check Pods Manifest.lock */,
 				8F78E8691941288B006B8217 /* Sources */,
 				8F78E86A1941288B006B8217 /* Frameworks */,
 				8F78E86B1941288B006B8217 /* Resources */,
 				499096AD1BF9254F004EDCC3 /* Embed Watch Content */,
+				5AACC72FF9C4890DAB28C939 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -592,34 +566,24 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = "";
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Tap Light Software";
 				TargetAttributes = {
 					4981FD331C41654B008A7F3C = {
 						CreatedOnToolsVersion = 7.2;
 						TestTargetID = 8F78E86C1941288B006B8217;
 					};
-					4981FD421C420234008A7F3C = {
-						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0920;
-						TestTargetID = 8F78E86C1941288B006B8217;
-					};
 					499096821BF9254F004EDCC3 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = GBLBH9THKY;
 					};
 					4990968E1BF9254F004EDCC3 = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = GBLBH9THKY;
-					};
-					8F78E86C1941288B006B8217 = {
-						DevelopmentTeam = GBLBH9THKY;
 					};
 				};
 			};
 			buildConfigurationList = 8F78E8681941288A006B8217 /* Build configuration list for PBXProject "SeattleParkingMap" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -634,7 +598,6 @@
 				499096821BF9254F004EDCC3 /* SeattleParkingMapWatch */,
 				4990968E1BF9254F004EDCC3 /* SeattleParkingMapWatch Extension */,
 				4981FD331C41654B008A7F3C /* SeattleParkingMapTests */,
-				4981FD421C420234008A7F3C /* SeattleParkingMapUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -644,14 +607,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4981FD411C420234008A7F3C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				49618CEB206A08DC000A59E6 /* ArcGIS.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,7 +623,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49AD864E1C31326E002040B7 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,13 +635,79 @@
 				49C0D7741BF85A48009057F2 /* LaunchScreen.storyboard in Resources */,
 				4924823620634CE500371853 /* Neighborhoods.xml in Resources */,
 				495AE45D205F7728005B3FE0 /* Expired.caf in Resources */,
-				498F20961C267D7A001DD2BA /* CalloutView.xib in Resources */,
+				498F20961C267D7A001DD2BA /* ParkingSpotCalloutView.xib in Resources */,
 				495AE45C205F7728005B3FE0 /* Expiring.caf in Resources */,
-				49774CB3205C924B00E23341 /* ArcGIS.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5AACC72FF9C4890DAB28C939 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SeattleParkingMap/Pods-SeattleParkingMap-frameworks.sh",
+				"${PODS_ROOT}/ArcGIS-Runtime-SDK-iOS/ArcGIS.framework",
+				"${PODS_ROOT}/ArcGIS-Runtime-SDK-iOS/ArcGIS.framework.dSYM",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ArcGIS.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/ArcGIS.framework.dSYM",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SeattleParkingMap/Pods-SeattleParkingMap-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8B3ADC15AB454C85D81DCBEC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SeattleParkingMapTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93AC426C3AA5E1CFEFB0EAC2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SeattleParkingMap-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4981FD301C41654B008A7F3C /* Sources */ = {
@@ -695,22 +715,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4981FD371C41654B008A7F3C /* SeattleParkingMapTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4981FD3F1C420234008A7F3C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				49618CF1206A1005000A59E6 /* UIImage+SPM.m in Sources */,
-				49618CEA206A0816000A59E6 /* SnapshotTests.m in Sources */,
-				49618CEE206A098E000A59E6 /* ParkingTimeLimit.m in Sources */,
-				49618CED206A0984000A59E6 /* ParkingSpot.m in Sources */,
-				49618CF0206A0FFA000A59E6 /* WCSession+SPM.m in Sources */,
-				4981FD461C420234008A7F3C /* SeattleParkingMapUITests.m in Sources */,
-				49618CEF206A0DCE000A59E6 /* NSDate+SPM.m in Sources */,
-				49618CEC206A097F000A59E6 /* ParkingManager.m in Sources */,
-				49618CE7206A0745000A59E6 /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,12 +730,10 @@
 				49AD85F41C31081B002040B7 /* UIColor+SPM.m in Sources */,
 				499A2F041C1FC1BE00F5AEE4 /* BaseInterfaceController.m in Sources */,
 				493AE69B1C211CDD00F0AD5C /* WKInterfaceController+SPM.m in Sources */,
-				49AD864C1C311D41002040B7 /* ComplicationController.m in Sources */,
 				493DFFB51C2F6DBC00ACEA45 /* TimeLimitInterfaceController.m in Sources */,
 				499096961BF9254F004EDCC3 /* ParkInterfaceController.m in Sources */,
 				493AE6911C1FF4B500F0AD5C /* WKInterfaceMap+SPM.m in Sources */,
 				49CFE13E1C3C060A00D29A89 /* NSDate+SPM.m in Sources */,
-				49DF3DAB205DE6CB0052064D /* ParkingSpot+Watch.m in Sources */,
 				493984C71C30F212009C38F0 /* WatchConnectivityOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -747,6 +749,7 @@
 				494631AF1C2E5028003B4A91 /* UIImage+SPM.m in Sources */,
 				8F78E8AA19412AC9006B8217 /* RootViewController.m in Sources */,
 				49134FC0194C66EF00250042 /* SettingsTableViewController.m in Sources */,
+				49A752B123A5E839004DA326 /* LegendTableViewHeaderFooterView.m in Sources */,
 				496646362063B778005AB972 /* NeighborhoodsViewController.m in Sources */,
 				49B96F071C28FF790080C5DB /* ParkingTimeLimit.m in Sources */,
 				494631AA1C2CF804003B4A91 /* LegendTableViewCell.m in Sources */,
@@ -774,11 +777,6 @@
 			isa = PBXTargetDependency;
 			target = 8F78E86C1941288B006B8217 /* SeattleParkingMap */;
 			targetProxy = 4981FD391C41654B008A7F3C /* PBXContainerItemProxy */;
-		};
-		4981FD491C420234008A7F3C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8F78E86C1941288B006B8217 /* SeattleParkingMap */;
-			targetProxy = 4981FD481C420234008A7F3C /* PBXContainerItemProxy */;
 		};
 		499096921BF9254F004EDCC3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -814,6 +812,7 @@
 /* Begin XCBuildConfiguration section */
 		4981FD3C1C41654B008A7F3C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C96BC6FF3AD5202822EE085E /* Pods-SeattleParkingMapTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -829,6 +828,7 @@
 		};
 		4981FD3D1C41654B008A7F3C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C5B7298F35D5107DCD0BAC1 /* Pods-SeattleParkingMapTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -843,68 +843,13 @@
 			};
 			name = Release;
 		};
-		4981FD4B1C420234008A7F3C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = $HOME/Library/SDKs/ArcGIS/iOS/Frameworks/Static;
-				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
-				INFOPLIST_FILE = SeattleParkingMapUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					ArcGIS,
-					"-l",
-					"c++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SeattleParkingMapUITests/SeattleParkingMapUITests-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = SeattleParkingMap;
-				USES_XCTRUNNER = YES;
-			};
-			name = Debug;
-		};
-		4981FD4C1C420234008A7F3C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = $HOME/Library/SDKs/ArcGIS/iOS/Frameworks/Static;
-				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
-				INFOPLIST_FILE = SeattleParkingMapUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					ArcGIS,
-					"-l",
-					"c++",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.taplightsoftware.SeattleParkingMapUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "SeattleParkingMapUITests/SeattleParkingMapUITests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
-				TEST_TARGET_NAME = SeattleParkingMap;
-				USES_XCTRUNNER = YES;
-			};
-			name = Release;
-		};
 		499096A61BF9254F004EDCC3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -926,6 +871,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -944,9 +890,9 @@
 		499096A81BF9254F004EDCC3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -967,9 +913,9 @@
 		499096A91BF9254F004EDCC3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -991,6 +937,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1055,6 +1002,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1102,6 +1050,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WARNING_CFLAGS = "";
@@ -1110,21 +1059,16 @@
 		};
 		8F78E8A31941288B006B8217 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2BBEFCE835E1D79052E15E77 /* Pods-SeattleParkingMap.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = GBLBH9THKY;
-				FRAMEWORK_SEARCH_PATHS = $HOME/Library/SDKs/ArcGIS/iOS/Frameworks/Static;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
 				INFOPLIST_FILE = SeattleParkingMap/Info.plist;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					ArcGIS,
-					"-l",
-					"c++",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.taplightsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1133,21 +1077,16 @@
 		};
 		8F78E8A41941288B006B8217 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4ED30B11602EA7CF26C8396C /* Pods-SeattleParkingMap.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = GBLBH9THKY;
-				FRAMEWORK_SEARCH_PATHS = $HOME/Library/SDKs/ArcGIS/iOS/Frameworks/Static;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SeattleParkingMap/Prefix.pch;
 				INFOPLIST_FILE = SeattleParkingMap/Info.plist;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					ArcGIS,
-					"-l",
-					"c++",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.taplightsoftware.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1162,15 +1101,6 @@
 			buildConfigurations = (
 				4981FD3C1C41654B008A7F3C /* Debug */,
 				4981FD3D1C41654B008A7F3C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4981FD4A1C420234008A7F3C /* Build configuration list for PBXNativeTarget "SeattleParkingMapUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4981FD4B1C420234008A7F3C /* Debug */,
-				4981FD4C1C420234008A7F3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

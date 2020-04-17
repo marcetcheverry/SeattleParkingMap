@@ -16,8 +16,6 @@
 
 @interface SettingsTableViewController () <MFMailComposeViewControllerDelegate>
 
-@property (strong, nonatomic) IBOutletCollection(UISegmentedControl) NSArray *segmentedControls;
-
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapProviderSegmentedControl;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapStyleSegmentedControl;
 
@@ -35,17 +33,6 @@
     
     self.mapProviderSegmentedControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapProvider];
     self.mapStyleSegmentedControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:SPMDefaultsSelectedMapType];
-
-    for (UISegmentedControl *segmentedControl in self.segmentedControls)
-    {
-        segmentedControl.backgroundColor = [segmentedControl.tintColor colorWithAlphaComponent:.1];
-        
-        NSDictionary *titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-        [segmentedControl setTitleTextAttributes:titleTextAttributes
-                                        forState:UIControlStateNormal];
-        [segmentedControl setTitleTextAttributes:titleTextAttributes
-                                        forState:UIControlStateSelected];
-    }
 }
 
 #pragma mark - UITableViewDelegate

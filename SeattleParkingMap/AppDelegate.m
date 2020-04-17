@@ -88,7 +88,7 @@
     {
         [self configureApplicationForForegroundOperation];
     }
-    
+
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{SPMDefaultsShownInitialWarning: @(NO),
                                                               SPMDefaultsNeedsBackgroundLocationWarning: @(NO),
                                                               SPMDefaultsLegendOpacity: @(.75),
@@ -114,6 +114,17 @@
                                                                                options:UNNotificationCategoryOptionAllowInCarPlay];
 
     [UNUserNotificationCenter.currentNotificationCenter setNotificationCategories:[NSSet setWithObjects:timeLimit, nil]];
+
+    // Test case: reinstall
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:SPMDefaultsRegisteredForLocalNotifications]) {
+        [UNUserNotificationCenter.currentNotificationCenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+             if (settings.authorizationStatus == UNAuthorizationStatusAuthorized)
+            {
+                [[NSUserDefaults standardUserDefaults] setBool:YES
+                                                        forKey:SPMDefaultsRegisteredForLocalNotifications];
+            }
+        }];
+    }
 
     return YES;
 }
@@ -228,11 +239,6 @@
                                                                                      withCompletionHandler:completionHandler];
                                                                           }];
         return;
-    }
-
-    if ([notification.request.content.categoryIdentifier isEqualToString:SPMNotificationCategoryTimeLimit])
-    {
-        [WCSession.defaultSession SPMTransferCurrentComplicationUserInfo:@{SPMWatchNeedsComplicationUpdate: @YES}];
     }
 
     self.lastTimeLimitNotificationAlertController = [UIAlertController alertControllerWithTitle:notification.request.content.title
@@ -373,7 +379,6 @@
             
             self.setParkingSpotReplyHandler(@{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                               SPMWatchResponseStatus: SPMWatchResponseFailure,
-                                              SPMWatchNeedsComplicationUpdate: @YES,
                                               SPMErrorCode: @(error.code),
                                               NSLocalizedFailureReasonErrorKey: error.userInfo[NSLocalizedFailureReasonErrorKey]});
             
@@ -416,7 +421,6 @@
         {
             replyDictionary = @{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                 SPMWatchResponseStatus: SPMWatchResponseSuccess,
-                                SPMWatchNeedsComplicationUpdate: @YES,
                                 SPMWatchObjectParkingSpot: [[ParkingManager sharedManager].currentSpot watchConnectivityDictionaryRepresentation]};
             
             if (parkingSpot.timeLimit &&
@@ -431,7 +435,6 @@
         {
             NSLog(@"%@: Failed to set parking spot %@", NSStringFromSelector(_cmd), [ParkingManager sharedManager]);
             replyDictionary = @{SPMWatchAction: SPMWatchActionSetParkingSpot,
-                                SPMWatchNeedsComplicationUpdate: @YES,
                                 SPMWatchResponseStatus: SPMWatchResponseFailure};
         }
         
@@ -470,7 +473,6 @@
         
         self.setParkingSpotReplyHandler(@{SPMWatchAction: SPMWatchActionSetParkingSpot,
                                           SPMWatchResponseStatus: SPMWatchResponseFailure,
-                                          SPMWatchNeedsComplicationUpdate: @YES,
                                           SPMErrorCode: @(error.code),
                                           NSLocalizedFailureReasonErrorKey: watchError.userInfo[NSLocalizedFailureReasonErrorKey]});
         
@@ -658,7 +660,6 @@
                         NSMutableDictionary *replyDictionary = [[NSMutableDictionary alloc] initWithCapacity:4];
                         replyDictionary[SPMWatchAction] = message[SPMWatchAction];
                         replyDictionary[SPMWatchResponseStatus] = SPMWatchResponseSuccess;
-                        replyDictionary[SPMWatchNeedsComplicationUpdate] = @YES;
                         replyDictionary[SPMWatchObjectParkingSpot] = parkingObject;
                         
                         if (parkingTimeLimit &&
